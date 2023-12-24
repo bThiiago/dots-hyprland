@@ -1,6 +1,6 @@
 <div align="center">
     <h1>「 Hyprland dotfiles 」</h1>
-    <h3> [end_4 illogical_impulse](https://github.com/end-4/dots-hyprland/tree/illogical-impulse) branch with personal tweaks </h3>
+    <h3> end_4 illogical_impulse branch with personal tweaks </h3>
 </div>
 
 ## Manual installation
@@ -27,3 +27,5 @@ meson install -C build   # When asked to use sudo, make sure you say yes
     - For [Chromium](https://chrome.google.com/webstore/detail/plasma-integration/cimiefiiaegbelhefglklhhakcgmhkai)
     - For [Firefox](https://addons.mozilla.org/en-US/firefox/addon/plasma-integration/)
   - Copy .local/bin to use fuzzel emoji
+
+Check [end_4 illogical_impulse](https://github.com/end-4/dots-hyprland/tree/illogical-impulse) branch for more details or to use the original version
