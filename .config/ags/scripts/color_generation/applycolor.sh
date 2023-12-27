@@ -47,28 +47,6 @@ get_light_dark() {
     echo "$lightdark"
 }
 
-apply_gtklock() {
-    # Check if scripts/templates/gtklock/main.scss exists
-    if [ ! -f "scripts/templates/gtklock/main.scss" ]; then
-        echo "SCSS not found. Fallback to CSS."
-    else
-        sassc ~/.config/ags/scripts/templates/gtklock/main.scss ~/.config/gtklock/style.css
-        return
-    fi
-    
-    # Check if scripts/templates/gtklock/style.css exists
-    if [ ! -f "scripts/templates/gtklock/style.css" ]; then
-        echo "Template file not found for Gtklock. Skipping that."
-        return
-    fi
-    # Copy template
-    cp "scripts/templates/gtklock/style.css" "$HOME/.config/gtklock/style.css"
-    # Apply colors
-    for i in "${!colorlist[@]}"; do
-        sed -i "s/${colorlist[$i]};/${colorvalues[$i]};/g" "$HOME/.config/gtklock/style.css"
-    done
-}
-
 apply_fuzzel() {
     # Check if scripts/templates/fuzzel/fuzzel.ini exists
     if [ ! -f "scripts/templates/fuzzel/fuzzel.ini" ]; then
@@ -117,9 +95,6 @@ apply_hyprland() {
 
 apply_gtk() { # Using gradience-cli
     lightdark=$(get_light_dark)
-
-    background=$(cat scss/_material.scss | grep "background" | awk '{print $2}' | cut -d ";" -f1)
-    secondaryContainer=$(cat scss/_material.scss | grep "secondaryContainer" | awk '{print $2}' | cut -d ";" -f1)
     
     # Copy template 
     cp "scripts/templates/gradience/preset_template.json" "scripts/templates/gradience/preset.json"
@@ -154,6 +129,5 @@ apply_ags() {
 apply_ags &
 apply_hyprland &
 apply_gtk &
-apply_gtklock &
 apply_fuzzel &
 apply_foot

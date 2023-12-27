@@ -162,7 +162,11 @@ const MessageContent = (content) => {
         "fullUpdate",
         (self, content, useCursor = false) => {
           // Clear and add first text widget
-          contentBox.get_children().forEach((ch) => ch.destroy());
+          const children = contentBox.get_children();
+          for (let i = 0; i < children.length; i++) {
+            const child = children[i];
+            child.destroy();
+          }
           contentBox.add(TextBlock());
           // Loop lines. Put normal text in markdown parser
           // and put code into code highlighter (TODO)

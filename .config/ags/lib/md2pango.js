@@ -273,7 +273,10 @@ if (__is_nodejs_main) {
     console.log(`Usage: ${process.argv[1]} FILE [FILE...]`);
     process.exit(0);
   }
-  args.forEach((f) => process.stdout.write(convert(readFile(f))));
+  for (let i = 0; i < args.length; i++) {
+    const f = args[i];
+    process.stdout.write(convert(readFile(f)));
+  }
 }
 
 export const markdownTest = `# Heading 1

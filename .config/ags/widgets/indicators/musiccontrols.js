@@ -57,7 +57,11 @@ function detectMediaSource(link) {
 
   if (domain == "ytimg.com") return "󰗃 Youtube";
   if (domain == "discordapp.net") return "󰙯 Discord";
+  if (domain == "spotify.com") return "ᯤ Spotify";
+  if (domain == "soundcloud.com") return "󰓀 SoundCloud";
+  if (domain == "twitch.tv") return "👾 Twitch";
   if (domain == "sndcdn.com") return "󰓀 SoundCloud";
+  if (domain == "scdn.co") return "ᯤ Spotify";
   return domain;
 }
 
@@ -352,7 +356,6 @@ const TrackTime = ({ player, ...rest }) => {
 };
 
 const PlayState = ({ player }) => {
-  var position = 0;
   const trackCircProg = TrackProgress({ player: player });
   return Widget.Button({
     className: "osd-music-playstate",
@@ -418,7 +421,12 @@ const MusicControlsWidget = (player) =>
               );
               box.pack_end(PlayState({ player: player }), false, false, 0);
               box.pack_end(TrackTime({ player: player }), false, false, 0);
-              // box.pack_end(TrackSource({ vpack: 'center', player: player }), false, false, 0);
+              box.pack_end(
+                TrackSource({ vpack: "center", player: player }),
+                false,
+                false,
+                0
+              );
             },
           }),
         ],
@@ -447,7 +455,11 @@ export default () =>
 
             if (!foundPlayer) {
               box._player = null;
-              box.get_children().forEach((ch) => ch.destroy());
+              const children = box.get_children();
+              for (let i = 0; i < children.length; i++) {
+                const child = children[i];
+                child.destroy();
+              }
               return;
             }
           },
