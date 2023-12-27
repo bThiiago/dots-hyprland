@@ -635,6 +635,7 @@ export const SearchAndWindows = () => {
 
   return Widget.Box({
     vertical: true,
+    className: "overview-window",
     children: [
       clickOutsideToClose,
       Widget.Box({
