@@ -59,10 +59,17 @@ export const ConfigToggle = ({
       // mouse up/kb press
       value = !value;
       toggleIcon.toggleClassName("switch-fg-toggling-false", false);
-      toggleIcon.label = `${value ? "check" : ""}`;
-      toggleIcon.toggleClassName("txt-poof", !value);
+      if (!value) {
+        toggleIcon.label = "";
+        toggleIcon.toggleClassName("txt-poof", true);
+      }
       toggleButtonIndicator.toggleClassName("switch-fg-true", value);
       toggleButton.toggleClassName("switch-bg-true", value);
+      if (value)
+        Utils.timeout(1, () => {
+          toggleIcon.label = "check";
+          toggleIcon.toggleClassName("txt-poof", false);
+        });
       onChange(interactionWrapper, value);
     },
     setup: (button) => {

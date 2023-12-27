@@ -232,7 +232,11 @@ export const chatContent = Box({
 
 const clearChat = () => {
   ChatGPT.clear();
-  chatContent.get_children().forEach((ch) => ch.destroy());
+  const children = chatContent.get_children();
+  for (let i = 0; i < children.length; i++) {
+    const child = children[i];
+    child.destroy();
+  }
 };
 
 export const chatGPTView = Scrollable({
