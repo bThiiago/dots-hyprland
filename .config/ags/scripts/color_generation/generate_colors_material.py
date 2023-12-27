@@ -26,7 +26,6 @@ elif len(sys.argv) > 1 and sys.argv[1] == '--color':
     colorstr = sys.argv[2]
     newtheme = themeFromSourceColor(argbFromHex(colorstr))
 else:
-    # try:
     imagePath = subprocess.check_output("swww query | awk -F 'image: ' '{print $2}'", shell=True)
     imagePath = imagePath[:-1].decode("utf-8") 
     img = Image.open(imagePath)
