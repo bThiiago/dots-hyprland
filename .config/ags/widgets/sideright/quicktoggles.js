@@ -127,7 +127,7 @@ export const ModuleNightLight = (props = {}) =>
         execAsync([
           "bash",
           "-c",
-          `hyprctl keyword decoration:screen_shader ~/.config/hypr/shaders/extradark.frag`,
+          `hyprctl keyword decoration:screen_shader ~/.config/hypr/shaders/night.frag`,
         ]).catch(print);
         button.toggleClassName("sidebar-button-active", true);
       }
@@ -156,7 +156,7 @@ export const ModuleInvertColors = (props = {}) =>
         execAsync([
           "bash",
           "-c",
-          `hyprctl keyword decoration:screen_shader ~/.config/hypr/shaders/invert.frag`,
+          `hyprctl keyword decoration:screen_shader ~/.config/hypr/shaders/vibrance.frag`,
         ]).catch(print);
         button.toggleClassName("sidebar-button-active", true);
       }

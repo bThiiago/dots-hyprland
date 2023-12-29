@@ -15,18 +15,14 @@ const activeWorkspaceIndicator = Widget.Box({
       vpack: "center",
       hpack: "start",
       className: "bar-ws-active-box",
-      connections: [
-        [
-          Hyprland.active.workspace,
-          (box) => {
-            const ws = Hyprland.active.workspace.id;
-            box.setCss(`
+      setup: (self) =>
+        self.hook(Hyprland.active.workspace, (box) => {
+          const ws = Hyprland.active.workspace.id;
+          box.setCss(`
                         margin-left: ${1.774 * (ws - 1) + 0.068}rem;
                     `);
-            lastWorkspace = ws;
-          },
-        ],
-      ],
+          lastWorkspace = ws;
+        }),
       children: [
         Widget.Label({
           vpack: "center",
@@ -89,8 +85,8 @@ export const ModuleWorkspaces = () =>
                     }),
                   })
                 ),
-                connections: [
-                  [
+                setup: (self) =>
+                  self.hook(
                     Hyprland,
                     (box) => {
                       // console.log('update');
@@ -127,9 +123,8 @@ export const ModuleWorkspaces = () =>
                         );
                       }
                     },
-                    "notify::workspaces",
-                  ],
-                ],
+                    "notify::workspaces"
+                  ),
               }),
               overlays: [activeWorkspaceIndicator],
             }),

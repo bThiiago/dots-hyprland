@@ -77,36 +77,28 @@ export const ModuleLeftSpace = () =>
                           Widget.Label({
                             xalign: 0,
                             className: "txt-smaller bar-topdesc txt",
-                            connections: [
-                              [
-                                Hyprland.active.client,
-                                (label) => {
-                                  // Hyprland.active.client
-                                  label.label =
-                                    Hyprland.active.client._class.length === 0
-                                      ? "Desktop"
-                                      : Hyprland.active.client._class;
-                                },
-                              ],
-                            ],
+                            setup: (self) =>
+                              self.hook(Hyprland.active.client, (label) => {
+                                // Hyprland.active.client
+                                label.label =
+                                  Hyprland.active.client._class.length === 0
+                                    ? "Desktop"
+                                    : Hyprland.active.client._class;
+                              }),
                           }),
                           Widget.Label({
                             xalign: 0,
                             className: "txt txt-smallie",
-                            connections: [
-                              [
-                                Hyprland.active.client,
-                                (label) => {
-                                  // Hyprland.active.client
-                                  label.label =
-                                    Hyprland.active.client._title.length === 0
-                                      ? `Workspace ${Hyprland.active.workspace.id}`
-                                      : truncateTitle(
-                                          Hyprland.active.client._title
-                                        );
-                                },
-                              ],
-                            ],
+                            setup: (self) =>
+                              self.hook(Hyprland.active.client, (label) => {
+                                // Hyprland.active.client
+                                label.label =
+                                  Hyprland.active.client._title.length === 0
+                                    ? `Workspace ${Hyprland.active.workspace.id}`
+                                    : truncateTitle(
+                                        Hyprland.active.client._title
+                                      );
+                              }),
                           }),
                         ],
                       }),

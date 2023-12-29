@@ -133,7 +133,7 @@ const pinButton = Button({
   child: MaterialIcon("push_pin", "larger"),
   tooltipText: "Pin sidebar",
   onClicked: (self) => self._toggle(self),
-  setup: setupCursorHover,
+  // QoL: Focus Pin button on open. Hit keybind -> space/enter = toggle pin state
   connections: [
     [
       App,
@@ -194,6 +194,8 @@ export default () =>
             if (event.get_keyval()[1] == Gdk.KEY_p)
               pinButton._toggle(pinButton);
             // Switch sidebar tab
+            else if (event.get_keyval()[1] === Gdk.KEY_Tab)
+              switchToTab((currentTabId + 1) % contents.length);
             else if (event.get_keyval()[1] === Gdk.KEY_Page_Up)
               switchToTab(Math.max(currentTabId - 1), 0);
             else if (event.get_keyval()[1] === Gdk.KEY_Page_Down)
@@ -203,10 +205,13 @@ export default () =>
             // If api tab is focused
             // Automatically focus entry when typing
             if (
-              event.get_keyval()[1] >= 32 &&
-              event.get_keyval()[1] <= 126 &&
-              widget != chatEntry &&
-              event.get_keyval()[1] != Gdk.KEY_space
+              (!(event.get_state()[1] & Gdk.ModifierType.CONTROL_MASK) &&
+                event.get_keyval()[1] >= 32 &&
+                event.get_keyval()[1] <= 126 &&
+                widget != chatEntry &&
+                event.get_keyval()[1] != Gdk.KEY_space) ||
+              (event.get_state()[1] & Gdk.ModifierType.CONTROL_MASK &&
+                event.get_keyval()[1] === Gdk.KEY_v)
             ) {
               chatEntry.grab_focus();
               chatEntry.set_text(

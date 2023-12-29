@@ -1,7 +1,6 @@
-const { Gdk, Gio, Gtk } = imports.gi;
+const { Gdk, Gtk } = imports.gi;
 import {
   App,
-  Service,
   Utils,
   Variable,
   Widget,
@@ -11,11 +10,8 @@ import {
 import Applications from "resource:///com/github/Aylur/ags/service/applications.js";
 import Hyprland from "resource:///com/github/Aylur/ags/service/hyprland.js";
 const { execAsync, exec } = Utils;
-import {
-  setupCursorHover,
-  setupCursorHoverGrab,
-} from "../../lib/cursorhover.js";
-import { DoubleRevealer } from "../../lib/doublerevealer.js";
+import { setupCursorHoverGrab } from "../../lib/cursorhover.js";
+import { DoubleRevealer } from "../../lib/advancedrevealers.js";
 import {
   execAndClose,
   expandTilde,
