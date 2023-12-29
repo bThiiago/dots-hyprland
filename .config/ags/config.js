@@ -1,6 +1,5 @@
 "strict mode";
 import { App, Utils } from "./imports.js";
-import { firstRunWelcome } from "./services/messages.js";
 import Bar from "./widgets/bar/main.js";
 import Cheatsheet from "./widgets/cheatsheet/main.js";
 import DesktopBackground from "./widgets/desktopbackground/main.js";

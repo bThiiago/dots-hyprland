@@ -23,16 +23,15 @@ $onSecondaryContainer: mix($color7, $color2, 90%);
     @include elevation2;
     margin-top: 0.313rem;
     @include normal-rounding;
-    // min-height: 7.159rem;
     min-width: 29.659rem;
     background-color: $t_background;
     padding: 0rem 1.023rem;
-    background: // Inspired by Amberol
+    background:
         linear-gradient(127deg, transparentize($music_gradient1, $music_colorstart_transparentize), transparentize($music_gradient1, $music_colorstart_transparentize - $transparentize_amount + $music_extra_transparentize) 70.71%),
         linear-gradient(217deg, transparentize($music_gradient2, $music_colorstart_transparentize), transparentize($music_gradient2, $music_colorstart_transparentize - $transparentize_amount + $music_extra_transparentize) 70.71%),
         radial-gradient(circle at 0% 100%, $color4 13%, rgba(0, 0, 0, 0) 100%),
         linear-gradient(336deg, transparentize($music_gradient3, $music_colorstart_transparentize), transparentize($music_gradient3, $music_colorstart_transparentize - $transparentize_amount + $music_extra_transparentize) 70.71%),
-        linear-gradient($background, $background), // We don't want wallpaper tint, so here's a fully opaque surface
+        linear-gradient($background, $background),
     ;
 }
 
@@ -40,7 +39,6 @@ $onSecondaryContainer: mix($color7, $color2, 90%);
 .osd-music-cover-fallback {
     @include menu_decel;
     @include small-rounding;
-    // margin: 1.023rem;
     min-width: 7.5rem;
     min-height: 7.5rem;
     background-color: $t_surface;
@@ -50,7 +48,6 @@ $onSecondaryContainer: mix($color7, $color2, 90%);
 .osd-music-cover {
     @include small-rounding;
     @include menu_decel;
-    // Must be -top and -bottom or it'll mess up horizontal spacing
     margin-top: 1.023rem;
     margin-bottom: 1.023rem;
     min-width: 7.5rem;
@@ -129,7 +126,7 @@ $onSecondaryContainer: mix($color7, $color2, 90%);
 
 .osd-music-circprog {
     @include fluent_decel_long;
-    min-width: 0.409rem; // width of progress
+    min-width: 0.409rem;
     min-height: 3.068rem;
     padding: 0.273rem;
     color: $onSecondaryContainer;

@@ -69,7 +69,7 @@ const m2p_styles = [
   {
     name: INLCODE,
     re: /(`)([^`]*)(`)/g,
-    sub: `<span font_weight='bold' font_family='${monospaceFonts}' bgcolor='#000000' fgcolor='#ffffff'> $2 </span>`,
+    sub: `<span font_weight='bold' font_family='${monospaceFonts}'> $2 </span>`,
   },
   // { name: UND, re: /(__|\*\*)(\S[\s\S]*?\S)(__|\*\*)/g, sub: "<u>$2</u>" },
 ];

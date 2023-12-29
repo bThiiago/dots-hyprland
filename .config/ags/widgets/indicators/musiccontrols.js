@@ -57,12 +57,11 @@ function detectMediaSource(link) {
 
   if (domain == "ytimg.com") return "󰗃 Youtube";
   if (domain == "discordapp.net") return "󰙯 Discord";
-  if (domain == "spotify.com") return "ᯤ Spotify";
+  if (domain == "spotify.com") return "󰓇 Spotify";
   if (domain == "soundcloud.com") return "󰓀 SoundCloud";
-  if (domain == "twitch.tv") return "👾 Twitch";
   if (domain == "sndcdn.com") return "󰓀 SoundCloud";
-  if (domain == "scdn.co") return "ᯤ Spotify";
-  return domain;
+  if (domain == "scdn.co") return "󰓇 Spotify";
+  return "󰖟" + domain;
 }
 
 const DEFAULT_MUSIC_FONT = "Gabarito, sans-serif";
@@ -444,7 +443,7 @@ export default () =>
           Mpris,
           (box) => {
             let foundPlayer = false;
-
+            console.log(Mpris.players);
             Mpris.players.forEach((player, i) => {
               if (isRealPlayer(player)) {
                 foundPlayer = true;

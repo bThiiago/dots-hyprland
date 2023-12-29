@@ -119,6 +119,22 @@ apply_gtk() { # Using gradience-cli
     fi
 }
 
+apply_swaylock() {
+    # Check if scripts/templates/swaylock/config exists
+    if [ ! -f "scripts/templates/swaylock/config" ]; then
+        echo "Template file not found for Swaylock. Skipping that."
+        return
+    fi
+    # Copy template
+    cp "scripts/templates/swaylock/config" "$HOME/.config/swaylock/config_new"
+    # Apply colors
+    for i in "${!colorlist[@]}"; do
+        sed -i "s/{{ ${colorlist[$i]} }}/${colorvalues[$i]#\#}/g" "$HOME/.config/swaylock/config_new"
+    done
+
+    mv "$HOME/.config/swaylock/config_new" "$HOME/.config/swaylock/config"
+}
+
 apply_ags() {
     sassc "$HOME"/.config/ags/scss/main.scss "$HOME"/.config/ags/style.css
     ags run-js 'openColorScheme.value = true; Utils.timeout(2000, () => openColorScheme.value = false);'
@@ -129,5 +145,6 @@ apply_ags() {
 apply_ags &
 apply_hyprland &
 apply_gtk &
+apply_swaylock &
 apply_fuzzel &
 apply_foot

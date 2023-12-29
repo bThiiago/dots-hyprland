@@ -261,4 +261,14 @@ export const ModulePowerIcon = (props = {}) =>
     setup: (button) => {
       setupCursorHover(button);
     },
+    connections: [
+      [
+        App,
+        (self, currentName, visible) => {
+          if (currentName === "sideright" && visible) {
+            self.grab_focus();
+          }
+        },
+      ],
+    ],
   });
