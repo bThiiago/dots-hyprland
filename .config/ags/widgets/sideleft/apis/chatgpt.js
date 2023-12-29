@@ -25,6 +25,7 @@ import {
   ConfigGap,
 } from "../../../lib/configwidgets.js";
 import { markdownTest } from "../../../lib/md2pango.js";
+import { MarginRevealer } from "../../../lib/advancedrevealers.js";
 
 export const chatGPTTabIcon = Box({
   hpack: "center",
@@ -83,16 +84,15 @@ const chatGPTInfo = Box({
   ],
 });
 
-export const chatGPTSettings = Revealer({
+export const chatGPTSettings = MarginRevealer({
   transition: "slide_down",
-  transitionDuration: 150,
   revealChild: true,
   connections: [
     [
       ChatGPT,
       (self) =>
         Utils.timeout(200, () => {
-          self.revealChild = false;
+          self._hide(self);
         }),
       "newMsg",
     ],
@@ -100,7 +100,7 @@ export const chatGPTSettings = Revealer({
       ChatGPT,
       (self) =>
         Utils.timeout(200, () => {
-          self.revealChild = true;
+          self._show(self);
         }),
       "clear",
     ],
@@ -235,10 +235,11 @@ export const chatGPTView = Scrollable({
     children: [chatGPTWelcome, chatContent],
   }),
   setup: (scrolledWindow) => {
+    // Show scrollbar
     scrolledWindow.set_policy(Gtk.PolicyType.NEVER, Gtk.PolicyType.AUTOMATIC);
     const vScrollbar = scrolledWindow.get_vscrollbar();
     vScrollbar.get_style_context().add_class("sidebar-scrollbar");
-
+    // Avoid click-to-scroll-widget-to-view behavior
     Utils.timeout(1, () => {
       const viewport = scrolledWindow.child;
       viewport.set_focus_vadjustment(new Gtk.Adjustment(undefined));
@@ -311,7 +312,17 @@ export const chatGPTSendMessage = (text) => {
           chatGPTView
         )
       );
-    else if (text.startsWith("/key")) {
+    else if (text.startsWith("/prompt")) {
+      const firstSpaceIndex = text.indexOf(" ");
+      const prompt = text.slice(firstSpaceIndex + 1);
+      if (firstSpaceIndex == -1 || prompt.length < 1) {
+        chatContent.add(
+          SystemMessage(`Usage: \`/prompt MESSAGE\``, "/prompt", chatGPTView)
+        );
+      } else {
+        ChatGPT.addMessage("user", prompt);
+      }
+    } else if (text.startsWith("/key")) {
       const parts = text.split(" ");
       if (parts.length == 1)
         chatContent.add(

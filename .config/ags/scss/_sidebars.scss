@@ -514,7 +514,8 @@ $onChatgpt: $onPrimary;
 }
 
 .sidebar-chat-apiswitcher-icon-enabled {
-    color: $primary;
+    background-color: $secondaryContainer;
+    color: $onSecondaryContainer;
 }
 
 .sidebar-chat-viewport {

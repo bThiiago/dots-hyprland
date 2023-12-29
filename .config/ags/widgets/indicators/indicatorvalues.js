@@ -1,31 +1,27 @@
-// This file is for microphone/volume indicators
-const { GLib, Gtk } = imports.gi;
-import { App, Service, Utils, Widget } from "../../imports.js";
+import { Widget } from "../../imports.js";
+import { MarginRevealer } from "../../lib/advancedrevealers.js";
 import Audio from "resource:///com/github/Aylur/ags/service/audio.js";
-import Notifications from "resource:///com/github/Aylur/ags/service/notifications.js";
-const { Box, EventBox, Icon, Scrollable, Label, Button, Revealer } = Widget;
 import Indicator from "../../services/indicator.js";
-import Notification from "../../lib/notification.js";
+const { Box, Label, ProgressBar } = Widget;
 
 const OsdValue = (name, labelConnections, progressConnections, props = {}) =>
-  Widget.Box({
-    // Volume
+  Box({
     ...props,
     vertical: true,
     className: "osd-bg osd-value",
     hexpand: true,
     children: [
-      Widget.Box({
+      Box({
         vexpand: true,
         children: [
-          Widget.Label({
+          Label({
             xalign: 0,
             yalign: 0,
             hexpand: true,
             className: "osd-label",
             label: `${name}`,
           }),
-          Widget.Label({
+          Label({
             hexpand: false,
             className: "osd-value-txt",
             label: "100",
@@ -33,7 +29,7 @@ const OsdValue = (name, labelConnections, progressConnections, props = {}) =>
           }),
         ],
       }),
-      Widget.ProgressBar({
+      ProgressBar({
         className: "osd-progress",
         hexpand: true,
         vertical: false,
@@ -85,18 +81,21 @@ const volumeIndicator = OsdValue(
 );
 
 export default () =>
-  Widget.Revealer({
+  MarginRevealer({
     transition: "slide_down",
+    showClass: "osd-show",
+    hideClass: "osd-hide",
     connections: [
       [
         Indicator,
         (revealer, value) => {
-          revealer.revealChild = value > -1;
+          if (value > -1) revealer._show(revealer);
+          else revealer._hide(revealer);
         },
         "popup",
       ],
     ],
-    child: Widget.Box({
+    child: Box({
       hpack: "center",
       vertical: false,
       children: [microphoneIndicator, volumeIndicator],

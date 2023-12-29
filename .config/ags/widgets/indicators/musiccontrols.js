@@ -1,9 +1,10 @@
-const { Gio, GLib, Gtk } = imports.gi;
-import { App, Service, Utils, Widget } from "../../imports.js";
+const { Gio, GLib } = imports.gi;
+import { App, Utils, Widget } from "../../imports.js";
 const { exec, execAsync } = Utils;
 import Mpris from "resource:///com/github/Aylur/ags/service/mpris.js";
 
-const { Box, EventBox, Icon, Scrollable, Label, Button, Revealer } = Widget;
+const { Box, Button, Label, Overlay, Revealer } = Widget;
+import { MarginRevealer } from "../../lib/advancedrevealers.js";
 import { AnimatedCircProg } from "../../lib/animatedcircularprogress.js";
 import { setupCursorHover } from "../../lib/cursorhover.js";
 import { showMusicControls } from "../../variables.js";
@@ -50,9 +51,7 @@ function detectMediaSource(link) {
     if (link.includes("firefox-mpris")) return "󰈹 Firefox";
     return "󰈣 File";
   }
-  // Remove protocol if present
   let url = link.replace(/(^\w+:|^)\/\//, "");
-  // Extract the domain name
   let domain = url.match(/(?:[a-z]+\.)?([a-z]+\.[a-z]+)/i)[1];
 
   if (domain == "ytimg.com") return "󰗃 Youtube";
@@ -73,8 +72,8 @@ function getTrackfont(player) {
     artists.includes("USAO") ||
     artists.includes("Kobaryo")
   )
-    return "Chakra Petch"; // Rigid square replacement
-  if (title.includes("東方")) return "Crimson Text, serif"; // Serif for Touhou stuff
+    return "Chakra Petch";
+  if (title.includes("東方")) return "Crimson Text, serif";
   return DEFAULT_MUSIC_FONT;
 }
 
@@ -82,7 +81,6 @@ const TrackProgress = ({ player, ...rest }) => {
   const _updateProgress = (circprog) => {
     const player = Mpris.getPlayer();
     if (!player) return;
-    // Set circular progress (see definition of AnimatedCircProg for explanation)
     circprog.css = `font-size: ${Math.max(
       (player.position / player.length) * 100,
       0
@@ -93,7 +91,6 @@ const TrackProgress = ({ player, ...rest }) => {
     className: "osd-music-circprog",
     vpack: "center",
     connections: [
-      // Update on change/once every 3 seconds
       [Mpris, _updateProgress],
       [3000, _updateProgress],
     ],
@@ -106,16 +103,13 @@ const TrackTitle = ({ player, ...rest }) =>
     label: "No music playing",
     xalign: 0,
     truncate: "end",
-    // wrap: true,
     className: "osd-music-title",
     connections: [
       [
         player,
         (self) => {
-          // Player name
           self.label =
             player.trackTitle.length > 0 ? player.trackTitle : "No media";
-          // Font based on track/artist
           const fontForThisTrack = getTrackfont(player);
           self.css = `font-family: ${fontForThisTrack}, ${DEFAULT_MUSIC_FONT};`;
         },
@@ -149,9 +143,8 @@ const CoverArt = ({ player, ...rest }) =>
     ...rest,
     className: "osd-music-cover",
     children: [
-      Widget.Overlay({
+      Overlay({
         child: Box({
-          // Fallback
           className: "osd-music-cover-fallback",
           homogeneous: true,
           children: [
@@ -162,7 +155,6 @@ const CoverArt = ({ player, ...rest }) =>
           ],
         }),
         overlays: [
-          // Real
           Box({
             properties: [
               [
@@ -170,8 +162,6 @@ const CoverArt = ({ player, ...rest }) =>
                 (self) => {
                   const player = Mpris.getPlayer();
 
-                  // Player closed
-                  // Note that cover path still remains, so we're checking title
                   if (!player || player.trackTitle == "") {
                     self.css = `background-image: none;`;
                     App.applyCss(`${App.configDir}/style.css`);
@@ -181,19 +171,16 @@ const CoverArt = ({ player, ...rest }) =>
                   const coverPath = player.coverPath;
                   const stylePath = `${player.coverPath}${lightDark}${COVER_COLORSCHEME_SUFFIX}`;
                   if (player.coverPath == lastCoverPath) {
-                    // Since 'notify::cover-path' emits on cover download complete
                     self.css = `background-image: url('${coverPath}');`;
                   }
                   lastCoverPath = player.coverPath;
 
-                  // If a colorscheme has already been generated, skip generation
                   if (fileExists(stylePath)) {
                     self.css = `background-image: url('${coverPath}');`;
                     App.applyCss(stylePath);
                     return;
                   }
 
-                  // Generate colors
                   execAsync([
                     "bash",
                     "-c",
@@ -227,17 +214,20 @@ const CoverArt = ({ player, ...rest }) =>
   });
 
 const TrackControls = ({ player, ...rest }) =>
-  Widget.Revealer({
+  Revealer({
     revealChild: false,
     transition: "slide_right",
     transitionDuration: 200,
-    child: Widget.Box({
+    child: Box({
       ...rest,
       vpack: "center",
       className: "osd-music-controls spacing-h-3",
       children: [
         Button({
           className: "osd-music-controlbtn",
+          onClicked: () => {
+            Mpris.getPlayer().previous();
+          },
           child: Label({
             className: "icon-material osd-music-controlbtn-txt",
             label: "skip_previous",
@@ -246,6 +236,9 @@ const TrackControls = ({ player, ...rest }) =>
         }),
         Button({
           className: "osd-music-controlbtn",
+          onClicked: () => {
+            Mpris.getPlayer().next();
+          },
           child: Label({
             className: "icon-material osd-music-controlbtn-txt",
             label: "skip_next",
@@ -268,11 +261,11 @@ const TrackControls = ({ player, ...rest }) =>
   });
 
 const TrackSource = ({ player, ...rest }) =>
-  Widget.Revealer({
+  Revealer({
     revealChild: false,
     transition: "slide_left",
     transitionDuration: 200,
-    child: Widget.Box({
+    child: Box({
       ...rest,
       className: "osd-music-pill spacing-h-5",
       homogeneous: true,
@@ -306,11 +299,11 @@ const TrackSource = ({ player, ...rest }) =>
   });
 
 const TrackTime = ({ player, ...rest }) => {
-  return Widget.Revealer({
+  return Revealer({
     revealChild: false,
     transition: "slide_left",
     transitionDuration: 200,
-    child: Widget.Box({
+    child: Box({
       ...rest,
       vpack: "center",
       className: "osd-music-pill spacing-h-5",
@@ -356,17 +349,17 @@ const TrackTime = ({ player, ...rest }) => {
 
 const PlayState = ({ player }) => {
   const trackCircProg = TrackProgress({ player: player });
-  return Widget.Button({
+  return Button({
     className: "osd-music-playstate",
-    child: Widget.Overlay({
+    child: Overlay({
       child: trackCircProg,
       overlays: [
-        Widget.Button({
+        Button({
           className: "osd-music-playstate-btn",
           onClicked: () => {
             Mpris.getPlayer().playPause();
           },
-          child: Widget.Label({
+          child: Label({
             justification: "center",
             hpack: "fill",
             vpack: "center",
@@ -434,9 +427,11 @@ const MusicControlsWidget = (player) =>
   });
 
 export default () =>
-  Widget.Revealer({
+  MarginRevealer({
     transition: "slide_down",
-    transitionDuration: 170,
+    revealChild: false,
+    showClass: "osd-show",
+    hideClass: "osd-hide",
     child: Box({
       connections: [
         [
@@ -470,7 +465,8 @@ export default () =>
       [
         showMusicControls,
         (revealer) => {
-          revealer.revealChild = showMusicControls.value;
+          if (showMusicControls.value) revealer._show(revealer);
+          else revealer._hide(revealer);
         },
       ],
     ],

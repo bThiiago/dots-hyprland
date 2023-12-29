@@ -1,8 +1,10 @@
-const { GLib } = imports.gi;
-import { Utils, Widget } from "../../imports.js";
-const { execAsync } = Utils;
-const { Box, Label, Button } = Widget;
+const { GLib, Gio } = imports.gi;
+import { App, Service, Utils, Widget } from "../../imports.js";
+import Variable from "resource:///com/github/Aylur/ags/variable.js";
+const { execAsync, exec } = Utils;
+const { Box, Label, Button, Revealer, EventBox } = Widget;
 import { setupCursorHover } from "../../lib/cursorhover.js";
+
 import { quickLaunchItems } from "../../data/quicklaunches.js";
 
 const TimeAndDate = () =>
@@ -13,27 +15,20 @@ const TimeAndDate = () =>
       Label({
         className: "bg-time-clock",
         xalign: 0,
-        connections: [
-          [
-            5000,
-            (label) => {
-              label.label = GLib.DateTime.new_now_local().format("%H:%M");
-            },
-          ],
-        ],
+        label: GLib.DateTime.new_now_local().format("%H:%M"),
+        setup: (self) =>
+          self.poll(5000, (label) => {
+            label.label = GLib.DateTime.new_now_local().format("%H:%M");
+          }),
       }),
       Label({
         className: "bg-time-date",
         xalign: 0,
-        connections: [
-          [
-            5000,
-            (label) => {
-              label.label =
-                GLib.DateTime.new_now_local().format("%A, %d/%m/%Y");
-            },
-          ],
-        ],
+        label: GLib.DateTime.new_now_local().format("%A, %d/%m/%Y"),
+        setup: (self) =>
+          self.poll(5000, (label) => {
+            label.label = GLib.DateTime.new_now_local().format("%A, %d/%m/%Y");
+          }),
       }),
     ],
   });
