@@ -1,15 +1,12 @@
-// This is for the cool memory indicator on the sidebar
-// For the right pill of the bar, see system.js
 const { Gdk, Gtk } = imports.gi;
 import {
   App,
-  Service,
   Utils,
   Widget,
   SCREEN_HEIGHT,
   SCREEN_WIDTH,
 } from "../../imports.js";
-const { exec, execAsync } = Utils;
+const { execAsync } = Utils;
 
 const SessionButton = (name, icon, command, props = {}) => {
   const buttonDescription = Widget.Revealer({
@@ -68,20 +65,18 @@ const SessionButton = (name, icon, command, props = {}) => {
 };
 
 export default () => {
-  // lock, logout, sleep
   const lockButton = SessionButton("Lock", "lock", () => {
     App.closeWindow("session");
     execAsync("swaylock");
   });
   const logoutButton = SessionButton("Logout", "logout", () => {
     App.closeWindow("session");
-    execAsync(["bash", "-c", "loginctl terminate-user $USER"]);
+    execAsync(["bash", "-c", "hyprctl dispatch exit"]);
   });
   const sleepButton = SessionButton("Sleep", "sleep", () => {
     App.closeWindow("session");
     execAsync("systemctl suspend");
   });
-  // hibernate, shutdown, reboot
   const hibernateButton = SessionButton("Hibernate", "downloading", () => {
     App.closeWindow("session");
     execAsync("systemctl hibernate");
@@ -105,7 +100,7 @@ export default () => {
     css: `
         min-width: ${SCREEN_WIDTH * 1.5}px; 
         min-height: ${SCREEN_HEIGHT * 1.5}px;
-        `, // idk why but height = screen height doesn't fill
+        `,
     vertical: true,
     children: [
       Widget.EventBox({
@@ -142,30 +137,17 @@ export default () => {
               Widget.Box({
                 hpack: "center",
                 className: "spacing-h-15",
-                children: [
-                  // lock, logout, sleep
-                  lockButton,
-                  logoutButton,
-                  sleepButton,
-                ],
+                children: [lockButton, logoutButton, sleepButton],
               }),
               Widget.Box({
                 hpack: "center",
                 className: "spacing-h-15",
-                children: [
-                  // hibernate, shutdown, reboot
-                  hibernateButton,
-                  shutdownButton,
-                  rebootButton,
-                ],
+                children: [hibernateButton, shutdownButton, rebootButton],
               }),
               Widget.Box({
                 hpack: "center",
                 className: "spacing-h-15",
-                children: [
-                  // hibernate, shutdown, reboot
-                  cancelButton,
-                ],
+                children: [cancelButton],
               }),
             ],
           }),
@@ -176,7 +158,7 @@ export default () => {
       [
         App,
         (_b, name, visible) => {
-          if (visible) lockButton.grab_focus(); // Lock is the default option
+          if (visible) lockButton.grab_focus();
         },
       ],
     ],

@@ -1,0 +1,35 @@
+daemonize
+show-failed-attempts
+clock
+screenshot
+indicator
+grace-no-mouse
+grace-no-touch
+ignore-empty-password
+font="Inter"
+effect-blur=15x15
+effect-vignette=1:1
+indicator-radius=200
+indicator-thickness=20
+line-color={{ $surface }}
+ring-color={{ $primaryContainer }}
+inside-color={{ $surface }}
+key-hl-color={{ $primary }}
+separator-color={{ $colorbarbg }}
+text-color={{ $onSurface }}
+line-ver-color={{ $primary }}
+ring-ver-color={{ $primary }}
+inside-ver-color={{ $surface }}
+text-ver-color={{ $onSurface }}
+ring-wrong-color={{ $error }}
+text-wrong-color={{ $error }}
+inside-wrong-color={{ $surface }}
+inside-clear-color={{ $surface }}
+text-clear-color={{ $onSurface }}
+ring-clear-color={{ $secondaryContainer }}
+line-clear-color={{ $surface }}
+line-wrong-color={{ $surface }}
+datestr=%a, %B %e
+timestr=%I:%M %p
+fade-in=0.3
+grace=2
