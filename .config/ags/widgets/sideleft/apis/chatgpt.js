@@ -25,7 +25,7 @@ import {
   ConfigGap,
 } from "../../../lib/configwidgets.js";
 import { markdownTest } from "../../../lib/md2pango.js";
-import { MarginRevealer } from "../../../lib/advancedrevealers.js";
+import { MarginRevealer } from "../../../lib/advancedwidgets.js";
 
 export const chatGPTTabIcon = Box({
   hpack: "center",
@@ -92,7 +92,7 @@ export const chatGPTSettings = MarginRevealer({
       ChatGPT,
       (self) =>
         Utils.timeout(200, () => {
-          self._hide(self);
+          self._hide();
         }),
       "newMsg",
     ],
@@ -100,7 +100,7 @@ export const chatGPTSettings = MarginRevealer({
       ChatGPT,
       (self) =>
         Utils.timeout(200, () => {
-          self._show(self);
+          self._show();
         }),
       "clear",
     ],
@@ -244,49 +244,33 @@ export const chatGPTView = Scrollable({
       const viewport = scrolledWindow.child;
       viewport.set_focus_vadjustment(new Gtk.Adjustment(undefined));
     });
+    // Always scroll to bottom with new content
+    const adjustment = scrolledWindow.get_vadjustment();
+    adjustment.connect("changed", () => {
+      adjustment.set_value(adjustment.get_upper() - adjustment.get_page_size());
+    });
   },
 });
+
+const CommandButton = (command) =>
+  Button({
+    className: "sidebar-chat-chip sidebar-chat-chip-action txt txt-small",
+    onClicked: () => sendMessage(command),
+    setup: setupCursorHover,
+    label: command,
+  });
 
 export const chatGPTCommands = Box({
   className: "spacing-h-5",
   children: [
     Box({ hexpand: true }),
-    Button({
-      className: "sidebar-chat-chip sidebar-chat-chip-action txt txt-small",
-      onClicked: () =>
-        chatContent.add(
-          SystemMessage(
-            `Key stored in:\n\`${ChatGPT.keyPath}\`\nTo update this key, type \`/key YOUR_API_KEY\``,
-            "/key",
-            chatGPTView
-          )
-        ),
-      setup: setupCursorHover,
-      label: "/key",
-    }),
-    Button({
-      className: "sidebar-chat-chip sidebar-chat-chip-action txt txt-small",
-      onClicked: () =>
-        chatContent.add(
-          SystemMessage(
-            `Currently using \`${ChatGPT.modelName}\``,
-            "/model",
-            chatGPTView
-          )
-        ),
-      setup: setupCursorHover,
-      label: "/model",
-    }),
-    Button({
-      className: "sidebar-chat-chip sidebar-chat-chip-action txt txt-small",
-      onClicked: () => clearChat(),
-      setup: setupCursorHover,
-      label: "/clear",
-    }),
+    CommandButton("/key"),
+    CommandButton("/model"),
+    CommandButton("/clear"),
   ],
 });
 
-export const chatGPTSendMessage = (text) => {
+export const sendMessage = (text) => {
   // Check if text or API key is empty
   if (text.length == 0) return;
   if (ChatGPT.key.length == 0) {

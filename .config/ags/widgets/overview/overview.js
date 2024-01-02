@@ -1,6 +1,7 @@
-const { Gdk, Gtk } = imports.gi;
+const { Gdk, Gio, Gtk } = imports.gi;
 import {
   App,
+  Service,
   Utils,
   Variable,
   Widget,
@@ -10,8 +11,11 @@ import {
 import Applications from "resource:///com/github/Aylur/ags/service/applications.js";
 import Hyprland from "resource:///com/github/Aylur/ags/service/hyprland.js";
 const { execAsync, exec } = Utils;
-import { setupCursorHoverGrab } from "../../lib/cursorhover.js";
-import { DoubleRevealer } from "../../lib/advancedrevealers.js";
+import {
+  setupCursorHover,
+  setupCursorHoverGrab,
+} from "../../lib/cursorhover.js";
+import { DoubleRevealer } from "../../lib/advancedwidgets.js";
 import {
   execAndClose,
   expandTilde,
@@ -347,6 +351,7 @@ const workspace = (index) => {
       child.destroy();
     }
     fixed.put(WorkspaceNumber(index), 0, 0);
+
     for (let i = 0; i < clients.length; i++) {
       const c = clients[i];
       if (c.mapped) {
@@ -357,6 +362,7 @@ const workspace = (index) => {
         );
       }
     }
+
     fixed.show_all();
   };
   return widget;
@@ -431,11 +437,13 @@ const OverviewRow = ({ startWorkspace, workspaces, windowName = "overview" }) =>
 export const SearchAndWindows = () => {
   var _appSearchResults = [];
 
-  const clickOutsideToClose = Widget.EventBox({
-    onPrimaryClick: () => App.closeWindow("overview"),
-    onSecondaryClick: () => App.closeWindow("overview"),
-    onMiddleClick: () => App.closeWindow("overview"),
-  });
+  const ClickToClose = ({ ...props }) =>
+    Widget.EventBox({
+      ...props,
+      onPrimaryClick: () => App.closeWindow("overview"),
+      onSecondaryClick: () => App.closeWindow("overview"),
+      onMiddleClick: () => App.closeWindow("overview"),
+    });
   const resultsBox = Widget.Box({
     className: "overview-search-results",
     vertical: true,
@@ -631,9 +639,13 @@ export const SearchAndWindows = () => {
 
   return Widget.Box({
     vertical: true,
-    className: "overview-window",
     children: [
-      clickOutsideToClose,
+      ClickToClose({
+        // Top margin. Also works as a click-outside-to-close thing
+        child: Widget.Box({
+          className: "bar-height",
+        }),
+      }),
       Widget.Box({
         hpack: "center",
         children: [

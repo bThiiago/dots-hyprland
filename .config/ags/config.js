@@ -1,9 +1,9 @@
-"strict mode";
+"use strict";
+const { GLib } = imports.gi;
 import { App, Utils } from "./imports.js";
 import Bar from "./widgets/bar/main.js";
 import Cheatsheet from "./widgets/cheatsheet/main.js";
 import DesktopBackground from "./widgets/desktopbackground/main.js";
-import Dock from "./widgets/dock/main.js";
 import {
   CornerTopleft,
   CornerTopright,
@@ -19,13 +19,17 @@ import SideRight from "./widgets/sideright/main.js";
 
 const CLOSE_ANIM_TIME = 210;
 
-Utils.exec(`bash -c 'mkdir -p ~/.cache/ags/user/colorschemes'`);
-
-Utils.exec(`bash -c 'echo "" > ${App.configDir}/scss/_musicwal.scss'`);
-Utils.exec(`bash -c 'echo "" > ${App.configDir}/scss/_musicmaterial.scss'`);
-Utils.exec(`sassc ${App.configDir}/scss/main.scss ${App.configDir}/style.css`);
-App.resetCss();
-App.applyCss(`${App.configDir}/style.css`);
+Utils.exec(`bash -c 'echo "" > ${App.configDir}/scss/_musicwal.scss'`); // reset music styles
+Utils.exec(`bash -c 'echo "" > ${App.configDir}/scss/_musicmaterial.scss'`); // reset music styles
+function applyStyle() {
+  Utils.exec(
+    `sassc ${App.configDir}/scss/main.scss ${App.configDir}/style.css`
+  );
+  App.resetCss();
+  App.applyCss(`${App.configDir}/style.css`);
+  console.log("[LOG] Styles loaded");
+}
+applyStyle();
 
 export default {
   css: `${App.configDir}/style.css`,
@@ -41,7 +45,6 @@ export default {
     CornerBottomleft(),
     CornerBottomright(),
     DesktopBackground(),
-    Dock(),
     Overview(),
     Indicator(),
     Cheatsheet(),

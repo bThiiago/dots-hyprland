@@ -95,9 +95,7 @@ export const ModuleLeftSpace = () =>
                                 label.label =
                                   Hyprland.active.client._title.length === 0
                                     ? `Workspace ${Hyprland.active.workspace.id}`
-                                    : truncateTitle(
-                                        Hyprland.active.client._title
-                                      );
+                                    : Hyprland.active.client._title;
                               }),
                           }),
                         ],

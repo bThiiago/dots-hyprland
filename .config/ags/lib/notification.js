@@ -1,5 +1,3 @@
-// This file is for the actual widget for each single notification
-
 const { GLib, Gdk, Gtk } = imports.gi;
 import { Utils, Widget } from "../imports.js";
 const { lookUpIcon, timeout } = Utils;
@@ -7,7 +5,6 @@ const { Box, EventBox, Icon, Overlay, Label, Button, Revealer } = Widget;
 import { MaterialIcon } from "./materialicon.js";
 import { setupCursorHover } from "./cursorhover.js";
 import { AnimatedCircProg } from "./animatedcircularprogress.js";
-import { MarginRevealer } from "./advancedrevealers.js";
 
 function guessMessageType(summary) {
   if (summary.includes("recording")) return "screen_record";
@@ -62,7 +59,7 @@ const NotificationIcon = (notifObject) => {
                   "min-height",
                   Gtk.StateFlags.NORMAL
                 );
-                self.size = Math.max(width * 0.9, height * 0.9, 1); // im too lazy to add another box lol
+                self.size = Math.max(width * 0.7, height * 0.7, 1); // im too lazy to add another box lol
               }),
           })
         : MaterialIcon(
@@ -177,7 +174,7 @@ export default ({
               onClicked: () => destroyWithAnims(),
             }),
             ...notifObject.actions.map((action) =>
-              Widget.Button({
+              Button({
                 className: `notif-action notif-action-${notifObject.urgency}`,
                 onClicked: () => notifObject.invoke(action.id),
                 label: action.label,
@@ -198,7 +195,8 @@ export default ({
           ? [
               AnimatedCircProg({
                 className: `notif-circprog-${notifObject.urgency}`,
-                valign: Gtk.Align.CENTER,
+                vpack: "center",
+                hpack: "center",
                 initFrom: isPopup ? 100 : 0,
                 initTo: 0,
                 initAnimTime: popupTimeout,
@@ -256,7 +254,6 @@ export default ({
     className: "notif-expand-btn",
     onClicked: (self) => {
       if (notifTextPreview.revealChild) {
-        // Expanding...
         notifTextPreview.revealChild = false;
         notifTextExpanded.revealChild = true;
         self.child.label = "expand_less";
@@ -265,7 +262,7 @@ export default ({
         notifTextPreview.revealChild = true;
         notifTextExpanded.revealChild = false;
         self.child.label = "expand_more";
-        expanded = true;
+        expanded = false;
       }
     },
     child: MaterialIcon("expand_more", "norm", {
@@ -278,7 +275,13 @@ export default ({
     className: `${isPopup ? "popup-" : ""}notif-${
       notifObject.urgency
     } spacing-h-10`,
-    children: [notifIcon, notifText, notifExpandButton],
+    children: [
+      notifIcon,
+      Box({
+        className: "spacing-h-5",
+        children: [notifText, notifExpandButton],
+      }),
+    ],
   });
 
   // Gesture stuff

@@ -13,14 +13,13 @@ const {
 } = Widget;
 const { execAsync, exec } = Utils;
 import { MaterialIcon } from "../../../lib/materialicon.js";
-import { convert } from "../../../lib/md2pango.js";
+import md2pango from "../../../lib/md2pango.js";
 import GtkSource from "gi://GtkSource?version=3.0";
 
 const CUSTOM_SOURCEVIEW_SCHEME_PATH = `${App.configDir}/data/sourceviewtheme.xml`;
 const CUSTOM_SCHEME_ID = "custom";
 const USERNAME = GLib.get_user_name();
 const CHATGPT_CURSOR = "  (o) ";
-const MESSAGE_SCROLL_DELAY = 13; // In milliseconds, the time before an updated message scrolls to bottom
 
 /////////////////////// Custom source view colorscheme /////////////////////////
 
@@ -110,8 +109,12 @@ const CodeBlock = (content = "", lang = "txt") => {
           ],
         }),
         onClicked: (self) => {
-          const copyContent = sourceView.get_buffer().get_text(0, 0, 0); // TODO: fix this
-          console.log(copyContent);
+          const buffer = sourceView.get_buffer();
+          const copyContent = buffer.get_text(
+            buffer.get_start_iter(),
+            buffer.get_end_iter(),
+            false
+          ); // TODO: fix this
           execAsync([`wl-copy`, `${copyContent}`]).catch(print);
         },
       }),
@@ -136,7 +139,13 @@ const CodeBlock = (content = "", lang = "txt") => {
       Box({
         className: "sidebar-chat-codeblock-code",
         homogeneous: true,
-        children: [sourceView],
+        children: [
+          Scrollable({
+            vscroll: "never",
+            hscroll: "automatic",
+            child: sourceView,
+          }),
+        ],
       }),
     ],
   });
@@ -178,12 +187,11 @@ const MessageContent = (content) => {
             // Code blocks
             const codeBlockRegex = /^\s*```([a-zA-Z0-9]+)?\n?/;
             if (codeBlockRegex.test(line)) {
-              // console.log(`code at line ${index}`);
               const kids = self.get_children();
               const lastLabel = kids[kids.length - 1];
               const blockContent = lines.slice(lastProcessed, index).join("\n");
               if (!inCode) {
-                lastLabel.label = convert(blockContent);
+                lastLabel.label = md2pango(blockContent);
                 contentBox.add(CodeBlock("", codeBlockRegex.exec(line)[1]));
               } else {
                 lastLabel._updateText(blockContent);
@@ -199,7 +207,7 @@ const MessageContent = (content) => {
               const kids = self.get_children();
               const lastLabel = kids[kids.length - 1];
               const blockContent = lines.slice(lastProcessed, index).join("\n");
-              lastLabel.label = convert(blockContent);
+              lastLabel.label = md2pango(blockContent);
               contentBox.add(Divider());
               contentBox.add(TextBlock());
               lastProcessed = index + 1;
@@ -212,7 +220,7 @@ const MessageContent = (content) => {
               .slice(lastProcessed, lines.length)
               .join("\n");
             if (!inCode)
-              lastLabel.label = `${convert(blockContent)}${
+              lastLabel.label = `${md2pango(blockContent)}${
                 useCursor ? CHATGPT_CURSOR : ""
               }`;
             else lastLabel._updateText(blockContent);
@@ -225,7 +233,7 @@ const MessageContent = (content) => {
           //     xalign: 0,
           //     wrap: true,
           //     selectable: true,
-          //     label: '------------------------------\n' + convert(content),
+          //     label: '------------------------------\n' + md2pango(content),
           // }))
           contentBox.show_all();
         },
@@ -279,13 +287,6 @@ export const ChatMessage = (message, scrolledWindow) => {
                 message.content,
                 message.role != "user"
               );
-              Utils.timeout(MESSAGE_SCROLL_DELAY, () => {
-                if (!scrolledWindow) return;
-                var adjustment = scrolledWindow.get_vadjustment();
-                adjustment.set_value(
-                  adjustment.get_upper() - adjustment.get_page_size()
-                );
-              });
             },
             "notify::content",
           ],
@@ -331,14 +332,6 @@ export const SystemMessage = (content, commandName, scrolledWindow) => {
         ],
       }),
     ],
-    setup: (self) =>
-      Utils.timeout(MESSAGE_SCROLL_DELAY, () => {
-        if (!scrolledWindow) return;
-        var adjustment = scrolledWindow.get_vadjustment();
-        adjustment.set_value(
-          adjustment.get_upper() - adjustment.get_page_size()
-        );
-      }),
   });
   return thisMessage;
 };
