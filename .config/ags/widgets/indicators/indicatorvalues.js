@@ -1,5 +1,5 @@
 import { Widget } from "../../imports.js";
-import { MarginRevealer } from "../../lib/advancedrevealers.js";
+import { MarginRevealer } from "../../lib/advancedwidgets.js";
 import Audio from "resource:///com/github/Aylur/ags/service/audio.js";
 import Indicator from "../../services/indicator.js";
 const { Box, Label, ProgressBar } = Widget;
@@ -89,8 +89,8 @@ export default () =>
       [
         Indicator,
         (revealer, value) => {
-          if (value > -1) revealer._show(revealer);
-          else revealer._hide(revealer);
+          if (value > -1) revealer._show();
+          else revealer._hide();
         },
         "popup",
       ],

@@ -4,7 +4,7 @@ const { exec, execAsync } = Utils;
 import Mpris from "resource:///com/github/Aylur/ags/service/mpris.js";
 
 const { Box, Button, Label, Overlay, Revealer } = Widget;
-import { MarginRevealer } from "../../lib/advancedrevealers.js";
+import { MarginRevealer } from "../../lib/advancedwidgets.js";
 import { AnimatedCircProg } from "../../lib/animatedcircularprogress.js";
 import { setupCursorHover } from "../../lib/cursorhover.js";
 import { showMusicControls } from "../../variables.js";
@@ -17,7 +17,7 @@ function expandTilde(path) {
   }
 }
 
-const LIGHTDARK_FILE_LOCATION = "~/.cache/ags/user/colormode.txt";
+const LIGHTDARK_FILE_LOCATION = `${GLib.get_user_cache_dir()}//ags/user/colormode.txt`;
 const lightDark = Utils.readFile(expandTilde(LIGHTDARK_FILE_LOCATION)).trim();
 const COVER_COLORSCHEME_SUFFIX = "_colorscheme.css";
 const PREFERRED_PLAYER = "plasma-browser-integration";
@@ -77,6 +77,12 @@ function getTrackfont(player) {
   return DEFAULT_MUSIC_FONT;
 }
 
+function trimTrackTitle(title) {
+  var pattern = /【[^】]*】/;
+  var cleanedTitle = title.replace(pattern, "");
+  return cleanedTitle.trim();
+}
+
 const TrackProgress = ({ player, ...rest }) => {
   const _updateProgress = (circprog) => {
     const player = Mpris.getPlayer();
@@ -109,7 +115,9 @@ const TrackTitle = ({ player, ...rest }) =>
         player,
         (self) => {
           self.label =
-            player.trackTitle.length > 0 ? player.trackTitle : "No media";
+            player.trackTitle.length > 0
+              ? trimTrackTitle(player.trackTitle)
+              : "No media";
           const fontForThisTrack = getTrackfont(player);
           self.css = `font-family: ${fontForThisTrack}, ${DEFAULT_MUSIC_FONT};`;
         },
@@ -191,7 +199,9 @@ const CoverArt = ({ player, ...rest }) =>
                         `wal -i "${player.coverPath}" -n -t -s -e -q ${lightDark}`
                       );
                       exec(
-                        `bash -c "cp ~/.cache/wal/colors.scss ${App.configDir}/scss/_musicwal.scss"`
+                        `cp ${GLib.get_user_cache_dir()}/wal/colors.scss ${
+                          App.configDir
+                        }/scss/_musicwal.scss`
                       );
                       exec(
                         `sassc ${App.configDir}/scss/_music.scss ${stylePath}`
@@ -465,8 +475,8 @@ export default () =>
       [
         showMusicControls,
         (revealer) => {
-          if (showMusicControls.value) revealer._show(revealer);
-          else revealer._hide(revealer);
+          if (showMusicControls.value) revealer._show();
+          else revealer._hide();
         },
       ],
     ],
