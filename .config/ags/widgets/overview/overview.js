@@ -62,8 +62,6 @@ const searchPromptTexts = [
   "Type to search",
 ];
 
-const overviewTick = Variable(false);
-
 function truncateTitle(str) {
   let lastDash = -1;
   let found = -1; // 0: em dash, 1: en dash, 2: minus, 3: vertical bar, 4: middle dot
@@ -98,7 +96,10 @@ function substitute(str) {
   const subs = [
     { from: "code-url-handler", to: "visual-studio-code" },
     { from: "Code", to: "visual-studio-code" },
+    { from: "GitHub Desktop", to: "github-desktop" },
+    { from: "wpsoffice", to: "wps-office2019-kprometheus" },
     { from: "gnome-tweaks", to: "org.gnome.tweaks" },
+    { from: "Minecraft* 1.20.1", to: "minecraft" },
     { from: "", to: "image-missing" },
   ];
 
@@ -121,8 +122,8 @@ const ContextWorkspaceArray = ({ label, actionFunc, thisWorkspace }) =>
           label: `Workspace ${i}`,
         });
         button.connect("activate", () => {
+          // execAsync([`${onClickBinary}`, `${thisWorkspace}`, `${i}`]).catch(print);
           actionFunc(thisWorkspace, i);
-          overviewTick.value = !overviewTick.value;
         });
         submenu.append(button);
       }
@@ -296,7 +297,6 @@ const workspace = (index) => {
             Gdk.DragAction.COPY
           );
           eventbox.connect("drag-data-received", (_w, _c, _x, _y, data) => {
-            overviewTick.value = !overviewTick.value;
             Hyprland.sendMessage(
               `dispatch movetoworkspacesilent ${index},address:${data.get_text()}`
             );
@@ -354,6 +354,7 @@ const OverviewRow = ({ startWorkspace, workspaces, windowName = "overview" }) =>
       [
         "update",
         (box) => {
+          if (!App.getWindow(windowName).visible) return;
           execAsync("hyprctl -j clients")
             .then((clients) => {
               const json = JSON.parse(clients);
@@ -367,43 +368,23 @@ const OverviewRow = ({ startWorkspace, workspaces, windowName = "overview" }) =>
         },
       ],
     ],
-    setup: (box) => box._update(box),
-    connections: [
-      // Update on change
-      [
-        overviewTick,
-        (box) => {
-          if (!App.getWindow(windowName).visible) return;
-          Utils.timeout(2, () => box._update(box));
-        },
-      ],
-      [
-        Hyprland,
-        (box) => {
-          if (!App.getWindow(windowName).visible) return;
-          box._update(box);
-        },
-        "client-added",
-      ],
-      [
-        Hyprland,
-        (box) => {
-          if (!App.getWindow(windowName).visible) return;
-          box._update(box);
-        },
-        "client-removed",
-      ],
-      // Update on show
-      [
-        App,
-        (box, name, visible) => {
+    setup: (box) => {
+      box
+        .hook(
+          Hyprland,
+          (box, name, data) => {
+            if (["changefloatingmode", "movewindow"].includes(name))
+              box._update(box);
+          },
+          "event"
+        )
+        .hook(Hyprland, (box) => box._update(box), "client-added")
+        .hook(Hyprland, (box) => box._update(box), "client-removed")
+        .hook(App, (box, name, visible) => {
           // Update on open
-          if (name == "overview" && visible) {
-            box._update(box);
-          }
-        },
-      ],
-    ],
+          if (name == "overview" && visible) box._update(box);
+        });
+    },
   });
 
 export const SearchAndWindows = () => {
@@ -478,7 +459,7 @@ export const SearchAndWindows = () => {
       const text = self.text;
       if (text.length == 0) return;
       const isAction = text.startsWith(">");
-      const isDir = entry.text[0] == "/" || entry.text[0] == "~";
+      const isDir = ["/", "~"].includes(entry.text[0]);
 
       if (startsWithNumber(text)) {
         // Eval on typing is dangerous, this is a workaround
@@ -525,88 +506,81 @@ export const SearchAndWindows = () => {
         ]).catch(print); // quora is useless
       }
     },
-    // Actually onChange but this is ta workaround for a bug
-    connections: [
-      [
-        "notify::text",
-        (entry) => {
-          // This is when you type
-          const isAction = entry.text[0] == ">";
-          const isDir = entry.text[0] == "/" || entry.text[0] == "~";
-          const children = resultsBox.get_children();
-          for (let i = 0; i < children.length; i++) {
-            const child = children[i];
-            child.destroy();
-          }
-          // check empty if so then dont do stuff
-          if (entry.text == "") {
-            resultsRevealer.set_reveal_child(false);
-            overviewRevealer.set_reveal_child(true);
-            entryPromptRevealer.set_reveal_child(true);
-            entryIconRevealer.set_reveal_child(false);
-            entry.toggleClassName("overview-search-box-extended", false);
-          } else {
-            const text = entry.text;
-            resultsRevealer.set_reveal_child(true);
-            overviewRevealer.set_reveal_child(false);
-            entryPromptRevealer.set_reveal_child(false);
-            entryIconRevealer.set_reveal_child(true);
-            entry.toggleClassName("overview-search-box-extended", true);
-            _appSearchResults = Applications.query(text);
+    onChange: (entry) => {
+      const isAction = entry.text[0] == ">";
+      const isDir = ["/", "~"].includes(entry.text[0]);
+      const children = resultsBox.get_children();
+      for (let i = 0; i < children.length; i++) {
+        const child = children[i];
+        child.destroy();
+      }
+      // check empty if so then dont do stuff
+      if (entry.text == "") {
+        resultsRevealer.set_reveal_child(false);
+        overviewRevealer.set_reveal_child(true);
+        entryPromptRevealer.set_reveal_child(true);
+        entryIconRevealer.set_reveal_child(false);
+        entry.toggleClassName("overview-search-box-extended", false);
+        return;
+      }
+      const text = entry.text;
+      resultsRevealer.set_reveal_child(true);
+      overviewRevealer.set_reveal_child(false);
+      entryPromptRevealer.set_reveal_child(false);
+      entryIconRevealer.set_reveal_child(true);
+      entry.toggleClassName("overview-search-box-extended", true);
+      _appSearchResults = Applications.query(text);
 
-            // Calculate
-            if (startsWithNumber(text)) {
-              // Eval on typing is dangerous, this is a small workaround.
-              try {
-                const fullResult = eval(text);
-                resultsBox.add(
-                  CalculationResultButton({ result: fullResult, text: text })
-                );
-              } catch (e) {
-                // console.log(e);
-              }
-            }
-            if (isDir) {
-              var contents = [];
-              contents = ls({ path: text, silent: true });
-              contents.forEach((item) => {
-                resultsBox.add(DirectoryButton(item));
-              });
-            }
-            if (isAction) {
-              // Eval on typing is dangerous, this is a workaround.
-              resultsBox.add(CustomCommandButton({ text: entry.text }));
-            }
-            // Add application entries
-            let appsToAdd = MAX_RESULTS;
-            _appSearchResults.forEach((app) => {
-              if (appsToAdd == 0) return;
-              resultsBox.add(DesktopEntryButton(app));
-              appsToAdd--;
-            });
+      // Calculate
+      if (startsWithNumber(text)) {
+        // Eval on typing is dangerous, this is a small workaround.
+        try {
+          const fullResult = eval(text);
+          resultsBox.add(
+            CalculationResultButton({ result: fullResult, text: text })
+          );
+        } catch (e) {
+          // console.log(e);
+        }
+      }
+      if (isDir) {
+        var contents = [];
+        contents = ls({ path: text, silent: true });
+        contents.forEach((item) => {
+          resultsBox.add(DirectoryButton(item));
+        });
+      }
+      if (isAction) {
+        // Eval on typing is dangerous, this is a workaround.
+        resultsBox.add(CustomCommandButton({ text: entry.text }));
+      }
+      // Add application entries
+      let appsToAdd = MAX_RESULTS;
+      _appSearchResults.forEach((app) => {
+        if (appsToAdd == 0) return;
+        resultsBox.add(DesktopEntryButton(app));
+        appsToAdd--;
+      });
 
-            // Fallbacks
-            // if the first word is an actual command
-            if (
-              !isAction &&
-              !hasUnterminatedBackslash(text) &&
-              exec(`bash -c "command -v ${text.split(" ")[0]}"`) != ""
-            ) {
-              resultsBox.add(
-                ExecuteCommandButton({
-                  command: entry.text,
-                  terminal: entry.text.startsWith("sudo"),
-                })
-              );
-            }
+      // Fallbacks
+      // if the first word is an actual command
+      if (
+        !isAction &&
+        !hasUnterminatedBackslash(text) &&
+        exec(`bash -c "command -v ${text.split(" ")[0]}"`) != ""
+      ) {
+        resultsBox.add(
+          ExecuteCommandButton({
+            command: entry.text,
+            terminal: entry.text.startsWith("sudo"),
+          })
+        );
+      }
 
-            // Add fallback: search
-            resultsBox.add(SearchButton({ text: entry.text }));
-            resultsBox.show_all();
-          }
-        },
-      ],
-    ],
+      // Add fallback: search
+      resultsBox.add(SearchButton({ text: entry.text }));
+      resultsBox.show_all();
+    },
   });
 
   return Widget.Box({
@@ -632,10 +606,9 @@ export const SearchAndWindows = () => {
       overviewRevealer,
       resultsRevealer,
     ],
-    connections: [
-      [
-        App,
-        (_b, name, visible) => {
+    setup: (self) =>
+      self
+        .hook(App, (_b, name, visible) => {
           if (name == "overview" && !visible) {
             entryPromptRevealer.child.label =
               searchPromptTexts[
@@ -644,11 +617,8 @@ export const SearchAndWindows = () => {
             resultsBox.children = [];
             entry.set_text("");
           }
-        },
-      ],
-      [
-        "key-press-event",
-        (widget, event) => {
+        })
+        .on("key-press-event", (widget, event) => {
           // Typing
           if (
             event.get_keyval()[1] >= 32 &&
@@ -661,8 +631,22 @@ export const SearchAndWindows = () => {
             );
             entry.set_position(-1);
           }
-        },
-      ],
-    ],
+        }),
+    // connections: [
+    //     [App, (_b, name, visible) => {
+    //         if (name == 'overview' && !visible) {
+    //             entryPromptRevealer.child.label = searchPromptTexts[Math.floor(Math.random() * searchPromptTexts.length)];
+    //             resultsBox.children = [];
+    //             entry.set_text('');
+    //         }
+    //     }],
+    //     ['key-press-event', (widget, event) => { // Typing
+    //         if (event.get_keyval()[1] >= 32 && event.get_keyval()[1] <= 126 && widget != entry) {
+    //             Utils.timeout(1, () => entry.grab_focus());
+    //             entry.set_text(entry.text + String.fromCharCode(event.get_keyval()[1]));
+    //             entry.set_position(-1);
+    //         }
+    //     }],
+    // ],
   });
 };

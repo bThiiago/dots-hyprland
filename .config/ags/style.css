@@ -445,6 +445,9 @@ menu > menuitem:hover,
 menu > menuitem:focus {
   background-color: #4d4042; }
 
+menu > menuitem:active {
+  background-color: #5c4f51; }
+
 tooltip {
   border-radius: 1.159rem;
   -gtk-outline-radius: 1.159rem;
@@ -517,8 +520,7 @@ tooltip {
 
 .segment-btn:focus,
 .segment-btn:hover {
-  background-color: #3e3234;
-  color: #d6c1c3; }
+  background-color: rgba(128, 128, 128, 0.3); }
 
 .segment-btn-enabled {
   background-color: #5c3f44;
@@ -923,10 +925,10 @@ tooltip {
 
 .cheatsheet-closebtn:hover,
 .cheatsheet-closebtn:focus {
-  background-color: #3e3234; }
+  background-color: rgba(128, 128, 128, 0.3); }
 
 .cheatsheet-closebtn:active {
-  background-color: #6c5d5f; }
+  background-color: rgba(128, 128, 128, 0.7); }
 
 .cheatsheet-category-title {
   font-family: "Gabarito", "Poppins", "Lexend", sans-serif;
@@ -1322,14 +1324,14 @@ tooltip {
 
 .osk-key:hover,
 .osk-key:focus {
-  background-color: rgba(77, 64, 66, 0.31); }
+  background-color: rgba(128, 128, 128, 0.3); }
 
 .osk-key:active {
-  background-color: rgba(108, 93, 95, 0.31);
+  background-color: rgba(128, 128, 128, 0.7);
   font-size: 1.091rem; }
 
 .osk-key-active {
-  background-color: rgba(108, 93, 95, 0.31); }
+  background-color: rgba(128, 128, 128, 0.7); }
 
 .osk-key-normal {
   min-width: 2.5rem;
@@ -1444,10 +1446,10 @@ tooltip {
 
 .sidebar-iconbutton:hover,
 .sidebar-iconbutton:focus {
-  background-color: #7d5e63; }
+  background-color: rgba(128, 128, 128, 0.3); }
 
 .sidebar-iconbutton:active {
-  background-color: #9d7d82; }
+  background-color: rgba(128, 128, 128, 0.7); }
 
 .sidebar-button {
   transition: 300ms cubic-bezier(0.1, 1, 0, 1);
@@ -1462,17 +1464,17 @@ tooltip {
 
 .sidebar-button:hover,
 .sidebar-button:focus {
-  background-color: #7d5e63; }
+  background-color: rgba(128, 128, 128, 0.3); }
 
 .sidebar-button:active {
-  background-color: #9d7d82; }
+  background-color: rgba(128, 128, 128, 0.7); }
 
 .sidebar-button-nopad:hover,
 .sidebar-button-nopad:focus {
-  background-color: #7d5e63; }
+  background-color: rgba(128, 128, 128, 0.3); }
 
 .sidebar-button-nopad:active {
-  background-color: #9d7d82; }
+  background-color: rgba(128, 128, 128, 0.7); }
 
 .sidebar-button-left {
   border-top-left-radius: 0.818rem;
@@ -1496,10 +1498,10 @@ tooltip {
 
 .sidebar-button-active:hover,
 .sidebar-button-active:focus {
-  background-color: rgba(253, 200, 209, 0.93); }
+  background-color: rgba(246, 196, 205, 0.79); }
 
 .sidebar-button-active:active {
-  background-color: rgba(246, 196, 205, 0.79); }
+  background-color: rgba(228, 186, 194, 0.58); }
 
 .sidebar-buttons-separator {
   min-width: 0.068rem;
@@ -1516,10 +1518,10 @@ tooltip {
 
 .sidebar-navrail-btn:hover > box > label:first-child,
 .sidebar-navrail-btn:focus > box > label:first-child {
-  background-color: rgba(119, 104, 106, 0.379); }
+  background-color: rgba(128, 128, 128, 0.3); }
 
 .sidebar-navrail-btn:active > box > label:first-child {
-  background-color: #645658; }
+  background-color: rgba(128, 128, 128, 0.7); }
 
 .sidebar-navrail-btn-active > box > label:first-child {
   background-color: #5c3f44;
@@ -1606,10 +1608,10 @@ tooltip {
 
 .sidebar-calendar-btn-today:hover,
 .sidebar-calendar-btn-today:focus {
-  background-color: rgba(253, 200, 209, 0.93); }
+  background-color: rgba(246, 196, 205, 0.79); }
 
 .sidebar-calendar-btn-today:active {
-  background-color: rgba(246, 196, 205, 0.79); }
+  background-color: rgba(228, 186, 194, 0.58); }
 
 .sidebar-calendar-btn-othermonth {
   color: #877d7e; }
@@ -1626,11 +1628,11 @@ tooltip {
 
 .sidebar-calendar-monthyear-btn:hover,
 .sidebar-calendar-monthyear-btn:focus {
-  background-color: rgba(96, 82, 84, 0.3445);
+  background-color: rgba(128, 128, 128, 0.3);
   color: #cebabc; }
 
 .sidebar-calendar-monthyear-btn:active {
-  background-color: #554749;
+  background-color: rgba(128, 128, 128, 0.7);
   color: #bfacae; }
 
 .sidebar-calendar-monthshift-btn {
@@ -1642,11 +1644,11 @@ tooltip {
   color: #d6c1c3; }
 
 .sidebar-calendar-monthshift-btn:hover {
-  background-color: rgba(96, 82, 84, 0.3445);
+  background-color: rgba(128, 128, 128, 0.3);
   color: #cebabc; }
 
 .sidebar-calendar-monthshift-btn:active {
-  background-color: #554749;
+  background-color: rgba(128, 128, 128, 0.7);
   color: #bfacae; }
 
 .sidebar-selector-tab {
@@ -1658,10 +1660,10 @@ tooltip {
 
 .sidebar-selector-tab:hover,
 .sidebar-selector-tab:focus {
-  background-color: rgba(119, 104, 106, 0.379); }
+  background-color: rgba(128, 128, 128, 0.3); }
 
 .sidebar-selector-tab:active {
-  background-color: #645658; }
+  background-color: rgba(128, 128, 128, 0.7); }
 
 .sidebar-selector-tab-active > box > label {
   color: #ffc9d3; }
@@ -1688,10 +1690,10 @@ tooltip {
 
 .sidebar-todo-item-action:hover,
 .sidebar-todo-item-action:focus {
-  background-color: rgba(74, 66, 67, 0.31); }
+  background-color: rgba(128, 128, 128, 0.3); }
 
 .sidebar-todo-item-action:active {
-  background-color: rgba(105, 96, 97, 0.31); }
+  background-color: rgba(128, 128, 128, 0.7); }
 
 .sidebar-todo-crosser {
   transition: margin 200ms cubic-bezier(0.1, 1, 0, 1), background-color 0ms;
@@ -1703,20 +1705,6 @@ tooltip {
 .sidebar-todo-crosser-removed {
   background-color: #ffb4a9; }
 
-.sidebar-clipboard-item {
-  border-radius: 0.818rem;
-  min-height: 2.045rem;
-  padding: 0.341rem;
-  background-color: #5c3f44;
-  color: #ffd9de; }
-
-.sidebar-clipboard-item:hover,
-.sidebar-clipboard-item:focus {
-  background-color: #6c4e53; }
-
-.sidebar-clipboard-item:active {
-  background-color: #7d5e63; }
-
 .sidebar-todo-new {
   border-radius: 9999px;
   -gtk-outline-radius: 9999px;
@@ -1725,7 +1713,7 @@ tooltip {
   padding: 0.205rem 0.545rem;
   border: 0.068rem solid #ecdfe0; }
 
-.sidebar-todo-new:hover,
+.sidebar-todo-newz,
 .sidebar-todo-new:focus {
   background-color: #614449; }
 
@@ -1899,7 +1887,7 @@ tooltip {
   font-family: "Rubik", "Geist", "AR One Sans", "Reddit Sans", "Inter", "Roboto", "Ubuntu", "Noto Sans", sans-serif;
   margin: 0.273rem;
   margin-bottom: 0rem;
-  background-color: #5c3f44;
+  background-color: rgba(129, 102, 106, 0.517);
   color: #ffd9de;
   border-radius: 0.886rem;
   border: 0.068rem solid #6c4e53;
@@ -1915,7 +1903,7 @@ tooltip {
 .sidebar-chat-codeblock-topbar-btn {
   border-radius: 9999px;
   -gtk-outline-radius: 9999px;
-  padding: 0.273rem; }
+  padding: 0.273rem 0.477rem; }
 
 .sidebar-chat-codeblock-topbar-btn:hover,
 .sidebar-chat-codeblock-topbar-btn:focus {
@@ -1965,11 +1953,10 @@ tooltip {
 
 .sidebar-chat-chip-action:hover,
 .sidebar-chat-chip-action:focus {
-  background-color: #7b6b6d; }
+  background-color: rgba(128, 128, 128, 0.3); }
 
 .sidebar-chat-chip-action:active {
-  background-color: #968587;
-  color: #695a5c; }
+  background-color: rgba(128, 128, 128, 0.7); }
 
 .sidebar-chat-chip-action-active {
   color: #7b6b6d;
@@ -1980,15 +1967,15 @@ tooltip {
   border-radius: 0.818rem;
   -gtk-outline-radius: 0.818rem;
   padding: 0.341rem 0.477rem;
-  background-color: #3e3234;
+  background-color: rgba(62, 50, 52, 0.31);
   color: #d6c1c3; }
 
 .sidebar-chat-chip-toggle:focus,
 .sidebar-chat-chip-toggle:hover {
-  background-color: #584a4c; }
+  background-color: rgba(128, 128, 128, 0.3); }
 
 .sidebar-chat-chip-toggle:active {
-  background-color: #706163; }
+  background-color: rgba(128, 128, 128, 0.7); }
 
 .sidebar-pin {
   border-radius: 0.818rem;
@@ -2000,10 +1987,10 @@ tooltip {
 
 .sidebar-pin:hover,
 .sidebar-pin:focus {
-  background-color: rgba(119, 104, 106, 0.379); }
+  background-color: rgba(128, 128, 128, 0.3); }
 
 .sidebar-pin:active {
-  background-color: #645658; }
+  background-color: rgba(128, 128, 128, 0.7); }
 
 .sidebar-pin-enabled {
   background-color: #ffc9d3; }
@@ -2189,17 +2176,28 @@ tooltip {
 .notif-expand-btn:active {
   background: rgba(128, 128, 128, 0.7); }
 
-.notif-closeall-btn {
+.notif-listaction-btn {
   border-radius: 1.159rem;
   -gtk-outline-radius: 1.159rem;
-  padding: 0.341rem 0.341rem; }
+  padding: 0.341rem 0.682rem; }
 
-.notif-closeall-btn:hover,
-.notif-closeall-btn:focus {
+.notif-listaction-btn:hover,
+.notif-listaction-btn:focus {
   background-color: rgba(128, 128, 128, 0.3); }
 
-.notif-closeall-btn:active {
+.notif-listaction-btn:active {
   background-color: rgba(128, 128, 128, 0.7); }
+
+.notif-listaction-btn-enabled {
+  background-color: #5c3f44;
+  color: #ffd9de; }
+
+.notif-listaction-btn-enabled:hover,
+.notif-listaction-btn-enabled:focus {
+  background-color: #6c4e53; }
+
+.notif-listaction-btn-enabled:active {
+  background-color: #85666b; }
 
 .osd-notif {
   border-radius: 1.159rem;
@@ -2241,10 +2239,10 @@ tooltip {
 
 .notif-action-low:focus,
 .notif-action-low:hover {
-  background-color: rgba(66, 57, 58, 0.31); }
+  background-color: rgba(128, 128, 128, 0.3); }
 
 .notif-action-low:active {
-  background-color: rgba(75, 65, 66, 0.31); }
+  background-color: rgba(128, 128, 128, 0.7); }
 
 .notif-action-normal {
   background-color: rgba(52, 44, 45, 0.31);
@@ -2252,10 +2250,10 @@ tooltip {
 
 .notif-action-normal:focus,
 .notif-action-normal:hover {
-  background-color: rgba(66, 57, 58, 0.31); }
+  background-color: rgba(128, 128, 128, 0.3); }
 
 .notif-action-normal:active {
-  background-color: rgba(75, 65, 66, 0.31); }
+  background-color: rgba(128, 128, 128, 0.7); }
 
 .notif-action-critical {
   background-color: #6c4e53;
