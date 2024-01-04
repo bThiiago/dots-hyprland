@@ -27,8 +27,9 @@ export const ToggleIconWifi = (props = {}) =>
         (button) => {
           button.toggleClassName(
             "sidebar-button-active",
-            Network.wifi?.internet == "connected" ||
-              Network.wired?.internet == "connected"
+            [Network.wifi?.internet, Network.wired?.internet].includes(
+              "connected"
+            )
           );
         },
       ],

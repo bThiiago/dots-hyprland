@@ -165,19 +165,24 @@ export default ({
           label: notifObject.body,
         }),
         Box({
-          homogeneous: true,
-          className: "notif-actions",
+          className: "notif-actions spacing-h-5",
           children: [
             Button({
+              hexpand: true,
               className: `notif-action notif-action-${notifObject.urgency}`,
-              label: "Close",
               onClicked: () => destroyWithAnims(),
+              child: Label({
+                label: "Close",
+              }),
             }),
             ...notifObject.actions.map((action) =>
-              Button({
+              Widget.Button({
+                hexpand: true,
                 className: `notif-action notif-action-${notifObject.urgency}`,
                 onClicked: () => notifObject.invoke(action.id),
-                label: action.label,
+                child: Label({
+                  label: action.label,
+                }),
               })
             ),
           ],
