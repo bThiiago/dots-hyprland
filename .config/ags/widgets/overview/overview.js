@@ -98,10 +98,7 @@ function substitute(str) {
   const subs = [
     { from: "code-url-handler", to: "visual-studio-code" },
     { from: "Code", to: "visual-studio-code" },
-    { from: "GitHub Desktop", to: "github-desktop" },
-    { from: "wpsoffice", to: "wps-office2019-kprometheus" },
     { from: "gnome-tweaks", to: "org.gnome.tweaks" },
-    { from: "Minecraft* 1.20.1", to: "minecraft" },
     { from: "", to: "image-missing" },
   ];
 
@@ -124,7 +121,6 @@ const ContextWorkspaceArray = ({ label, actionFunc, thisWorkspace }) =>
           label: `Workspace ${i}`,
         });
         button.connect("activate", () => {
-          // execAsync([`${onClickBinary}`, `${thisWorkspace}`, `${i}`]).catch(print);
           actionFunc(thisWorkspace, i);
           overviewTick.value = !overviewTick.value;
         });
@@ -151,21 +147,11 @@ const client = ({
     hpack: "center",
     vpack: "center",
     onClicked: () => {
-      execAsync([
-        `bash`,
-        `-c`,
-        `hyprctl dispatch focuswindow address:${address}`,
-        `&`,
-      ]).catch(print);
+      Hyprland.sendMessage(`dispatch focuswindow address:${address}`);
       App.closeWindow("overview");
     },
     onMiddleClickRelease: () =>
-      execAsync([
-        `bash`,
-        `-c`,
-        `hyprctl dispatch closewindow address:${address}`,
-        `&`,
-      ]).catch(print),
+      Hyprland.sendMessage(`dispatch closewindow address:${address}`),
     onSecondaryClick: (button) => {
       button.toggleClassName("overview-tasks-window-selected", true);
       const menu = Widget.Menu({
@@ -176,14 +162,8 @@ const client = ({
               xalign: 0,
               label: "Close (Middle-click)",
             }),
-            onActivate: () => {
-              execAsync([
-                `bash`,
-                `-c`,
-                `hyprctl dispatch closewindow address:${address}`,
-                `&`,
-              ]).catch(print);
-            },
+            onActivate: () =>
+              Hyprland.sendMessage(`dispatch closewindow address:${address}`),
           }),
           ContextWorkspaceArray({
             label: "Dump windows to workspace",
@@ -305,13 +285,8 @@ const workspace = (index) => {
       Widget.EventBox({
         hexpand: true,
         vexpand: true,
-        onPrimaryClickRelease: () => {
-          execAsync([
-            `bash`,
-            `-c`,
-            `hyprctl dispatch workspace ${index}`,
-            `&`,
-          ]).catch(print);
+        onPrimaryClick: () => {
+          Hyprland.sendMessage(`dispatch workspace ${index}`);
           App.closeWindow("overview");
         },
         setup: (eventbox) => {
@@ -322,12 +297,9 @@ const workspace = (index) => {
           );
           eventbox.connect("drag-data-received", (_w, _c, _x, _y, data) => {
             overviewTick.value = !overviewTick.value;
-            execAsync([
-              `bash`,
-              `-c`,
-              `hyprctl dispatch movetoworkspacesilent ${index},address:${data.get_text()}`,
-              `&`,
-            ]).catch(print);
+            Hyprland.sendMessage(
+              `dispatch movetoworkspacesilent ${index},address:${data.get_text()}`
+            );
           });
         },
         child: fixed,
@@ -550,7 +522,7 @@ export const SearchAndWindows = () => {
           "bash",
           "-c",
           `xdg-open 'https://www.google.com/search?q=${text} -site:quora.com' &`,
-        ]).catch(print); // fuck quora
+        ]).catch(print); // quora is useless
       }
     },
     // Actually onChange but this is ta workaround for a bug

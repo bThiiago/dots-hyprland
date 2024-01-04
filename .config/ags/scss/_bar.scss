@@ -103,9 +103,9 @@ $bar_subgroup_bg: mix($surfaceVariant, $primary, 89%);
 
 .bar-ws {
   min-width: $bar_ws_width;
-  color: mix($onBackground, $background, 40%);
+  color: mix($onBackground, $background, 80%);
   @if $darkmode ==true {
-    color: mix($onBackground, $background, 45%);
+    color: mix($onBackground, $background, 85%);
   }
 }
 

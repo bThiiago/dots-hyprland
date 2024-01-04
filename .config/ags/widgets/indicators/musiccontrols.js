@@ -448,7 +448,6 @@ export default () =>
           Mpris,
           (box) => {
             let foundPlayer = false;
-            console.log(Mpris.players);
             Mpris.players.forEach((player, i) => {
               if (isRealPlayer(player)) {
                 foundPlayer = true;
