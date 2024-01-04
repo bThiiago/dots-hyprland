@@ -1,8 +1,9 @@
 import { Utils, Widget } from "../../imports.js";
 import Mpris from "resource:///com/github/Aylur/ags/service/mpris.js";
-const { execAsync } = Utils;
+import Hyprland from "resource:///com/github/Aylur/ags/service/hyprland.js";
 import { AnimatedCircProg } from "../../lib/animatedcircularprogress.js";
 import { showMusicControls } from "../../variables.js";
+const { execAsync } = Utils;
 
 function trimTrackTitle(title) {
   var pattern = /【[^】]*】/;
@@ -14,7 +15,6 @@ const TrackProgress = () => {
   const _updateProgress = (circprog) => {
     const mpris = Mpris.getPlayer("");
     if (!mpris) return;
-    // Set circular progress value
     circprog.css = `font-size: ${Math.max(
       (mpris.position / mpris.length) * 100,
       0
@@ -34,8 +34,8 @@ const TrackProgress = () => {
 
 export const ModuleMusic = () =>
   Widget.EventBox({
-    onScrollUp: () => execAsync("hyprctl dispatch workspace -1"),
-    onScrollDown: () => execAsync("hyprctl dispatch workspace +1"),
+    onScrollUp: () => Hyprland.sendMessage(`hyprctl dispatch workspace -1`),
+    onScrollDown: () => Hyprland.sendMessage(`hyprctl dispatch workspace +1`),
     onPrimaryClickRelease: () =>
       showMusicControls.setValue(!showMusicControls.value),
     onSecondaryClickRelease: () =>
@@ -107,7 +107,7 @@ export const ModuleMusic = () =>
             Widget.Scrollable({
               hexpand: true,
               child: Widget.Label({
-                className: "txt-smallie txt-onSurfaceVariant",
+                className: "txt-smallie txt-onSurfaceVariant txt-semibold",
                 connections: [
                   [
                     Mpris,

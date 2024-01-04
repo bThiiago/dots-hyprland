@@ -30,6 +30,6 @@ ring-clear-color={{ $secondaryContainer }}
 line-clear-color={{ $surface }}
 line-wrong-color={{ $surface }}
 datestr=%a, %B %e
-timestr=%I:%M %p
+timestr=%H:%M %p
 fade-in=0.3
 grace=2
