@@ -1,36 +1,36 @@
 const { Gtk } = imports.gi;
 import { Widget } from "../../imports.js";
-
+const { Box, CenterBox, Window } = Widget;
 import { ModuleLeftSpace } from "./leftspace.js";
 import { ModuleMusic } from "./music.js";
 import { ModuleRightSpace } from "./rightspace.js";
 import { ModuleSystem } from "./system.js";
 import ModuleWorkspaces from "./workspaces.js";
 
-const left = Widget.Box({
+const left = Box({
   className: "bar-sidemodule",
   children: [ModuleMusic()],
 });
 
-const center = Widget.Box({
+const center = Box({
   children: [ModuleWorkspaces()],
 });
 
-const right = Widget.Box({
+const right = Box({
   className: "bar-sidemodule",
   children: [ModuleSystem()],
 });
 
 export default () =>
-  Widget.Window({
+  Window({
     name: "bar",
     anchor: ["top", "left", "right"],
     exclusivity: "exclusive",
     visible: true,
-    child: Widget.CenterBox({
+    child: CenterBox({
       className: "bar-bg",
       startWidget: ModuleLeftSpace(),
-      centerWidget: Widget.Box({
+      centerWidget: Box({
         className: "spacing-h-4",
         children: [left, center, right],
       }),

@@ -1,6 +1,7 @@
 const { Gtk } = imports.gi;
 const Lang = imports.lang;
 import { Utils, Widget } from "../imports.js";
+const { timeout } = Utils;
 const { DrawingArea } = Widget;
 
 export const AnimatedCircProg = ({
@@ -128,7 +129,7 @@ export const AnimatedCircProg = ({
       );
 
       if (initFrom != initTo) {
-        Utils.timeout(20, () => {
+        timeout(20, () => {
           area.css = `font-size: ${initTo}px;`;
         });
       } else area.css = "font-size: 0px;";

@@ -1,19 +1,9 @@
-// This file is for the notification widget on the sidebar
-// For the popup notifications, see onscreendisplay.js
-// The actual widget for each single notification is in lib/notification.js
-
-const { GLib, Gtk } = imports.gi;
-import { Service, Utils, Widget } from "../../imports.js";
+import { Widget } from "../../imports.js";
 import Notifications from "resource:///com/github/Aylur/ags/service/notifications.js";
-const { lookUpIcon, timeout } = Utils;
-const { Box, Button, Icon, Label, Revealer, Scrollable, Stack } = Widget;
+const { Box, Button, Label, Revealer, Scrollable, Stack } = Widget;
 import { MaterialIcon } from "../../lib/materialicon.js";
 import { setupCursorHover } from "../../lib/cursorhover.js";
-import {
-  ConfigToggle,
-  ConfigSegmentedSelection,
-  ConfigGap,
-} from "../../lib/configwidgets.js";
+import { ConfigToggle } from "../../lib/configwidgets.js";
 import Notification from "../../lib/notification.js";
 
 export default (props) => {
@@ -61,7 +51,6 @@ export default (props) => {
         Notifications,
         (box, id) => {
           if (box.get_children().length == 0) {
-            // On init there's no notif, or 1st notif
             Notifications.notifications.forEach((n) => {
               box.pack_end(
                 Notification({
@@ -76,7 +65,6 @@ export default (props) => {
             box.show_all();
             return;
           }
-          // 2nd or later notif
           const notif = Notifications.getNotification(id);
           const NewNotif = Notification({
             notifObject: notif,
@@ -166,7 +154,6 @@ export default (props) => {
     vscroll: "automatic",
     child: Box({
       vexpand: true,
-      // homogeneous: true,
       children: [notificationList],
     }),
     setup: (self) => {

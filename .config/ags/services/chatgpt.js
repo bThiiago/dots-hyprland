@@ -1,4 +1,5 @@
 import { Utils } from "../imports.js";
+const { readFile, writeFile } = Utils;
 import Service from "resource:///com/github/Aylur/ags/service.js";
 import Gio from "gi://Gio";
 import GLib from "gi://GLib";
@@ -157,7 +158,7 @@ class ChatGPTService extends Service {
     super();
 
     if (fileExists(expandTilde(KEY_FILE_LOCATION)))
-      this._key = Utils.readFile(expandTilde(KEY_FILE_LOCATION)).trim();
+      this._key = readFile(expandTilde(KEY_FILE_LOCATION)).trim();
     else this.emit("hasKey", false);
 
     if (this._assistantPrompt) this._messages = [...initMessages];
@@ -178,7 +179,7 @@ class ChatGPTService extends Service {
   }
   set key(keyValue) {
     this._key = keyValue;
-    Utils.writeFile(this._key, expandTilde(KEY_FILE_LOCATION))
+    writeFile(this._key, expandTilde(KEY_FILE_LOCATION))
       .then(this.emit("hasKey", true))
       .catch((err) => print(err));
   }

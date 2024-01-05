@@ -1,6 +1,7 @@
-const { Gio, Gdk, GLib, Gtk } = imports.gi;
-import { App, Widget, Utils } from "../../imports.js";
-const { Box, Button, CenterBox, Label, Revealer } = Widget;
+const { Gtk } = imports.gi;
+import { Widget, Utils } from "../../imports.js";
+const { timeout } = Utils;
+const { Box, Button, Entry, Scrollable, Stack, Label, Revealer } = Widget;
 import { MaterialIcon } from "../../lib/materialicon.js";
 import Todo from "../../services/todo.js";
 import { setupCursorHover } from "../../lib/cursorhover.js";
@@ -9,13 +10,13 @@ import { NavigationIndicator } from "../../lib/navigationindicator.js";
 const defaultTodoSelected = "undone";
 
 const todoListItem = (task, id, isDone, isEven = false) => {
-  const crosser = Widget.Box({
+  const crosser = Box({
     className: "sidebar-todo-crosser",
   });
-  const todoContent = Widget.Box({
+  const todoContent = Box({
     className: "sidebar-todo-item spacing-h-5",
     children: [
-      Widget.Label({
+      Label({
         hexpand: true,
         xalign: 0,
         wrap: true,
@@ -23,7 +24,7 @@ const todoListItem = (task, id, isDone, isEven = false) => {
         label: task.content,
         selectable: true,
       }),
-      Widget.Button({
+      Button({
         vpack: "center",
         className: "txt sidebar-todo-item-action",
         child: MaterialIcon(`${isDone ? "remove_done" : "check"}`, "norm", {
@@ -33,17 +34,17 @@ const todoListItem = (task, id, isDone, isEven = false) => {
           const contentWidth = todoContent.get_allocated_width();
           crosser.toggleClassName("sidebar-todo-crosser-crossed", true);
           crosser.css = `margin-left: -${contentWidth}px;`;
-          Utils.timeout(200, () => {
+          timeout(200, () => {
             widgetRevealer.revealChild = false;
           });
-          Utils.timeout(350, () => {
+          timeout(350, () => {
             if (isDone) Todo.uncheck(id);
             else Todo.check(id);
           });
         },
         setup: setupCursorHover,
       }),
-      Widget.Button({
+      Button({
         vpack: "center",
         className: "txt sidebar-todo-item-action",
         child: MaterialIcon("delete_forever", "norm", { vpack: "center" }),
@@ -51,10 +52,10 @@ const todoListItem = (task, id, isDone, isEven = false) => {
           const contentWidth = todoContent.get_allocated_width();
           crosser.toggleClassName("sidebar-todo-crosser-removed", true);
           crosser.css = `margin-left: -${contentWidth}px;`;
-          Utils.timeout(200, () => {
+          timeout(200, () => {
             widgetRevealer.revealChild = false;
           });
-          Utils.timeout(350, () => {
+          timeout(350, () => {
             Todo.remove(id);
           });
         },
@@ -63,7 +64,7 @@ const todoListItem = (task, id, isDone, isEven = false) => {
       crosser,
     ],
   });
-  const widgetRevealer = Widget.Revealer({
+  const widgetRevealer = Revealer({
     revealChild: true,
     transition: "slide_down",
     transitionDuration: 150,
@@ -73,8 +74,8 @@ const todoListItem = (task, id, isDone, isEven = false) => {
 };
 
 const todoItems = (isDone) =>
-  Widget.Scrollable({
-    child: Widget.Box({
+  Scrollable({
+    child: Box({
       vertical: true,
       connections: [
         [
@@ -87,7 +88,7 @@ const todoItems = (isDone) =>
             if (self.children.length == 0) {
               self.homogeneous = true;
               self.children = [
-                Widget.Box({
+                Box({
                   hexpand: true,
                   vertical: true,
                   vpack: "center",
@@ -157,7 +158,7 @@ const UndoneTodoList = () => {
       },
     }),
   });
-  const newTaskEntry = Widget.Entry({
+  const newTaskEntry = Entry({
     vpack: "center",
     className: "txt-small sidebar-todo-entry",
     placeholderText: "Add a task...",
@@ -217,7 +218,7 @@ const UndoneTodoList = () => {
   });
 };
 
-const todoItemsBox = Widget.Stack({
+const todoItemsBox = Stack({
   vpack: "fill",
   transition: "slide_left_right",
   items: [
@@ -228,7 +229,7 @@ const todoItemsBox = Widget.Stack({
 
 export const TodoWidget = () => {
   const TodoTabButton = (isDone, navIndex) =>
-    Widget.Button({
+    Button({
       hexpand: true,
       className: "sidebar-selector-tab",
       onClicked: (button) => {
@@ -261,7 +262,7 @@ export const TodoWidget = () => {
         ],
       }),
       setup: (button) =>
-        Utils.timeout(1, () => {
+        timeout(1, () => {
           setupCursorHover(button);
           button.toggleClassName(
             "sidebar-selector-tab-active",
@@ -275,16 +276,16 @@ export const TodoWidget = () => {
     className: "sidebar-selector-highlight",
     css: "font-size: 0px; padding: 0rem 1.636rem;",
   });
-  return Widget.Box({
+  return Box({
     hexpand: true,
     vertical: true,
     className: "spacing-v-10",
     setup: (box) => {
       box.pack_start(
-        Widget.Box({
+        Box({
           vertical: true,
           children: [
-            Widget.Box({
+            Box({
               className: "sidebar-selectors spacing-h-5",
               homogeneous: true,
               setup: (box) => {
@@ -292,7 +293,7 @@ export const TodoWidget = () => {
                 box.pack_start(doneButton, false, true, 0);
               },
             }),
-            Widget.Box({
+            Box({
               className: "sidebar-selector-highlight-offset",
               homogeneous: true,
               children: [navIndicator],

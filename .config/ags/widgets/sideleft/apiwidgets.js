@@ -1,22 +1,6 @@
-const { Gtk, Gdk } = imports.gi;
-import { App, Utils, Widget } from "../../imports.js";
-const {
-  Box,
-  Button,
-  Entry,
-  EventBox,
-  Icon,
-  Label,
-  Revealer,
-  Scrollable,
-  Stack,
-} = Widget;
-const { execAsync, exec } = Utils;
-import {
-  setupCursorHover,
-  setupCursorHoverInfo,
-} from "../../lib/cursorhover.js";
-// APIs
+import { Widget } from "../../imports.js";
+const { Box, Button, Entry, Stack } = Widget;
+import { setupCursorHover } from "../../lib/cursorhover.js";
 import ChatGPT from "../../services/chatgpt.js";
 import {
   chatGPTView,
@@ -144,7 +128,7 @@ const apiSwitcher = Box({
   ],
 });
 
-export default Widget.Box({
+export default Box({
   properties: [
     ["nextTab", () => switchToTab(Math.min(currentApiId + 1, APIS.length - 1))],
     ["prevTab", () => switchToTab(Math.max(0, currentApiId - 1))],

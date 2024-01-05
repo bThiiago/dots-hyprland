@@ -1,14 +1,15 @@
-import { Widget, Utils, Service } from "../../imports.js";
+import { Widget, Utils } from "../../imports.js";
 import Bluetooth from "resource:///com/github/Aylur/ags/service/bluetooth.js";
 import Network from "resource:///com/github/Aylur/ags/service/network.js";
 import Notifications from "resource:///com/github/Aylur/ags/service/notifications.js";
-const { execAsync, exec } = Utils;
+const { execAsync, exec, subprocess } = Utils;
+const { Button } = Widget;
 import { BluetoothIndicator, NetworkIndicator } from "../../lib/statusicons.js";
 import { setupCursorHover } from "../../lib/cursorhover.js";
 import { MaterialIcon } from "../../lib/materialicon.js";
 
 export const ToggleIconWifi = (props = {}) =>
-  Widget.Button({
+  Button({
     className: "txt-small sidebar-iconbutton",
     tooltipText: "Network | Right-click to configure",
     onClicked: Network.toggleWifi,
@@ -47,7 +48,7 @@ export const ToggleIconWifi = (props = {}) =>
   });
 
 export const ToggleIconBluetooth = (props = {}) =>
-  Widget.Button({
+  Button({
     className: "txt-small sidebar-iconbutton",
     tooltipText: "Bluetooth | Right-click to configure",
     onClicked: () => {
@@ -82,12 +83,12 @@ export const ToggleIconBluetooth = (props = {}) =>
   });
 
 export const HyprToggleIcon = (icon, name, hyprlandConfigValue, props = {}) =>
-  Widget.Button({
+  Button({
     className: "txt-small sidebar-iconbutton",
     tooltipText: `${name}`,
     onClicked: (button) => {
       // Set the value to 1 - value
-      Utils.execAsync(`hyprctl -j getoption ${hyprlandConfigValue}`)
+      execAsync(`hyprctl -j getoption ${hyprlandConfigValue}`)
         .then((result) => {
           const currentOption = JSON.parse(result).int;
           execAsync([
@@ -103,8 +104,7 @@ export const HyprToggleIcon = (icon, name, hyprlandConfigValue, props = {}) =>
     setup: (button) => {
       button.toggleClassName(
         "sidebar-button-active",
-        JSON.parse(Utils.exec(`hyprctl -j getoption ${hyprlandConfigValue}`))
-          .int == 1
+        JSON.parse(exec(`hyprctl -j getoption ${hyprlandConfigValue}`)).int == 1
       );
       setupCursorHover(button);
     },
@@ -112,7 +112,7 @@ export const HyprToggleIcon = (icon, name, hyprlandConfigValue, props = {}) =>
   });
 
 export const ModuleNightLight = (props = {}) =>
-  Widget.Button({
+  Button({
     className: "txt-small sidebar-iconbutton",
     tooltipText: "Night Light",
     onClicked: (button) => {
@@ -141,7 +141,7 @@ export const ModuleNightLight = (props = {}) =>
   });
 
 export const ModuleInvertColors = (props = {}) =>
-  Widget.Button({
+  Button({
     className: "txt-small sidebar-iconbutton",
     tooltipText: "Vibrance",
     onClicked: (button) => {
@@ -170,7 +170,7 @@ export const ModuleInvertColors = (props = {}) =>
   });
 
 export const ModuleIdleInhibitor = (props = {}) =>
-  Widget.Button({
+  Button({
     properties: [
       ["enabled", false],
       ["inhibitor", undefined],
@@ -181,7 +181,7 @@ export const ModuleIdleInhibitor = (props = {}) =>
       self._enabled = !self._enabled;
       self.toggleClassName("sidebar-button-active", self._enabled);
       if (self._enabled) {
-        self._inhibitor = Utils.subprocess(
+        self._inhibitor = subprocess(
           ["wayland-idle-inhibitor.py"],
           (output) => print(output),
           (err) => logError(err),
@@ -200,7 +200,7 @@ export const ModuleIdleInhibitor = (props = {}) =>
   });
 
 export const ModuleDND = (props = {}) =>
-  Widget.Button({
+  Button({
     className: "txt-small sidebar-iconbutton",
     tooltipText: "Do not disturb",
     onClicked: (button) => {
@@ -217,7 +217,7 @@ export const ModuleDND = (props = {}) =>
   });
 
 export const ModuleReloadIcon = (props = {}) =>
-  Widget.Button({
+  Button({
     ...props,
     className: "txt-small sidebar-iconbutton",
     tooltipText: "Reload Hyprland",
@@ -232,7 +232,7 @@ export const ModuleReloadIcon = (props = {}) =>
   });
 
 export const ModuleSettingsIcon = (props = {}) =>
-  Widget.Button({
+  Button({
     ...props,
     className: "txt-small sidebar-iconbutton",
     tooltipText: "Open Settings",
@@ -252,7 +252,7 @@ export const ModuleSettingsIcon = (props = {}) =>
   });
 
 export const ModulePowerIcon = (props = {}) =>
-  Widget.Button({
+  Button({
     ...props,
     className: "txt-small sidebar-iconbutton",
     tooltipText: "Session",

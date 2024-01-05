@@ -1,17 +1,7 @@
-const { Gdk, Gio, GLib, Gtk, Pango } = imports.gi;
+const { Gio, GLib, Gtk } = imports.gi;
 import { App, Utils, Widget } from "../../../imports.js";
-const {
-  Box,
-  Button,
-  Entry,
-  EventBox,
-  Icon,
-  Label,
-  Revealer,
-  Scrollable,
-  Stack,
-} = Widget;
-const { execAsync, exec } = Utils;
+const { Box, Button, Label, Scrollable } = Widget;
+const { execAsync } = Utils;
 import { MaterialIcon } from "../../../lib/materialicon.js";
 import md2pango from "../../../lib/md2pango.js";
 import GtkSource from "gi://GtkSource?version=3.0";
@@ -21,10 +11,7 @@ const CUSTOM_SCHEME_ID = "custom";
 const USERNAME = GLib.get_user_name();
 const CHATGPT_CURSOR = "  (o) ";
 
-/////////////////////// Custom source view colorscheme /////////////////////////
-
 function loadCustomColorScheme(filePath) {
-  // Read the XML file content
   const file = Gio.File.new_for_path(filePath);
   const [success, contents] = file.load_contents(null);
 
@@ -33,20 +20,10 @@ function loadCustomColorScheme(filePath) {
     return;
   }
 
-  // Parse the XML content and set the Style Scheme
   const schemeManager = GtkSource.StyleSchemeManager.get_default();
   schemeManager.append_search_path(file.get_parent().get_path());
 }
 loadCustomColorScheme(CUSTOM_SOURCEVIEW_SCHEME_PATH);
-
-//////////////////////////////////////////////////////////////////////////////
-
-function copyToClipboard(text) {
-  const clipboard = Gtk.Clipboard.get(Gdk.SELECTION_CLIPBOARD);
-  const textVariant = new GLib.Variant("s", text);
-  clipboard.set_text(textVariant, -1);
-  clipboard.store();
-}
 
 function substituteLang(str) {
   const subs = [{ from: "javascript", to: "js" }];
@@ -149,13 +126,6 @@ const CodeBlock = (content = "", lang = "txt") => {
       }),
     ],
   });
-
-  // const schemeIds = styleManager.get_scheme_ids();
-
-  // print("Available Style Schemes:");
-  // for (let i = 0; i < schemeIds.length; i++) {
-  //     print(schemeIds[i]);
-  // }
   return codeBlock;
 };
 
@@ -178,8 +148,6 @@ const MessageContent = (content) => {
             child.destroy();
           }
           contentBox.add(TextBlock());
-          // Loop lines. Put normal text in markdown parser
-          // and put code into code highlighter (TODO)
           let lines = content.split("\n");
           let lastProcessed = 0;
           let inCode = false;
@@ -225,16 +193,6 @@ const MessageContent = (content) => {
               }`;
             else lastLabel._updateText(blockContent);
           }
-          // Debug: plain text
-          // contentBox.add(Label({
-          //     hpack: 'fill',
-          //     className: 'txt sidebar-chat-txtblock sidebar-chat-txt',
-          //     useMarkup: false,
-          //     xalign: 0,
-          //     wrap: true,
-          //     selectable: true,
-          //     label: '------------------------------\n' + md2pango(content),
-          // }))
           contentBox.show_all();
         },
       ],

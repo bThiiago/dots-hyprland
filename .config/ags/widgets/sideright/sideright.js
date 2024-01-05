@@ -1,6 +1,6 @@
 import { Utils, Widget } from "../../imports.js";
 const { execAsync } = Utils;
-const { Box, EventBox } = Widget;
+const { Box, EventBox, Label } = Widget;
 import {
   ToggleIconBluetooth,
   ToggleIconWifi,
@@ -19,7 +19,7 @@ import { ModuleCalendar } from "./calendar.js";
 const timeRow = Box({
   className: "spacing-h-5 sidebar-group-invisible-morehorizpad",
   children: [
-    Widget.Label({
+    Label({
       hpack: "center",
       className: "txt-small txt",
       connections: [
@@ -39,15 +39,14 @@ const timeRow = Box({
         ],
       ],
     }),
-    Widget.Box({ hexpand: true }),
-    // ModuleEditIcon({ hpack: 'end' }), // TODO: Make this work
+    Box({ hexpand: true }),
     ModuleReloadIcon({ hpack: "end" }),
     ModuleSettingsIcon({ hpack: "end" }),
     ModulePowerIcon({ hpack: "end" }),
   ],
 });
 
-const togglesBox = Widget.Box({
+const togglesBox = Box({
   hpack: "center",
   className: "sidebar-group spacing-h-10",
   children: [
@@ -86,11 +85,7 @@ export default () =>
           Box({
             vertical: true,
             className: "spacing-v-5",
-            children: [
-              timeRow,
-              // togglesFlowBox,
-              togglesBox,
-            ],
+            children: [timeRow, togglesBox],
           }),
           ModuleNotificationList({ vexpand: true }),
           ModuleCalendar(),

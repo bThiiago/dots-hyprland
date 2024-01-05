@@ -2,11 +2,12 @@ import { App, Utils, Widget } from "../../imports.js";
 import Audio from "resource:///com/github/Aylur/ags/service/audio.js";
 import Mpris from "resource:///com/github/Aylur/ags/service/mpris.js";
 import SystemTray from "resource:///com/github/Aylur/ags/service/systemtray.js";
-const { execAsync } = Utils;
 import Indicator from "../../services/indicator.js";
 import { StatusIcons } from "../../lib/statusicons.js";
 import { RoundedCorner } from "../../lib/roundedcorner.js";
 import { Tray } from "./tray.js";
+const { Box, EventBox, Revealer } = Widget;
+const { execAsync } = Utils;
 
 export const ModuleRightSpace = () => {
   const barTray = Tray();
@@ -20,7 +21,7 @@ export const ModuleRightSpace = () => {
       }),
   });
 
-  return Widget.EventBox({
+  return EventBox({
     onScrollUp: () => {
       if (!Audio.speaker) return;
       Audio.speaker.volume += 0.05;
@@ -31,8 +32,6 @@ export const ModuleRightSpace = () => {
       Audio.speaker.volume -= 0.05;
       Indicator.popup(1);
     },
-    // onHover: () => { barStatusIcons.toggleClassName('bar-statusicons-hover', true) },
-    // onHoverLost: () => { barStatusIcons.toggleClassName('bar-statusicons-hover', false) },
     onPrimaryClick: () => App.toggleWindow("sideright"),
     onSecondaryClickRelease: () =>
       execAsync([
@@ -41,20 +40,20 @@ export const ModuleRightSpace = () => {
         'playerctl next || playerctl position `bc <<< "100 * $(playerctl metadata mpris:length) / 1000000 / 100"` &',
       ]),
     onMiddleClickRelease: () => Mpris.getPlayer("")?.playPause(),
-    child: Widget.Box({
+    child: Box({
       homogeneous: false,
       children: [
-        Widget.Box({
+        Box({
           hexpand: true,
           className: "spacing-h-5 txt",
           children: [
-            Widget.Box({
+            Box({
               hexpand: true,
               className: "spacing-h-5 txt",
               children: [
-                Widget.Box({ hexpand: true }),
+                Box({ hexpand: true }),
                 barTray,
-                Widget.Revealer({
+                Revealer({
                   transition: "slide_left",
                   revealChild: false,
                   properties: [
@@ -67,7 +66,7 @@ export const ModuleRightSpace = () => {
                       },
                     ],
                   ],
-                  child: Widget.Box({
+                  child: Box({
                     vpack: "center",
                     className: "separator-circle",
                   }),

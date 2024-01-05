@@ -1,5 +1,6 @@
 import { Utils } from "../imports.js";
 import Service from "resource:///com/github/Aylur/ags/service.js";
+const { timeout } = Utils;
 
 // Tags:
 //     waifu.im (type):
@@ -137,7 +138,7 @@ class WaifuService extends Service {
         headers: this._headers[this._mode],
       };
       var status = 0;
-      Utils.fetch(`${this._endpoints[this._mode]}?${paramString}`, options)
+      fetch(`${this._endpoints[this._mode]}?${paramString}`, options)
         .then((result) => {
           status = result.status;
           return result.text();

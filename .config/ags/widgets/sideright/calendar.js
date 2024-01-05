@@ -1,40 +1,28 @@
-const { Gio, Gdk, GLib, Gtk } = imports.gi;
-import { App, Widget, Utils } from "../../imports.js";
-const { Box, Button, CenterBox, Label, Revealer } = Widget;
+import { Widget, Utils } from "../../imports.js";
+const { timeout } = Utils;
+const { Box, Button, EventBox, Label, Overlay, Stack } = Widget;
 import { MaterialIcon } from "../../lib/materialicon.js";
 import { getCalendarLayout } from "../../lib/calendarlayout.js";
 import { setupCursorHover } from "../../lib/cursorhover.js";
-
 import { TodoWidget } from "./todolist.js";
 
 let calendarJson = getCalendarLayout(undefined, true);
 let monthshift = 0;
-
-function fileExists(filePath) {
-  let file = Gio.File.new_for_path(filePath);
-  return file.query_exists(null);
-}
 
 function getDateInXMonthsTime(x) {
   var currentDate = new Date(); // Get the current date
   var targetMonth = currentDate.getMonth() + x; // Calculate the target month
   var targetYear = currentDate.getFullYear(); // Get the current year
 
-  // Adjust the year and month if necessary
   targetYear += Math.floor(targetMonth / 12);
   targetMonth = ((targetMonth % 12) + 12) % 12;
 
-  // Create a new date object with the target year and month
   var targetDate = new Date(targetYear, targetMonth, 1);
-
-  // Set the day to the last day of the month to get the desired date
-  // targetDate.setDate(0);
 
   return targetDate;
 }
 
 const weekDays = [
-  // MONDAY IS THE FIRST DAY OF THE WEEK :HESRIGHTYOUKNOW:
   { day: "Mo", today: 0 },
   { day: "Tu", today: 0 },
   { day: "We", today: 0 },
@@ -45,7 +33,7 @@ const weekDays = [
 ];
 
 const CalendarDay = (day, today) =>
-  Widget.Button({
+  Button({
     className: `sidebar-calendar-btn ${
       today == 1
         ? "sidebar-calendar-btn-today"
@@ -53,7 +41,7 @@ const CalendarDay = (day, today) =>
         ? "sidebar-calendar-btn-othermonth"
         : ""
     }`,
-    child: Widget.Overlay({
+    child: Overlay({
       child: Box({}),
       overlays: [
         Label({
@@ -66,7 +54,7 @@ const CalendarDay = (day, today) =>
   });
 
 const CalendarWidget = () => {
-  const calendarMonthYear = Widget.Button({
+  const calendarMonthYear = Button({
     className: "txt txt-large sidebar-calendar-monthyear-btn",
     onClicked: () => shiftCalendarXMonths(0),
     setup: (button) => {
@@ -83,8 +71,7 @@ const CalendarWidget = () => {
       child.destroy();
     }
     box.children = calendarJson.map((row, i) =>
-      Widget.Box({
-        // homogeneous: true,
+      Box({
         className: "spacing-h-5",
         children: row.map((day, i) => CalendarDay(day.day, day.today)),
       })
@@ -105,12 +92,12 @@ const CalendarWidget = () => {
     })} ${newDate.getFullYear()}`;
     addCalendarChildren(calendarDays, calendarJson);
   }
-  const calendarHeader = Widget.Box({
+  const calendarHeader = Box({
     className: "spacing-h-5 sidebar-calendar-header",
     setup: (box) => {
       box.pack_start(calendarMonthYear, false, false, 0);
       box.pack_end(
-        Widget.Box({
+        Box({
           className: "spacing-h-5",
           children: [
             Button({
@@ -133,7 +120,7 @@ const CalendarWidget = () => {
       );
     },
   });
-  const calendarDays = Widget.Box({
+  const calendarDays = Box({
     hexpand: true,
     vertical: true,
     className: "spacing-v-5",
@@ -141,19 +128,19 @@ const CalendarWidget = () => {
       addCalendarChildren(box, calendarJson);
     },
   });
-  return Widget.EventBox({
+  return EventBox({
     onScrollUp: () => shiftCalendarXMonths(-1),
     onScrollDown: () => shiftCalendarXMonths(1),
-    child: Widget.Box({
+    child: Box({
       hpack: "center",
       children: [
-        Widget.Box({
+        Box({
           hexpand: true,
           vertical: true,
           className: "spacing-v-5",
           children: [
             calendarHeader,
-            Widget.Box({
+            Box({
               homogeneous: true,
               className: "spacing-h-5",
               children: weekDays.map((day, i) =>
@@ -169,23 +156,22 @@ const CalendarWidget = () => {
 };
 
 const defaultShown = "calendar";
-const contentStack = Widget.Stack({
+const contentStack = Stack({
   hexpand: true,
   items: [
     ["calendar", CalendarWidget()],
     ["todo", TodoWidget()],
-    // ['stars', Widget.Label({ label: 'GitHub feed will be here' })],
   ],
   transition: "slide_up_down",
   transitionDuration: 180,
   setup: (stack) =>
-    Utils.timeout(1, () => {
+    timeout(1, () => {
       stack.shown = defaultShown;
     }),
 });
 
 const StackButton = (stackItemName, icon, name) =>
-  Widget.Button({
+  Button({
     className:
       "button-minsize sidebar-navrail-btn sidebar-button-alone txt-small spacing-h-5",
     onClicked: (button) => {
@@ -212,7 +198,7 @@ const StackButton = (stackItemName, icon, name) =>
       ],
     }),
     setup: (button) =>
-      Utils.timeout(1, () => {
+      timeout(1, () => {
         setupCursorHover(button);
         button.toggleClassName(
           "sidebar-navrail-btn-active",
@@ -234,7 +220,6 @@ export const ModuleCalendar = () =>
           children: [
             StackButton("calendar", "calendar_month", "Calendar"),
             StackButton("todo", "lists", "To Do"),
-            // StackButton(box, 'stars', 'star', 'GitHub'),
           ],
         }),
         false,

@@ -1,4 +1,5 @@
 import { Widget } from "../../imports.js";
+const { Box, Label, Button, Revealer } = Widget;
 
 export const searchItem = ({
   materialIconName,
@@ -7,44 +8,44 @@ export const searchItem = ({
   content,
   onActivate,
 }) => {
-  const actionText = Widget.Revealer({
+  const actionText = Revealer({
     revealChild: false,
     transition: "crossfade",
     transitionDuration: 200,
-    child: Widget.Label({
+    child: Label({
       className: "overview-search-results-txt txt txt-small txt-action",
       label: `${actionName}`,
     }),
   });
-  const actionTextRevealer = Widget.Revealer({
+  const actionTextRevealer = Revealer({
     revealChild: false,
     transition: "slide_left",
     transitionDuration: 300,
     child: actionText,
   });
-  return Widget.Button({
+  return Button({
     className: "overview-search-result-btn",
     onClicked: onActivate,
-    child: Widget.Box({
+    child: Box({
       children: [
-        Widget.Box({
+        Box({
           vertical: false,
           children: [
-            Widget.Label({
+            Label({
               className: `icon-material overview-search-results-icon`,
               label: `${materialIconName}`,
             }),
-            Widget.Box({
+            Box({
               vertical: true,
               children: [
-                Widget.Label({
+                Label({
                   hpack: "start",
                   className:
                     "overview-search-results-txt txt txt-smallie txt-subtext",
                   label: `${name}`,
                   truncate: "end",
                 }),
-                Widget.Label({
+                Label({
                   hpack: "start",
                   className: "overview-search-results-txt txt txt-norm",
                   label: `${content}`,
@@ -52,7 +53,7 @@ export const searchItem = ({
                 }),
               ],
             }),
-            Widget.Box({ hexpand: true }),
+            Box({ hexpand: true }),
             actionTextRevealer,
           ],
         }),

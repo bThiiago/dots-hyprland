@@ -1,6 +1,7 @@
-import { Widget } from "../imports.js";
+import { Utils, Widget } from "../imports.js";
 const { Gtk } = imports.gi;
 const Lang = imports.lang;
+const { timeout } = Utils;
 const { DrawingArea } = Widget;
 
 export const RoundedCorner = (place, props) =>
@@ -9,7 +10,7 @@ export const RoundedCorner = (place, props) =>
     hpack: place.includes("left") ? "start" : "end",
     vpack: place.includes("top") ? "start" : "end",
     setup: (widget) =>
-      Utils.timeout(1, () => {
+      timeout(1, () => {
         const c = widget
           .get_style_context()
           .get_property("background-color", Gtk.StateFlags.NORMAL);

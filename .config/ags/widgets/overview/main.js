@@ -1,8 +1,9 @@
 import { Widget } from "../../imports.js";
 import { SearchAndWindows } from "./overview.js";
+const { Box, Window } = Widget;
 
 export default () =>
-  Widget.Window({
+  Window({
     name: "overview",
     exclusivity: "ignore",
     focusable: true,
@@ -10,7 +11,7 @@ export default () =>
     visible: false,
     anchor: ["top"],
     layer: "overlay",
-    child: Widget.Box({
+    child: Box({
       vertical: true,
       children: [SearchAndWindows()],
     }),

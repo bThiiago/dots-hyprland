@@ -1,5 +1,5 @@
 import { Utils, Widget } from "../../imports.js";
-const { Box, Label, Button, Overlay, Revealer } = Widget;
+const { Box, EventBox, Label, Button, Overlay, Revealer } = Widget;
 const { execAsync } = Utils;
 const { GLib } = imports.gi;
 import Battery from "resource:///com/github/Aylur/ags/service/battery.js";
@@ -20,11 +20,11 @@ const BatBatteryProgress = () => {
 };
 
 const BarClock = () =>
-  Widget.Box({
+  Box({
     vpack: "center",
     className: "spacing-h-5 txt-onSurfaceVariant bar-clock-box",
     children: [
-      Widget.Label({
+      Label({
         className: "bar-clock",
         tooltipText: "Clock",
         label: GLib.DateTime.new_now_local().format("%H:%M"),
@@ -33,11 +33,11 @@ const BarClock = () =>
             label.label = GLib.DateTime.new_now_local().format("%H:%M");
           }),
       }),
-      Widget.Label({
+      Label({
         className: "txt-norm",
         label: "•",
       }),
-      Widget.Label({
+      Label({
         className: "txt-smallie txt-onSurfaceVariant txt-semibold",
         tooltipText: "Date",
         label: GLib.DateTime.new_now_local().format("%A, %d/%m"),
@@ -67,7 +67,7 @@ const Utilities = () =>
         name: "Screen snip",
         icon: "screenshot_region",
         onClicked: () => {
-          Utils.execAsync([
+          execAsync([
             "bash",
             "-c",
             `grim -g "$(slurp -d -c e2e2e2BB -b 31313122 -s 00000000)" | wl-copy &`,
@@ -78,7 +78,7 @@ const Utilities = () =>
         name: "Color picker",
         icon: "colorize",
         onClicked: () => {
-          Utils.execAsync(["hyprpicker", "-a"]).catch(print);
+          execAsync(["hyprpicker", "-a"]).catch(print);
         },
       }),
       UtilButton({
@@ -114,7 +114,7 @@ const BarBattery = () =>
           }),
       }),
       Overlay({
-        child: Widget.Box({
+        child: Box({
           vpack: "center",
           className: "bar-batt",
           homogeneous: true,
@@ -126,10 +126,10 @@ const BarBattery = () =>
   });
 
 const BarGroup = ({ child }) =>
-  Widget.Box({
+  Box({
     className: "bar-group-margin bar-sides",
     children: [
-      Widget.Box({
+      Box({
         className: "bar-group bar-group-standalone bar-group-pad-system",
         children: [child],
       }),
@@ -137,11 +137,11 @@ const BarGroup = ({ child }) =>
   });
 
 export const ModuleSystem = () =>
-  Widget.EventBox({
+  EventBox({
     onScrollUp: () => Hyprland.sendMessage(`dispatch workspace -1`),
     onScrollDown: () => Hyprland.sendMessage(`dispatch workspace +1`),
     onPrimaryClick: () => App.toggleWindow("sideright"),
-    child: Widget.Box({
+    child: Box({
       className: "spacing-h-5",
       children: [
         BarGroup({ child: BarClock() }),

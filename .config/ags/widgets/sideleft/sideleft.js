@@ -1,13 +1,12 @@
-const { Gdk, Gtk } = imports.gi;
+const { Gdk } = imports.gi;
 import { Utils, Widget } from "../../imports.js";
-const { Box, Button, EventBox, Label, Revealer, Scrollable, Stack } = Widget;
-const { execAsync, exec } = Utils;
+const { Box, Button, EventBox, Label, Stack } = Widget;
+const { timeout } = Utils;
 import { MaterialIcon } from "../../lib/materialicon.js";
 import { setupCursorHover } from "../../lib/cursorhover.js";
 import { NavigationIndicator } from "../../lib/navigationindicator.js";
 import toolBox from "./toolbox.js";
-import apiWidgets from "./apiwidgets.js";
-import apiwidgets, { chatEntry } from "./apiwidgets.js";
+import apiWidgets, { chatEntry } from "./apiwidgets.js";
 
 const contents = [
   {
@@ -49,7 +48,7 @@ function switchToTab(id) {
   currentTabId = id;
 }
 const SidebarTabButton = (navIndex) =>
-  Widget.Button({
+  Button({
     // hexpand: true,
     className: "sidebar-selector-tab",
     onClicked: (self) => {
@@ -67,7 +66,7 @@ const SidebarTabButton = (navIndex) =>
       ],
     }),
     setup: (button) =>
-      Utils.timeout(1, () => {
+      timeout(1, () => {
         setupCursorHover(button);
         button.toggleClassName(
           "sidebar-selector-tab-active",

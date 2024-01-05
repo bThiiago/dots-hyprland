@@ -3,6 +3,7 @@ import Mpris from "resource:///com/github/Aylur/ags/service/mpris.js";
 import Hyprland from "resource:///com/github/Aylur/ags/service/hyprland.js";
 import { AnimatedCircProg } from "../../lib/animatedcircularprogress.js";
 import { showMusicControls } from "../../variables.js";
+const { Box, EventBox, Label, Overlay, Scrollable } = Widget;
 const { execAsync } = Utils;
 
 function trimTrackTitle(title) {
@@ -25,7 +26,6 @@ const TrackProgress = () => {
     vpack: "center",
     hpack: "center",
     connections: [
-      // Update on change/once every 3 seconds
       [Mpris, _updateProgress],
       [3000, _updateProgress],
     ],
@@ -33,7 +33,7 @@ const TrackProgress = () => {
 };
 
 export const ModuleMusic = () =>
-  Widget.EventBox({
+  EventBox({
     onScrollUp: () => Hyprland.sendMessage(`dispatch workspace -1`),
     onScrollDown: () => Hyprland.sendMessage(`dispatch workspace +1`),
     onPrimaryClickRelease: () =>
@@ -45,24 +45,23 @@ export const ModuleMusic = () =>
         'playerctl next || playerctl position `bc <<< "100 * $(playerctl metadata mpris:length) / 1000000 / 100"` &',
       ]),
     onMiddleClickRelease: () => Mpris.getPlayer("")?.playPause(),
-    child: Widget.Box({
+    child: Box({
       className: "bar-group-margin bar-sides",
       children: [
-        Widget.Box({
+        Box({
           className:
             "bar-group bar-group-standalone bar-group-pad-music spacing-h-10",
           children: [
-            Widget.Box({
-              // Wrap a box cuz overlay can't have margins itself
+            Box({
               homogeneous: true,
               children: [
-                Widget.Overlay({
-                  child: Widget.Box({
+                Overlay({
+                  child: Box({
                     vpack: "center",
                     className: "bar-music-playstate",
                     homogeneous: true,
                     children: [
-                      Widget.Label({
+                      Label({
                         vpack: "center",
                         className: "bar-music-playstate-txt",
                         justification: "center",
@@ -104,9 +103,9 @@ export const ModuleMusic = () =>
                 }),
               ],
             }),
-            Widget.Scrollable({
+            Scrollable({
               hexpand: true,
-              child: Widget.Label({
+              child: Label({
                 className: "txt-smallie txt-onSurfaceVariant txt-semibold",
                 connections: [
                   [
