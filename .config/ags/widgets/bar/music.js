@@ -34,8 +34,8 @@ const TrackProgress = () => {
 
 export const ModuleMusic = () =>
   Widget.EventBox({
-    onScrollUp: () => Hyprland.sendMessage(`hyprctl dispatch workspace -1`),
-    onScrollDown: () => Hyprland.sendMessage(`hyprctl dispatch workspace +1`),
+    onScrollUp: () => Hyprland.sendMessage(`dispatch workspace -1`),
+    onScrollDown: () => Hyprland.sendMessage(`dispatch workspace +1`),
     onPrimaryClickRelease: () =>
       showMusicControls.setValue(!showMusicControls.value),
     onSecondaryClickRelease: () =>

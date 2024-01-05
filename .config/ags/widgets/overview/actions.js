@@ -1,9 +1,13 @@
+import { Utils } from "../../imports.js";
+const { execAsync } = Utils;
 import Hyprland from "resource:///com/github/Aylur/ags/service/hyprland.js";
 
 function moveClientToWorkspace(address, workspace) {
-  Hyprland.sendMessage(
-    `dispatch movetoworkspacesilent ${workspace},address:${address} &`
-  );
+  execAsync([
+    "bash",
+    "-c",
+    `hyprctl dispatch movetoworkspacesilent ${workspace},address:${address} &`,
+  ]);
 }
 
 export function dumpToWorkspace(from, to) {

@@ -1,7 +1,3 @@
-// SPDX-FileCopyrightText: 2021 Uwe Jugel
-// SPDX-License-Identifier: MIT
-// This file is part of md2pango (https://github.com/ubunatic/md2pango).
-
 const monospaceFonts =
   "JetBrains Mono NF, JetBrains Mono Nerd Font, JetBrains Mono NL, SpaceMono NF, SpaceMono Nerd Font, monospace";
 

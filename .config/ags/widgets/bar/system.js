@@ -138,8 +138,8 @@ const BarGroup = ({ child }) =>
 
 export const ModuleSystem = () =>
   Widget.EventBox({
-    onScrollUp: () => Hyprland.sendMessage(`hyprctl dispatch workspace -1`),
-    onScrollDown: () => Hyprland.sendMessage(`hyprctl dispatch workspace +1`),
+    onScrollUp: () => Hyprland.sendMessage(`dispatch workspace -1`),
+    onScrollDown: () => Hyprland.sendMessage(`dispatch workspace +1`),
     onPrimaryClick: () => App.toggleWindow("sideright"),
     child: Widget.Box({
       className: "spacing-h-5",

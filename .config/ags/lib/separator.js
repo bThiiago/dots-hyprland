@@ -1,5 +1,6 @@
-import { App, Service, Utils, Widget } from '../imports.js';
+import { Widget } from "../imports.js";
+const { Box } = Widget;
 
-export const separatorLine = Widget.Box({
-    className: 'separator-line',
-})
+export const separatorLine = Box({
+  className: "separator-line",
+});

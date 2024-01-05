@@ -329,9 +329,8 @@ export const waifuCommands = Box({
         className: "sidebar-chat-chip-toggle",
         setup: setupCursorHover,
         label: "Tags →",
-        onClicked: (label) => {
+        onClicked: () => {
           waifuTags.revealChild = !waifuTags.revealChild;
-          label.label = waifuTags.revealChild ? "Tags ←" : "Tags →";
         },
       }),
       false,
