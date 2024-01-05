@@ -1,45 +1,7 @@
-// This file is for popup notifications
-const { GLib, Gtk } = imports.gi;
-import { App, Service, Utils, Widget } from "../../imports.js";
-import Audio from "resource:///com/github/Aylur/ags/service/audio.js";
+import { Widget } from "../../imports.js";
 import Notifications from "resource:///com/github/Aylur/ags/service/notifications.js";
-const { Box, EventBox, Icon, Scrollable, Label, Button, Revealer } = Widget;
 import Notification from "../../lib/notification.js";
-
-const PopupNotification = (notifObject) =>
-  Widget.Box({
-    homogeneous: true,
-    children: [
-      Widget.EventBox({
-        onHoverLost: () => {
-          notifObject.dismiss();
-        },
-        child: Widget.Revealer({
-          revealChild: true,
-          child: Widget.Box({
-            children: [
-              Notification({
-                notifObject: notifObject,
-                isPopup: true,
-                props: { hpack: "fill" },
-              }),
-            ],
-          }),
-        }),
-      }),
-    ],
-  });
-
-const naiveNotifPopupList = Widget.Box({
-  vertical: true,
-  className: "spacing-v-5",
-  setup: (self) =>
-    self.hook(Notifications, (box) => {
-      box.children = Notifications.popups
-        .reverse()
-        .map((notifItem) => PopupNotification(notifItem));
-    }),
-});
+const { Box } = Widget;
 
 const notifPopupList = Box({
   vertical: true,

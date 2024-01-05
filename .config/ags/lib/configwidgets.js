@@ -1,6 +1,7 @@
 import { Utils, Widget } from "../imports.js";
 import { MaterialIcon } from "./materialicon.js";
 import { setupCursorHover } from "./cursorhover.js";
+const { timeout } = Utils;
 const { Box, Button, Label, Revealer } = Widget;
 
 export const ConfigToggle = ({
@@ -56,7 +57,7 @@ export const ConfigToggle = ({
           toggleButtonIndicator.toggleClassName("switch-fg-true", value);
           toggleButton.toggleClassName("switch-bg-true", value);
           if (value)
-            Utils.timeout(1, () => {
+            timeout(1, () => {
               toggleIcon.label = "check";
               toggleIcon.toggleClassName("txt-poof", false);
             });

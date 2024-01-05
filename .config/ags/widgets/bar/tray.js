@@ -1,6 +1,7 @@
-const { GLib, Gdk, Gtk } = imports.gi;
-import { Service, Widget } from "../../imports.js";
+const { Gtk } = imports.gi;
+import { Utils, Widget } from "../../imports.js";
 import SystemTray from "resource:///com/github/Aylur/ags/service/systemtray.js";
+const { timeout } = Utils;
 const { Box, Icon, Button, Revealer } = Widget;
 const { Gravity } = imports.gi.Gdk;
 
@@ -13,7 +14,7 @@ const SysTrayItem = (item) =>
       hpack: "center",
       binds: [["icon", item, "icon"]],
       setup: (self) =>
-        Utils.timeout(1, () => {
+        timeout(1, () => {
           const styleContext = self.get_parent().get_style_context();
           const width = styleContext.get_property(
             "min-width",
@@ -68,7 +69,7 @@ export const Tray = (props = {}) => {
         .hook(SystemTray, (box, id) => box._onAdded(box, id), "added")
         .hook(SystemTray, (box, id) => box._onRemoved(box, id), "removed"),
   });
-  const trayRevealer = Widget.Revealer({
+  const trayRevealer = Revealer({
     revealChild: false,
     transition: "slide_left",
     transitionDuration: revealerDuration,

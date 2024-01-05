@@ -1,10 +1,9 @@
 const { Gio, GLib } = imports.gi;
-import { App, Service, Utils, Widget } from "../../imports.js";
-const { execAsync, exec } = Utils;
+import { App, Utils } from "../../imports.js";
+const { execAsync } = Utils;
 import Todo from "../../services/todo.js";
 
 export function hasUnterminatedBackslash(inputString) {
-  // Use a regular expression to match a trailing odd number of backslashes
   const regex = /\\+$/;
   return regex.test(inputString);
 }

@@ -1,53 +1,54 @@
 import { Widget } from "../../imports.js";
 import { keybindList } from "../../data/keybinds.js";
+const { Box, Label } = Widget;
 
 export const Keybinds = () =>
-  Widget.Box({
+  Box({
     vertical: false,
     className: "spacing-h-15",
     homogeneous: true,
     children: keybindList.map((group, i) =>
-      Widget.Box({
+      Box({
         // Columns
         vertical: true,
         className: "spacing-v-15",
         children: group.map((category, i) =>
-          Widget.Box({
+          Box({
             // Categories
             vertical: true,
             className: "spacing-v-15",
             children: [
-              Widget.Box({
+              Box({
                 // Category header
                 vertical: false,
                 className: "spacing-h-10",
                 children: [
-                  Widget.Label({
+                  Label({
                     xalign: 0,
                     className: "icon-material txt txt-larger",
                     label: category.icon,
                   }),
-                  Widget.Label({
+                  Label({
                     xalign: 0,
                     className: "cheatsheet-category-title txt",
                     label: category.name,
                   }),
                 ],
               }),
-              Widget.Box({
+              Box({
                 vertical: false,
                 className: "spacing-h-10",
                 children: [
-                  Widget.Box({
+                  Box({
                     // Keys
                     vertical: true,
                     homogeneous: true,
                     children: category.binds.map((keybinds, i) =>
-                      Widget.Box({
+                      Box({
                         // Binds
                         vertical: false,
                         children: keybinds.keys.map((key, i) =>
-                          Widget.Label({
+                          Label({
                             // Specific keys
                             className: `${
                               ["OR", "+"].includes(key)
@@ -60,12 +61,12 @@ export const Keybinds = () =>
                       })
                     ),
                   }),
-                  Widget.Box({
+                  Box({
                     // Actions
                     vertical: true,
                     homogeneous: true,
                     children: category.binds.map((keybinds, i) =>
-                      Widget.Label({
+                      Label({
                         // Binds
                         xalign: 0,
                         label: keybinds.action,

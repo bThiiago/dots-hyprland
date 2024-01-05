@@ -1,16 +1,15 @@
-const { GLib, Gdk, Gtk } = imports.gi;
-import { App, Service, Utils, Widget } from "../../imports.js";
+const { Gtk } = imports.gi;
+import { App, Utils, Widget } from "../../imports.js";
 import Hyprland from "resource:///com/github/Aylur/ags/service/hyprland.js";
-const { Box, EventBox, Button, Revealer } = Widget;
-const { execAsync, exec } = Utils;
-import { MaterialIcon } from "../../lib/materialicon.js";
+const { Box, EventBox, Button } = Widget;
+const { execAsync } = Utils;
 import { separatorLine } from "../../lib/separator.js";
 import { defaultOskLayout, oskLayouts } from "../../data/keyboardlayouts.js";
 import { setupCursorHoverGrab } from "../../lib/cursorhover.js";
 
 const keyboardLayout = defaultOskLayout;
 const keyboardJson = oskLayouts[keyboardLayout];
-execAsync(`ydotoold`).catch(print); // Start ydotool daemon
+execAsync(`ydotoold`).catch(print);
 
 function releaseAllKeys() {
   const keycodes = Array.from(Array(249).keys());
@@ -18,7 +17,6 @@ function releaseAllKeys() {
     .then(console.log("Released all keys"))
     .catch(print);
 }
-var modsPressed = false;
 
 const topDecor = Box({
   vertical: true,
@@ -35,20 +33,6 @@ const topDecor = Box({
     }),
   ],
 });
-
-const keyboardControlButton = (icon, text, runFunction) =>
-  Button({
-    className: "osk-control-button spacing-h-10",
-    onClicked: () => runFunction(),
-    child: Widget.Box({
-      children: [
-        MaterialIcon(icon, "norm"),
-        Widget.Label({
-          label: `${text}`,
-        }),
-      ],
-    }),
-  });
 
 const keyboardControls = Box({
   vertical: true,
@@ -69,7 +53,6 @@ const keyboardControls = Box({
     Button({
       className: "osk-control-button txt-norm icon-material",
       onClicked: () => {
-        // TODO: Proper clipboard widget, since fuzzel doesn't receive mouse inputs
         execAsync([
           `bash`,
           `-c`,
@@ -98,16 +81,13 @@ const keyboardItself = (kbJson) => {
               let pressed = false;
               if (key.keytype == "normal") {
                 button.connect("pressed", () => {
-                  // mouse down
                   execAsync(`ydotool key ${key.keycode}:1`);
                 });
                 button.connect("clicked", () => {
-                  // release
                   execAsync(`ydotool key ${key.keycode}:0`);
                 });
               } else if (key.keytype == "modkey") {
                 button.connect("pressed", () => {
-                  // release
                   if (pressed) {
                     execAsync(`ydotool key ${key.keycode}:0`);
                     button.toggleClassName("osk-key-active", false);
@@ -142,7 +122,6 @@ const keyboardWindow = Box({
   ],
   setup: (self) =>
     self.hook(App, (box, name, visible) => {
-      // Update on open
       if (name == "osk" && visible) {
         keyboardWindow.setCss(`margin-bottom: -0px;`);
       }

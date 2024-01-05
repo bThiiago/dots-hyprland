@@ -1,6 +1,6 @@
 const { Gio, GLib } = imports.gi;
 import { App, Utils, Widget } from "../../imports.js";
-const { exec, execAsync } = Utils;
+const { exec, execAsync, readFile } = Utils;
 import Mpris from "resource:///com/github/Aylur/ags/service/mpris.js";
 
 const { Box, Button, Label, Overlay, Revealer } = Widget;
@@ -18,7 +18,7 @@ function expandTilde(path) {
 }
 
 const LIGHTDARK_FILE_LOCATION = `${GLib.get_user_cache_dir()}//ags/user/colormode.txt`;
-const lightDark = Utils.readFile(expandTilde(LIGHTDARK_FILE_LOCATION)).trim();
+const lightDark = readFile(expandTilde(LIGHTDARK_FILE_LOCATION)).trim();
 const COVER_COLORSCHEME_SUFFIX = "_colorscheme.css";
 const PREFERRED_PLAYER = "plasma-browser-integration";
 var lastCoverPath = "";

@@ -1,8 +1,9 @@
 import { Widget } from "../../imports.js";
 import { RoundedCorner } from "../../lib/roundedcorner.js";
+const { Window } = Widget;
 
 export const CornerTopleft = () =>
-  Widget.Window({
+  Window({
     name: "cornertl",
     layer: "top",
     anchor: ["top", "left"],
@@ -11,7 +12,7 @@ export const CornerTopleft = () =>
     child: RoundedCorner("topleft", { className: "corner" }),
   });
 export const CornerTopright = () =>
-  Widget.Window({
+  Window({
     name: "cornertr",
     layer: "top",
     anchor: ["top", "right"],
@@ -20,7 +21,7 @@ export const CornerTopright = () =>
     child: RoundedCorner("topright", { className: "corner" }),
   });
 export const CornerBottomleft = () =>
-  Widget.Window({
+  Window({
     name: "cornerbl",
     layer: "top",
     anchor: ["bottom", "left"],
@@ -29,7 +30,7 @@ export const CornerBottomleft = () =>
     child: RoundedCorner("bottomleft", { className: "corner-black" }),
   });
 export const CornerBottomright = () =>
-  Widget.Window({
+  Window({
     name: "cornerbr",
     layer: "top",
     anchor: ["bottom", "right"],

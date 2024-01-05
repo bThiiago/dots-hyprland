@@ -5,6 +5,7 @@ import Network from "resource:///com/github/Aylur/ags/service/network.js";
 import Notifications from "resource:///com/github/Aylur/ags/service/notifications.js";
 import Hyprland from "resource:///com/github/Aylur/ags/service/hyprland.js";
 import { languages } from "../data/languages.js";
+const { exec } = Utils;
 const { Box, Revealer, Stack, Label, Icon } = Widget;
 
 // A guessing func to try to support langs not listed in data/languages.js
@@ -260,9 +261,7 @@ const KeyboardLayout = ({ useFlag } = {}) => {
   var currentKeyboard;
 
   const updateCurrentKeyboards = () => {
-    currentKeyboard = JSON.parse(
-      Utils.exec("hyprctl -j devices")
-    ).keyboards.find(
+    currentKeyboard = JSON.parse(exec("hyprctl -j devices")).keyboards.find(
       (device) => device.name === "at-translated-set-2-keyboard"
     );
     if (currentKeyboard) {

@@ -1,4 +1,4 @@
-import { App, Service, Utils, Widget } from "../../imports.js";
+import { Utils, Widget } from "../../imports.js";
 const { execAsync, exec } = Utils;
 const { Box, EventBox, Label, Revealer, Overlay } = Widget;
 import { AnimatedCircProg } from "../../lib/animatedcircularprogress.js";

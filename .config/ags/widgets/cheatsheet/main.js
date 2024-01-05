@@ -1,61 +1,54 @@
-const { Gdk, Gtk } = imports.gi;
-import { Service, Widget } from "../../imports.js";
+const { Gtk } = imports.gi;
+import { Widget } from "../../imports.js";
 import { Keybinds } from "./keybinds.js";
 import { setupCursorHover } from "../../lib/cursorhover.js";
+const { Box, Label, Button, CenterBox, EventBox, Window } = Widget;
 
 const cheatsheetHeader = () =>
-  Widget.CenterBox({
+  CenterBox({
     vertical: false,
-    startWidget: Widget.Box({}),
-    centerWidget: Widget.Box({
+    startWidget: Box({}),
+    centerWidget: Box({
       vertical: true,
       className: "spacing-h-15",
       children: [
-        Widget.Box({
+        Box({
           hpack: "center",
           className: "spacing-h-5",
           children: [
-            Widget.Label({
+            Label({
               hpack: "center",
               css: "margin-right: 0.682rem;",
               className: "txt-title txt",
               label: "Cheat sheet",
             }),
-            Widget.Label({
+            Label({
               vpack: "center",
               className: "cheatsheet-key txt-small",
               label: "",
             }),
-            Widget.Label({
+            Label({
               vpack: "center",
               className: "cheatsheet-key-notkey txt-small",
               label: "+",
             }),
-            Widget.Label({
+            Label({
               vpack: "center",
               className: "cheatsheet-key txt-small",
               label: "/",
             }),
           ],
         }),
-        Widget.Label({
-          useMarkup: true,
-          selectable: true,
-          justify: Gtk.Justification.CENTER,
-          className: "txt-small txt",
-          label:
-            "Sheet data stored in <tt>~/.config/ags/data/keybinds.js</tt>\nChange keybinds in <tt>~/.config/hypr/keybinds.conf</tt>",
-        }),
       ],
     }),
-    endWidget: Widget.Button({
+    endWidget: Button({
       vpack: "start",
       hpack: "end",
       className: "cheatsheet-closebtn icon-material txt txt-hugeass",
       onClicked: () => {
         App.toggleWindow("cheatsheet");
       },
-      child: Widget.Label({
+      child: Label({
         className: "icon-material txt txt-hugeass",
         label: "close",
       }),
@@ -63,24 +56,24 @@ const cheatsheetHeader = () =>
     }),
   });
 
-const clickOutsideToClose = Widget.EventBox({
+const clickOutsideToClose = EventBox({
   onPrimaryClick: () => App.closeWindow("cheatsheet"),
   onSecondaryClick: () => App.closeWindow("cheatsheet"),
   onMiddleClick: () => App.closeWindow("cheatsheet"),
 });
 
 export default () =>
-  Widget.Window({
+  Window({
     name: "cheatsheet",
     exclusivity: "ignore",
     focusable: true,
     popup: true,
     visible: false,
-    child: Widget.Box({
+    child: Box({
       vertical: true,
       children: [
         clickOutsideToClose,
-        Widget.Box({
+        Box({
           vertical: true,
           className: "cheatsheet-bg spacing-v-15",
           children: [cheatsheetHeader(), Keybinds()],

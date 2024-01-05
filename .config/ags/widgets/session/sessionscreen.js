@@ -7,23 +7,24 @@ import {
   SCREEN_WIDTH,
 } from "../../imports.js";
 const { execAsync } = Utils;
+const { Box, EventBox, Label, Button, Overlay, Revealer } = Widget;
 
 const SessionButton = (name, icon, command, props = {}) => {
-  const buttonDescription = Widget.Revealer({
+  const buttonDescription = Revealer({
     vpack: "end",
     transitionDuration: 200,
     transition: "slide_down",
     revealChild: false,
-    child: Widget.Label({
+    child: Label({
       className: "txt-smaller session-button-desc",
       label: name,
     }),
   });
-  return Widget.Button({
+  return Button({
     onClicked: command,
     className: "session-button",
-    child: Widget.Overlay({
-      child: Widget.Label({
+    child: Overlay({
+      child: Label({
         vexpand: true,
         className: "icon-material",
         label: icon,
@@ -95,7 +96,7 @@ export default () => {
     () => App.closeWindow("session"),
     { className: "session-button-cancel" }
   );
-  return Widget.Box({
+  return Box({
     className: "session-bg",
     css: `
         min-width: ${SCREEN_WIDTH * 1.5}px; 
@@ -103,30 +104,30 @@ export default () => {
         `,
     vertical: true,
     children: [
-      Widget.EventBox({
+      EventBox({
         onPrimaryClick: () => App.closeWindow("session"),
         onSecondaryClick: () => App.closeWindow("session"),
         onMiddleClick: () => App.closeWindow("session"),
       }),
-      Widget.Box({
+      Box({
         hpack: "center",
         vexpand: true,
         vertical: true,
         children: [
-          Widget.Box({
+          Box({
             vpack: "center",
             vertical: true,
             className: "spacing-v-15",
             children: [
-              Widget.Box({
+              Box({
                 vertical: true,
                 css: "margin-bottom: 0.682rem;",
                 children: [
-                  Widget.Label({
+                  Label({
                     className: "txt-title txt",
                     label: "Session",
                   }),
-                  Widget.Label({
+                  Label({
                     justify: Gtk.Justification.CENTER,
                     className: "txt-small txt",
                     label:
@@ -134,17 +135,17 @@ export default () => {
                   }),
                 ],
               }),
-              Widget.Box({
+              Box({
                 hpack: "center",
                 className: "spacing-h-15",
                 children: [lockButton, logoutButton, sleepButton],
               }),
-              Widget.Box({
+              Box({
                 hpack: "center",
                 className: "spacing-h-15",
                 children: [hibernateButton, shutdownButton, rebootButton],
               }),
-              Widget.Box({
+              Box({
                 hpack: "center",
                 className: "spacing-h-15",
                 children: [cancelButton],

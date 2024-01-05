@@ -1,4 +1,5 @@
 import { Service, Utils } from "../imports.js";
+const { timeout } = Utils;
 
 class IndicatorService extends Service {
   static {
@@ -11,7 +12,7 @@ class IndicatorService extends Service {
   popup(value) {
     this.emit("popup", value);
     this._count++;
-    Utils.timeout(this._delay, () => {
+    timeout(this._delay, () => {
       this._count--;
 
       if (this._count === 0) this.emit("popup", -1);

@@ -1,6 +1,7 @@
 const { GLib, Gio } = imports.gi;
 import { Utils } from "../imports.js";
 import Battery from "resource:///com/github/Aylur/ags/service/battery.js";
+const { execAsync, timeout, writeFile } = Utils;
 
 export function fileExists(filePath) {
   let file = Gio.File.new_for_path(filePath);
@@ -23,9 +24,9 @@ const FIRST_RUN_NOTIF_BODY = `Looks like this is your first run.\nHit <span fore
 export async function firstRunWelcome() {
   if (!fileExists(FIRST_RUN_PATH)) {
     console.log("uuwuwuwuwuwuwuwuu");
-    Utils.writeFile(FIRST_RUN_FILE_CONTENT, FIRST_RUN_PATH)
+    writeFile(FIRST_RUN_FILE_CONTENT, FIRST_RUN_PATH)
       .then(() => {
-        Utils.execAsync([
+        execAsync([
           "bash",
           "-c",
           `sleep 0.5; notify-send "Millis since epoch" "$(date +%s%N | cut -b1-13)"; sleep 0.5; notify-send '${FIRST_RUN_NOTIF_TITLE}' '${FIRST_RUN_NOTIF_BODY}' -a '${APP_NAME}' &`,
@@ -57,7 +58,7 @@ async function batteryMessage() {
   for (let i = BATTERY_WARN_LEVELS.length - 1; i >= 0; i--) {
     if (perc <= BATTERY_WARN_LEVELS[i] && !charging && !batteryWarned) {
       batteryWarned = true;
-      Utils.execAsync([
+      execAsync([
         "bash",
         "-c",
         `notify-send "${BATTERY_WARN_TITLES[i]}" "${BATTERY_WARN_BODIES[i]}" -u critical -a 'ags' &`,
@@ -68,6 +69,6 @@ async function batteryMessage() {
 }
 
 firstRunWelcome();
-Utils.timeout(1, () => {
+timeout(1, () => {
   Battery.connect("changed", () => batteryMessage());
 });

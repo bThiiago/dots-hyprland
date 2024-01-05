@@ -1,30 +1,27 @@
-const { Gdk, Gtk } = imports.gi;
-import { App, Service, Utils, Widget } from "../../imports.js";
-const { execAsync, exec } = Utils;
+const { Gtk } = imports.gi;
+import { App, Utils, Widget } from "../../imports.js";
+const { execAsync, timeout } = Utils;
+const { Box, Label, Icon, Button, Revealer } = Widget;
 import { searchItem } from "./searchitem.js";
-import {
-  execAndClose,
-  startsWithNumber,
-  launchCustomCommand,
-} from "./miscfunctions.js";
+import { execAndClose, launchCustomCommand } from "./miscfunctions.js";
 
 export const DirectoryButton = ({ parentPath, name, type, icon }) => {
-  const actionText = Widget.Revealer({
+  const actionText = Revealer({
     revealChild: false,
     transition: "crossfade",
     transitionDuration: 200,
-    child: Widget.Label({
+    child: Label({
       className: "overview-search-results-txt txt txt-small txt-action",
       label: "Open",
     }),
   });
-  const actionTextRevealer = Widget.Revealer({
+  const actionTextRevealer = Revealer({
     revealChild: false,
     transition: "slide_left",
     transitionDuration: 300,
     child: actionText,
   });
-  return Widget.Button({
+  return Button({
     className: "overview-search-result-btn",
     onClicked: () => {
       App.closeWindow("overview");
@@ -32,18 +29,18 @@ export const DirectoryButton = ({ parentPath, name, type, icon }) => {
         print
       );
     },
-    child: Widget.Box({
+    child: Box({
       children: [
-        Widget.Box({
+        Box({
           vertical: false,
           children: [
-            Widget.Box({
+            Box({
               className: "overview-search-results-icon",
               homogeneous: true,
-              child: Widget.Icon({
+              child: Icon({
                 icon: icon,
                 setup: (self) =>
-                  Utils.timeout(1, () => {
+                  timeout(1, () => {
                     const styleContext = self.get_parent().get_style_context();
                     const width = styleContext.get_property(
                       "min-width",
@@ -57,11 +54,11 @@ export const DirectoryButton = ({ parentPath, name, type, icon }) => {
                   }),
               }),
             }),
-            Widget.Label({
+            Label({
               className: "overview-search-results-txt txt txt-norm",
               label: name,
             }),
-            Widget.Box({ hexpand: true }),
+            Box({ hexpand: true }),
             actionTextRevealer,
           ],
         }),
@@ -99,39 +96,39 @@ export const CalculationResultButton = ({ result, text }) =>
   });
 
 export const DesktopEntryButton = (app) => {
-  const actionText = Widget.Revealer({
+  const actionText = Revealer({
     revealChild: false,
     transition: "crossfade",
     transitionDuration: 200,
-    child: Widget.Label({
+    child: Label({
       className: "overview-search-results-txt txt txt-small txt-action",
       label: "Launch",
     }),
   });
-  const actionTextRevealer = Widget.Revealer({
+  const actionTextRevealer = Revealer({
     revealChild: false,
     transition: "slide_left",
     transitionDuration: 300,
     child: actionText,
   });
-  return Widget.Button({
+  return Button({
     className: "overview-search-result-btn",
     onClicked: () => {
       App.closeWindow("overview");
       app.launch();
     },
-    child: Widget.Box({
+    child: Box({
       children: [
-        Widget.Box({
+        Box({
           vertical: false,
           children: [
-            Widget.Box({
+            Box({
               className: "overview-search-results-icon",
               homogeneous: true,
-              child: Widget.Icon({
+              child: Icon({
                 icon: app.iconName,
                 setup: (self) =>
-                  Utils.timeout(1, () => {
+                  timeout(1, () => {
                     const styleContext = self.get_parent().get_style_context();
                     const width = styleContext.get_property(
                       "min-width",
@@ -145,11 +142,11 @@ export const DesktopEntryButton = (app) => {
                   }),
               }),
             }),
-            Widget.Label({
+            Label({
               className: "overview-search-results-txt txt txt-norm",
               label: app.name,
             }),
-            Widget.Box({ hexpand: true }),
+            Box({ hexpand: true }),
             actionTextRevealer,
           ],
         }),

@@ -1,20 +1,27 @@
-const { Gdk, Gio, Gtk } = imports.gi;
+const { Gdk, Gtk } = imports.gi;
 import {
   App,
-  Service,
   Utils,
-  Variable,
   Widget,
   SCREEN_HEIGHT,
   SCREEN_WIDTH,
 } from "../../imports.js";
 import Applications from "resource:///com/github/Aylur/ags/service/applications.js";
 import Hyprland from "resource:///com/github/Aylur/ags/service/hyprland.js";
-const { execAsync, exec } = Utils;
-import {
-  setupCursorHover,
-  setupCursorHoverGrab,
-} from "../../lib/cursorhover.js";
+const { execAsync, exec, timeout } = Utils;
+const {
+  Box,
+  EventBox,
+  Button,
+  Label,
+  Entry,
+  Menu,
+  MenuItem,
+  Icon,
+  Revealer,
+  Scrollable,
+} = Widget;
+import { setupCursorHoverGrab } from "../../lib/cursorhover.js";
 import { DoubleRevealer } from "../../lib/advancedwidgets.js";
 import {
   execAndClose,
@@ -35,7 +42,7 @@ import {
 import { dumpToWorkspace, swapWorkspace } from "./actions.js";
 
 // Add math funcs
-const { abs, sin, cos, tan, cot, asin, acos, atan, acot } = Math;
+const { sin, cos, tan, cot, asin, acos, atan, acot } = Math;
 const pi = Math.PI;
 // trigonometric funcs for deg
 const sind = (x) => sin((x * pi) / 180);
@@ -113,7 +120,7 @@ function substitute(str) {
 }
 
 const ContextWorkspaceArray = ({ label, actionFunc, thisWorkspace }) =>
-  Widget.MenuItem({
+  MenuItem({
     label: `${label}`,
     setup: (menuItem) => {
       let submenu = new Gtk.Menu();
@@ -144,7 +151,7 @@ const client = ({
   const revealInfoCondition = Math.min(w, h) * OVERVIEW_SCALE > 70;
   if (w <= 0 || h <= 0) return null;
   title = truncateTitle(title);
-  return Widget.Button({
+  return Button({
     className: "overview-tasks-window",
     hpack: "center",
     vpack: "center",
@@ -156,11 +163,11 @@ const client = ({
       Hyprland.sendMessage(`dispatch closewindow address:${address}`),
     onSecondaryClick: (button) => {
       button.toggleClassName("overview-tasks-window-selected", true);
-      const menu = Widget.Menu({
+      const menu = Menu({
         className: "menu",
         children: [
-          Widget.MenuItem({
-            child: Widget.Label({
+          MenuItem({
+            child: Label({
               xalign: 0,
               label: "Close (Middle-click)",
             }),
@@ -187,18 +194,18 @@ const client = ({
       });
       menu.popup_at_pointer(null); // Show the menu at the pointer's position
     },
-    child: Widget.Box({
+    child: Box({
       css: `
                 min-width: ${Math.max(w * OVERVIEW_SCALE - 4, 1)}px;
                 min-height: ${Math.max(h * OVERVIEW_SCALE - 4, 1)}px;
             `,
       homogeneous: true,
-      child: Widget.Box({
+      child: Box({
         vertical: true,
         vpack: "center",
         className: "spacing-v-5",
         children: [
-          Widget.Icon({
+          Icon({
             icon: substitute(c),
             size: (Math.min(w, h) * OVERVIEW_SCALE) / 2.5,
           }),
@@ -207,11 +214,11 @@ const client = ({
             transition1: "slide_right",
             transition2: "slide_down",
             revealChild: revealInfoCondition,
-            child: Widget.Scrollable({
+            child: Scrollable({
               hexpand: true,
               vscroll: "never",
               hscroll: "automatic",
-              child: Widget.Label({
+              child: Label({
                 truncate: "end",
                 className: `${xwayland ? "txt txt-italic" : "txt"}`,
                 css: `
@@ -262,7 +269,7 @@ const client = ({
 const workspace = (index) => {
   const fixed = Gtk.Fixed.new();
   const WorkspaceNumber = (index) =>
-    Widget.Label({
+    Label({
       className: "overview-tasks-workspace-number",
       label: `${index}`,
       css: `
@@ -276,7 +283,7 @@ const workspace = (index) => {
             }px;
         `,
     });
-  const widget = Widget.Box({
+  const widget = Box({
     className: "overview-tasks-workspace",
     vpack: "center",
     css: `
@@ -284,7 +291,7 @@ const workspace = (index) => {
         min-height: ${SCREEN_HEIGHT * OVERVIEW_SCALE}px;
         `,
     children: [
-      Widget.EventBox({
+      EventBox({
         hexpand: true,
         vexpand: true,
         onPrimaryClick: () => {
@@ -349,7 +356,7 @@ const arr = (s, n) => {
 };
 
 const OverviewRow = ({ startWorkspace, workspaces, windowName = "overview" }) =>
-  Widget.Box({
+  Box({
     children: arr(startWorkspace, workspaces).map(workspace),
     properties: [
       [
@@ -392,18 +399,18 @@ export const SearchAndWindows = () => {
   var _appSearchResults = [];
 
   const ClickToClose = ({ ...props }) =>
-    Widget.EventBox({
+    EventBox({
       ...props,
       onPrimaryClick: () => App.closeWindow("overview"),
       onSecondaryClick: () => App.closeWindow("overview"),
       onMiddleClick: () => App.closeWindow("overview"),
     });
-  const resultsBox = Widget.Box({
+  const resultsBox = Box({
     className: "overview-search-results",
     vertical: true,
     vexpand: true,
   });
-  const resultsRevealer = Widget.Revealer({
+  const resultsRevealer = Revealer({
     transitionDuration: 200,
     revealChild: false,
     transition: "slide_down",
@@ -411,11 +418,11 @@ export const SearchAndWindows = () => {
     hpack: "center",
     child: resultsBox,
   });
-  const overviewRevealer = Widget.Revealer({
+  const overviewRevealer = Revealer({
     revealChild: true,
     transition: "slide_down",
     transitionDuration: 200,
-    child: Widget.Box({
+    child: Box({
       vertical: true,
       className: "overview-tasks",
       children: [
@@ -424,35 +431,35 @@ export const SearchAndWindows = () => {
       ],
     }),
   });
-  const entryPromptRevealer = Widget.Revealer({
+  const entryPromptRevealer = Revealer({
     transition: "crossfade",
     transitionDuration: 150,
     revealChild: true,
     hpack: "center",
-    child: Widget.Label({
+    child: Label({
       className: "overview-search-prompt txt-small txt",
       label:
         searchPromptTexts[Math.floor(Math.random() * searchPromptTexts.length)],
     }),
   });
 
-  const entryIconRevealer = Widget.Revealer({
+  const entryIconRevealer = Revealer({
     transition: "crossfade",
     transitionDuration: 150,
     revealChild: false,
     hpack: "end",
-    child: Widget.Label({
+    child: Label({
       className: "txt txt-large icon-material overview-search-icon",
       label: "search",
     }),
   });
 
-  const entryIcon = Widget.Box({
+  const entryIcon = Box({
     className: "overview-search-prompt-box",
     setup: (box) => box.pack_start(entryIconRevealer, true, true, 0),
   });
 
-  const entry = Widget.Entry({
+  const entry = Entry({
     className: "overview-search-box txt-small txt",
     hpack: "center",
     onAccept: (self) => {
@@ -584,20 +591,20 @@ export const SearchAndWindows = () => {
     },
   });
 
-  return Widget.Box({
+  return Box({
     vertical: true,
     children: [
       ClickToClose({
         // Top margin. Also works as a click-outside-to-close thing
-        child: Widget.Box({
+        child: Box({
           className: "bar-height",
         }),
       }),
-      Widget.Box({
+      Box({
         hpack: "center",
         children: [
           entry,
-          Widget.Box({
+          Box({
             className: "overview-search-icon-box",
             setup: (box) => box.pack_start(entryPromptRevealer, true, true, 0),
           }),
@@ -620,34 +627,17 @@ export const SearchAndWindows = () => {
           }
         })
         .on("key-press-event", (widget, event) => {
-          // Typing
           if (
             event.get_keyval()[1] >= 32 &&
             event.get_keyval()[1] <= 126 &&
             widget != entry
           ) {
-            Utils.timeout(1, () => entry.grab_focus());
+            timeout(1, () => entry.grab_focus());
             entry.set_text(
               entry.text + String.fromCharCode(event.get_keyval()[1])
             );
             entry.set_position(-1);
           }
         }),
-    // connections: [
-    //     [App, (_b, name, visible) => {
-    //         if (name == 'overview' && !visible) {
-    //             entryPromptRevealer.child.label = searchPromptTexts[Math.floor(Math.random() * searchPromptTexts.length)];
-    //             resultsBox.children = [];
-    //             entry.set_text('');
-    //         }
-    //     }],
-    //     ['key-press-event', (widget, event) => { // Typing
-    //         if (event.get_keyval()[1] >= 32 && event.get_keyval()[1] <= 126 && widget != entry) {
-    //             Utils.timeout(1, () => entry.grab_focus());
-    //             entry.set_text(entry.text + String.fromCharCode(event.get_keyval()[1]));
-    //             entry.set_position(-1);
-    //         }
-    //     }],
-    // ],
   });
 };

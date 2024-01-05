@@ -49,7 +49,7 @@ const NotificationIcon = (notifObject) => {
             vpack: "center",
             icon: icon,
             setup: (self) =>
-              Utils.timeout(1, () => {
+              timeout(1, () => {
                 const styleContext = self.get_parent().get_style_context();
                 const width = styleContext.get_property(
                   "min-width",
@@ -89,10 +89,10 @@ export default ({
   const destroyWithAnims = () => {
     widget.sensitive = false;
     notificationBox.setCss(middleClickClose);
-    Utils.timeout(200, () => {
+    timeout(200, () => {
       wholeThing.revealChild = false;
     });
-    Utils.timeout(400, () => {
+    timeout(400, () => {
       command();
       wholeThing.destroy();
     });
@@ -176,7 +176,7 @@ export default ({
               }),
             }),
             ...notifObject.actions.map((action) =>
-              Widget.Button({
+              Button({
                 hexpand: true,
                 className: `notif-action notif-action-${notifObject.urgency}`,
                 onClicked: () => notifObject.invoke(action.id),
@@ -423,10 +423,10 @@ export default ({
                 self.setCss(leftAnim1);
                 widget.sensitive = false;
               }
-              Utils.timeout(200, () => {
+              timeout(200, () => {
                 wholeThing.revealChild = false;
               });
-              Utils.timeout(400, () => {
+              timeout(400, () => {
                 command();
                 wholeThing.destroy();
               });

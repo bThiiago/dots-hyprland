@@ -1,30 +1,17 @@
-const { Gdk, Gio, GLib, Gtk, Pango } = imports.gi;
-import { App, Utils, Widget } from "../../../imports.js";
-const {
-  Box,
-  Button,
-  Entry,
-  EventBox,
-  Icon,
-  Label,
-  Revealer,
-  Scrollable,
-  Stack,
-} = Widget;
-const { execAsync, exec } = Utils;
+const { Gio, GLib, Gtk } = imports.gi;
+import { Utils, Widget } from "../../../imports.js";
+const { Box, Button, Label, Revealer, Scrollable, Stack } = Widget;
+const { execAsync, exec, timeout } = Utils;
 import { MaterialIcon } from "../../../lib/materialicon.js";
 import { MarginRevealer } from "../../../lib/advancedwidgets.js";
-import {
-  setupCursorHover,
-  setupCursorHoverInfo,
-} from "../../../lib/cursorhover.js";
+import { setupCursorHover } from "../../../lib/cursorhover.js";
 import WaifuService from "../../../services/waifus.js";
 
-const IMAGE_REVEAL_DELAY = 13; // Some wait for inits n other weird stuff
+const IMAGE_REVEAL_DELAY = 13;
 
 // Create cache folder and clear pics from previous session
-Utils.exec(`bash -c 'mkdir -p ${GLib.get_user_cache_dir()}/ags/media/waifus'`);
-Utils.exec(`bash -c 'rm ${GLib.get_user_cache_dir()}/ags/media/waifus/*'`);
+exec(`bash -c 'mkdir -p ${GLib.get_user_cache_dir()}/ags/media/waifus'`);
+exec(`bash -c 'rm ${GLib.get_user_cache_dir()}/ags/media/waifus/*'`);
 
 export function fileExists(filePath) {
   let file = Gio.File.new_for_path(filePath);
@@ -191,10 +178,10 @@ const WaifuImage = (taglist) => {
             downloadState.shown = "done";
             // blockImage.css = `background-color: ${dominant_color};`;
             blockImage.css = `background-image:url('${thisBlock._imagePath}');`; // TODO: use proper image widget
-            Utils.timeout(IMAGE_REVEAL_DELAY, () => {
+            timeout(IMAGE_REVEAL_DELAY, () => {
               blockImageRevealer.revealChild = true;
             });
-            Utils.timeout(
+            timeout(
               IMAGE_REVEAL_DELAY + blockImageRevealer.transitionDuration,
               () => (blockImage.get_children()[0].revealChild = true)
             );
@@ -202,7 +189,7 @@ const WaifuImage = (taglist) => {
           };
           if (!force && fileExists(thisBlock._imagePath)) showImage();
           else
-            Utils.execAsync([
+            execAsync([
               "bash",
               "-c",
               `wget -O '${thisBlock._imagePath}' '${url}'`,
@@ -278,7 +265,7 @@ export const waifuView = Scrollable({
     const vScrollbar = scrolledWindow.get_vscrollbar();
     vScrollbar.get_style_context().add_class("sidebar-scrollbar");
     // Avoid click-to-scroll-widget-to-view behavior
-    Utils.timeout(1, () => {
+    timeout(1, () => {
       const viewport = scrolledWindow.child;
       viewport.set_focus_vadjustment(new Gtk.Adjustment(undefined));
     });
@@ -357,7 +344,7 @@ export const sendMessage = (text) => {
     else if (text.startsWith("/test")) {
       const newImage = WaifuImage(["/test"]);
       waifuContent.add(newImage);
-      Utils.timeout(IMAGE_REVEAL_DELAY, () =>
+      timeout(IMAGE_REVEAL_DELAY, () =>
         newImage._update(
           {
             // Needs timeout or inits won't make it

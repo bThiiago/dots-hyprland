@@ -1,5 +1,5 @@
 import { Widget } from "../../imports.js";
-const { Box, Label } = Widget;
+const { Box, Label, Revealer } = Widget;
 import { showColorScheme } from "../../variables.js";
 
 const ColorBox = ({ name = "Color", ...rest }) =>
@@ -48,7 +48,7 @@ const colorschemeContent = Box({
 });
 
 export default () =>
-  Widget.Revealer({
+  Revealer({
     transition: "slide_down",
     transitionDuration: 200,
     child: colorschemeContent,

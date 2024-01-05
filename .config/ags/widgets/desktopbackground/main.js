@@ -1,17 +1,17 @@
 import { Widget } from "../../imports.js";
-
 import TimeAndLaunchesWidget from "./timeandlaunches.js";
 import SystemWidget from "./system.js";
+const { Box, Overlay, Window } = Widget;
 
 export default () =>
-  Widget.Window({
+  Window({
     name: "desktopbackground",
     anchor: ["top", "bottom", "left", "right"],
     layer: "background",
     exclusivity: "normal",
     visible: true,
-    child: Widget.Overlay({
-      child: Widget.Box({
+    child: Overlay({
+      child: Box({
         hexpand: true,
         vexpand: true,
       }),
