@@ -1,10 +1,11 @@
-import { App, Service, Utils, Widget } from "../imports.js";
+import { App, Utils, Widget } from "../imports.js";
 import { MaterialIcon } from "./materialicon.js";
 import Bluetooth from "resource:///com/github/Aylur/ags/service/bluetooth.js";
 import Network from "resource:///com/github/Aylur/ags/service/network.js";
 import Notifications from "resource:///com/github/Aylur/ags/service/notifications.js";
 import Hyprland from "resource:///com/github/Aylur/ags/service/hyprland.js";
 import { languages } from "../data/languages.js";
+const { Box, Revealer, Stack, Label, Icon } = Widget;
 
 // A guessing func to try to support langs not listed in data/languages.js
 function isLanguageMatch(abbreviation, word) {
@@ -23,7 +24,7 @@ function isLanguageMatch(abbreviation, word) {
 }
 
 export const NotificationIndicator = (notifCenterName = "sideright") => {
-  const widget = Widget.Revealer({
+  const widget = Revealer({
     transition: 150,
     transition: "slide_left",
     revealChild: false,
@@ -43,10 +44,10 @@ export const NotificationIndicator = (notifCenterName = "sideright") => {
             self.revealChild = false;
           }
         }),
-    child: Widget.Box({
+    child: Box({
       children: [
         MaterialIcon("notifications", "norm"),
-        Widget.Label({
+        Label({
           className: "txt-small titlefont",
           properties: [
             ["increment", (self) => self._unreadCount++],
@@ -80,19 +81,19 @@ export const NotificationIndicator = (notifCenterName = "sideright") => {
 };
 
 export const BluetoothIndicator = () =>
-  Widget.Stack({
+  Stack({
     transition: "slide_up_down",
     items: [
       [
         "true",
-        Widget.Label({
+        Label({
           className: "txt-norm icon-material",
           label: "bluetooth",
         }),
       ],
       [
         "false",
-        Widget.Label({
+        Label({
           className: "txt-norm icon-material",
           label: "bluetooth_disabled",
         }),
@@ -105,31 +106,31 @@ export const BluetoothIndicator = () =>
   });
 
 const NetworkWiredIndicator = () =>
-  Widget.Stack({
+  Stack({
     transition: "slide_up_down",
     items: [
       ["fallback", SimpleNetworkIndicator()],
       [
         "unknown",
-        Widget.Label({
+        Label({
           className: "txt-norm icon-material",
           label: "wifi_off",
         }),
       ],
       [
         "disconnected",
-        Widget.Label({
+        Label({
           className: "txt-norm icon-material",
           label: "signal_wifi_off",
         }),
       ],
       [
         "connected",
-        Widget.Label({ className: "txt-norm icon-material", label: "lan" }),
+        Label({ className: "txt-norm icon-material", label: "lan" }),
       ],
       [
         "connecting",
-        Widget.Label({
+        Label({
           className: "txt-norm icon-material",
           label: "settings_ethernet",
         }),
@@ -148,7 +149,7 @@ const NetworkWiredIndicator = () =>
   });
 
 const SimpleNetworkIndicator = () =>
-  Widget.Icon({
+  Icon({
     setup: (self) =>
       self.hook(Network, (self) => {
         const icon = Network[Network.primary || "wifi"]?.iconName;
@@ -158,61 +159,61 @@ const SimpleNetworkIndicator = () =>
   });
 
 const NetworkWifiIndicator = () =>
-  Widget.Stack({
+  Stack({
     transition: "slide_up_down",
     items: [
       [
         "disabled",
-        Widget.Label({
+        Label({
           className: "txt-norm icon-material",
           label: "wifi_off",
         }),
       ],
       [
         "disconnected",
-        Widget.Label({
+        Label({
           className: "txt-norm icon-material",
           label: "signal_wifi_off",
         }),
       ],
       [
         "connecting",
-        Widget.Label({
+        Label({
           className: "txt-norm icon-material",
           label: "settings_ethernet",
         }),
       ],
       [
         "0",
-        Widget.Label({
+        Label({
           className: "txt-norm icon-material",
           label: "signal_wifi_0_bar",
         }),
       ],
       [
         "1",
-        Widget.Label({
+        Label({
           className: "txt-norm icon-material",
           label: "network_wifi_1_bar",
         }),
       ],
       [
         "2",
-        Widget.Label({
+        Label({
           className: "txt-norm icon-material",
           label: "network_wifi_2_bar",
         }),
       ],
       [
         "3",
-        Widget.Label({
+        Label({
           className: "txt-norm icon-material",
           label: "network_wifi_3_bar",
         }),
       ],
       [
         "4",
-        Widget.Label({
+        Label({
           className: "txt-norm icon-material",
           label: "signal_wifi_4_bar",
         }),
@@ -234,7 +235,7 @@ const NetworkWifiIndicator = () =>
   });
 
 export const NetworkIndicator = () =>
-  Widget.Stack({
+  Stack({
     transition: "slide_up_down",
     items: [
       ["fallback", SimpleNetworkIndicator()],
@@ -269,22 +270,19 @@ const KeyboardLayout = ({ useFlag } = {}) => {
     }
     languageStackArray = Array.from({ length: initLangs.length }, (_, i) => {
       const lang = languages.find((lang) => lang.layout == initLangs[i]);
-      if (!lang) return [initLangs[i], Widget.Label({ label: initLangs[i] })];
-      return [
-        lang.layout,
-        Widget.Label({ label: useFlag ? lang.flag : lang.layout }),
-      ];
+      if (!lang) return [initLangs[i], Label({ label: initLangs[i] })];
+      return [lang.layout, Label({ label: useFlag ? lang.flag : lang.layout })];
     });
   };
   updateCurrentKeyboards();
-  const widgetRevealer = Widget.Revealer({
+  const widgetRevealer = Revealer({
     transition: 150,
     transition: "slide_left",
     revealChild: languageStackArray.length > 1,
   });
-  const widgetContent = Widget.Stack({
+  const widgetContent = Stack({
     transition: "slide_up_down",
-    items: [...languageStackArray, ["undef", Widget.Label({ label: "?" })]],
+    items: [...languageStackArray, ["undef", Label({ label: "?" })]],
     setup: (self) =>
       self.hook(
         Hyprland,
@@ -312,9 +310,9 @@ const KeyboardLayout = ({ useFlag } = {}) => {
 };
 
 export const StatusIcons = (props = {}) =>
-  Widget.Box({
+  Box({
     ...props,
-    child: Widget.Box({
+    child: Box({
       className: "spacing-h-15",
       children: [
         KeyboardLayout({ useFlag: false }),

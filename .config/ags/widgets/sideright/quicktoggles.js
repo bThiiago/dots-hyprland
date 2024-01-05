@@ -19,6 +19,7 @@ export const ToggleIconWifi = (props = {}) =>
         'XDG_CURRENT_DESKTOP="gnome" gnome-control-center network',
         "&",
       ]);
+      App.closeWindow("sideright");
     },
     child: NetworkIndicator(),
     connections: [
@@ -65,6 +66,7 @@ export const ToggleIconBluetooth = (props = {}) =>
         'XDG_CURRENT_DESKTOP="gnome" gnome-control-center bluetooth',
         "&",
       ]);
+      App.closeWindow("sideright");
     },
     child: BluetoothIndicator(),
     connections: [

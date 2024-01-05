@@ -1,9 +1,10 @@
 const { Gtk } = imports.gi;
 const Lang = imports.lang;
 import { Widget } from "../imports.js";
+const { DrawingArea } = Widget;
 
 export const NavigationIndicator = (count, vertical, props) =>
-  Widget.DrawingArea({
+  DrawingArea({
     ...props,
     setup: (area) => {
       const styleContext = area.get_style_context();

@@ -15,29 +15,52 @@ const dummyOccupiedWs = Box({ className: "bar-ws bar-ws-occupied" }); // Not sho
 // Font size = workspace id
 const WorkspaceContents = (count = 10) => {
   return DrawingArea({
-    properties: [["workspaceMask", 0]],
-    css: `transition: 500ms cubic-bezier(0.1, 1, 0, 1);`,
-    setup: (area) =>
+    properties: [
+      ["initialized", false],
+      ["workspaceMask", 0],
+      [
+        "updateMask",
+        (self) => {
+          if (self._initialized) return; // We only need this to run once
+          console.log("update dayo");
+          const workspaces = Hyprland.workspaces;
+          let workspaceMask = 0;
+          for (let i = 0; i < workspaces.length; i++) {
+            const ws = workspaces[i];
+            if (ws.id < 0) continue; // Ignore scratchpads
+            if (ws.id > count) return; // Not rendered
+            if (workspaces[i].windows > 0) {
+              workspaceMask |= 1 << ws.id;
+            }
+          }
+          self._workspaceMask = workspaceMask;
+          self._initialized = true;
+        },
+      ],
+      [
+        "toggleMask",
+        (self, occupied, name) => {
+          if (occupied) self._workspaceMask |= 1 << parseInt(name);
+          else self._workspaceMask &= ~(1 << parseInt(name));
+        },
+      ],
+    ],
+    css: `transition: 200ms cubic-bezier(0.1, 1, 0, 1);`,
+    setup: (area) => {
       area
         .hook(Hyprland.active.workspace, (area) =>
           area.setCss(`font-size: ${Hyprland.active.workspace.id}px;`)
         )
+        .hook(Hyprland, (self) => self._updateMask(self), "notify::workspaces")
         .hook(
           Hyprland,
-          (area) => {
-            const workspaces = Hyprland.workspaces;
-            let workspaceMask = 0;
-            for (let i = 0; i < workspaces.length; i++) {
-              const ws = workspaces[i];
-              if (ws.id < 0) continue; // Ignore scratchpads
-              if (ws.id > count) return; // Not rendered
-              if (workspaces[i].windows > 0) {
-                workspaceMask |= 1 << ws.id;
-              }
-            }
-            area._workspaceMask = workspaceMask;
-          },
-          "notify::workspaces"
+          (self, name) => self._toggleMask(self, true, name),
+          "workspace-added"
+        )
+        .hook(
+          Hyprland,
+          (self, name) => self._toggleMask(self, false, name),
+          "workspace-removed"
         )
         .on(
           "draw",
@@ -220,7 +243,8 @@ const WorkspaceContents = (count = 10) => {
             );
             cr.fill();
           })
-        ),
+        );
+    },
   });
 };
 
