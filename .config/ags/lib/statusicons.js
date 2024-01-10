@@ -8,7 +8,6 @@ import { languages } from "../data/languages.js";
 const { exec } = Utils;
 const { Box, Revealer, Stack, Label, Icon } = Widget;
 
-// A guessing func to try to support langs not listed in data/languages.js
 function isLanguageMatch(abbreviation, word) {
   const lowerAbbreviation = abbreviation.toLowerCase();
   const lowerWord = word.toLowerCase();
@@ -293,7 +292,6 @@ const KeyboardLayout = ({ useFlag } = {}) => {
           if (lang) {
             widgetContent.shown = lang.layout;
           } else {
-            // Attempt to support langs not listed
             lang = languageStackArray.find((lang) =>
               isLanguageMatch(lang[0], layoutName)
             );

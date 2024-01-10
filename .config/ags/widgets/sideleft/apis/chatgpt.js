@@ -43,7 +43,7 @@ const chatGPTInfo = Box({
             "min-height",
             Gtk.StateFlags.NORMAL
           );
-          self.size = (Math.max(width, height, 1) * 116) / 180; // Why such a specific proportion? See https://openai.com/brand#logos
+          self.size = (Math.max(width, height, 1) * 116) / 180;
         }),
     }),
     Label({
@@ -114,7 +114,7 @@ export const chatGPTSettings = MarginRevealer({
           ChatGPT.temperature = value;
         },
       }),
-      ConfigGap({ vertical: true, size: 10 }), // Note: size can only be 5, 10, or 15
+      ConfigGap({ vertical: true, size: 10 }),
       Box({
         vertical: true,
         hpack: "fill",
@@ -225,16 +225,13 @@ export const chatGPTView = Scrollable({
     children: [chatGPTWelcome, chatContent],
   }),
   setup: (scrolledWindow) => {
-    // Show scrollbar
     scrolledWindow.set_policy(Gtk.PolicyType.NEVER, Gtk.PolicyType.AUTOMATIC);
     const vScrollbar = scrolledWindow.get_vscrollbar();
     vScrollbar.get_style_context().add_class("sidebar-scrollbar");
-    // Avoid click-to-scroll-widget-to-view behavior
     timeout(1, () => {
       const viewport = scrolledWindow.child;
       viewport.set_focus_vadjustment(new Gtk.Adjustment(undefined));
     });
-    // Always scroll to bottom with new content
     const adjustment = scrolledWindow.get_vadjustment();
     adjustment.connect("changed", () => {
       adjustment.set_value(adjustment.get_upper() - adjustment.get_page_size());
@@ -261,7 +258,6 @@ export const chatGPTCommands = Box({
 });
 
 export const sendMessage = (text) => {
-  // Check if text or API key is empty
   if (text.length == 0) return;
   if (ChatGPT.key.length == 0) {
     ChatGPT.key = text;
@@ -275,7 +271,6 @@ export const sendMessage = (text) => {
     text = "";
     return;
   }
-  // Commands
   if (text.startsWith("/")) {
     if (text.startsWith("/clear")) clearChat();
     else if (text.startsWith("/model"))

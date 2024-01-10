@@ -37,7 +37,6 @@ function switchToTab(id) {
   allTabs[id].toggleClassName("sidebar-selector-tab-active", true);
   contentStack.shown = contents[id].name;
   if (tabButton) {
-    // Fancy highlighter line width
     const buttonWidth = tabButton.get_allocated_width();
     const highlightWidth = tabButton.get_children()[0].get_allocated_width();
     navIndicator.css = `
@@ -49,7 +48,6 @@ function switchToTab(id) {
 }
 const SidebarTabButton = (navIndex) =>
   Button({
-    // hexpand: true,
     className: "sidebar-selector-tab",
     onClicked: (self) => {
       switchToTab(navIndex);
@@ -83,9 +81,8 @@ const navTabs = Box({
 });
 
 const navIndicator = NavigationIndicator(2, false, {
-  // The line thing
   className: "sidebar-selector-highlight",
-  css: "font-size: 0px; padding: 0rem 4.160rem;", // Shushhhh
+  css: "font-size: 0px; padding: 0rem 4.160rem;",
 });
 
 const navBar = Box({
@@ -132,7 +129,6 @@ const pinButton = Button({
   child: MaterialIcon("push_pin", "larger"),
   tooltipText: "Pin sidebar",
   onClicked: (self) => self._toggle(self),
-  // QoL: Focus Pin button on open. Hit keybind -> space/enter = toggle pin state
   connections: [
     [
       App,
@@ -147,7 +143,6 @@ const pinButton = Button({
 
 export default () =>
   Box({
-    // vertical: true,
     vexpand: true,
     hexpand: true,
     css: "min-width: 2px;",
@@ -187,12 +182,9 @@ export default () =>
       [
         "key-press-event",
         (widget, event) => {
-          // Handle keybinds
           if (event.get_state()[1] & Gdk.ModifierType.CONTROL_MASK) {
-            // Pin sidebar
             if (event.get_keyval()[1] == Gdk.KEY_p)
               pinButton._toggle(pinButton);
-            // Switch sidebar tab
             else if (event.get_keyval()[1] === Gdk.KEY_Tab)
               switchToTab((currentTabId + 1) % contents.length);
             else if (event.get_keyval()[1] === Gdk.KEY_Page_Up)
@@ -201,8 +193,6 @@ export default () =>
               switchToTab(Math.min(currentTabId + 1, contents.length - 1));
           }
           if (contentStack.shown == "apis") {
-            // If api tab is focused
-            // Automatically focus entry when typing
             if (
               (!(event.get_state()[1] & Gdk.ModifierType.CONTROL_MASK) &&
                 event.get_keyval()[1] >= 32 &&
@@ -217,9 +207,7 @@ export default () =>
                 chatEntry.text + String.fromCharCode(event.get_keyval()[1])
               );
               chatEntry.set_position(-1);
-            }
-            // Switch API type
-            else if (
+            } else if (
               !(event.get_state()[1] & Gdk.ModifierType.CONTROL_MASK) &&
               event.get_keyval()[1] === Gdk.KEY_Page_Down
             ) {

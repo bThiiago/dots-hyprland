@@ -19,8 +19,8 @@ import SideRight from "./widgets/sideright/main.js";
 
 const CLOSE_ANIM_TIME = 210;
 
-exec(`bash -c 'echo "" > ${App.configDir}/scss/_musicwal.scss'`); // reset music styles
-exec(`bash -c 'echo "" > ${App.configDir}/scss/_musicmaterial.scss'`); // reset music styles
+exec(`bash -c 'echo "" > ${App.configDir}/scss/_musicwal.scss'`);
+exec(`bash -c 'echo "" > ${App.configDir}/scss/_musicmaterial.scss'`);
 function applyStyle() {
   exec(`sassc ${App.configDir}/scss/main.scss ${App.configDir}/style.css`);
   App.resetCss();

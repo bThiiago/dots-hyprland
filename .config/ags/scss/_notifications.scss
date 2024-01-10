@@ -147,7 +147,7 @@ $notif_surface: $t_background;
 
 .notif-circprog-low {
   transition: 0ms linear;
-  min-width: 0.136rem; // line width
+  min-width: 0.136rem;
   min-height: 3.136rem;
   padding: 0rem;
   color: $onSecondaryContainer;
@@ -155,7 +155,7 @@ $notif_surface: $t_background;
 
 .notif-circprog-normal {
   transition: 0ms linear;
-  min-width: 0.136rem; // line width
+  min-width: 0.136rem;
   min-height: 3.136rem;
   padding: 0rem;
   color: $onSecondaryContainer;
@@ -163,7 +163,7 @@ $notif_surface: $t_background;
 
 .notif-circprog-critical {
   transition: 0ms linear;
-  min-width: 0.136rem; // line width
+  min-width: 0.136rem;
   min-height: 3.136rem;
   padding: 0rem;
   color: $secondaryContainer;

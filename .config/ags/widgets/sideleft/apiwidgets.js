@@ -79,7 +79,6 @@ const chatSendButton = Button({
 });
 
 const textboxArea = Box({
-  // Entry area
   className: "sidebar-chat-textarea spacing-h-10",
   children: [chatEntry, chatSendButton],
 });
@@ -116,6 +115,7 @@ const apiSwitcher = Box({
       hpack: "center",
       children: APIS.map((api, id) =>
         Button({
+          className: "sidebar-chat-apiswitcher-icon",
           child: api.tabIcon,
           tooltipText: api.name,
           setup: setupCursorHover,

@@ -18,8 +18,6 @@ const BOLD = "BOLD",
 
 let sub_h1, sub_h2, sub_h3, sub_h4, sub_h5;
 
-// m2p_sections defines how to detect special markdown sections.
-// These expressions scan the full line to detect headings, lists, and code.
 const m2p_sections = [
   (sub_h1 = {
     name: H1,
@@ -50,12 +48,10 @@ const m2p_sections = [
   { name: NUMBERING, re: /^(\s*[0-9]+\.\s)(.*)(\s*)$/, sub: " $1$2" },
 ];
 
-// m2p_styles defines how to replace inline styled text
 const m2p_styles = [
   { name: BOLD, re: /(\*\*)(\S[\s\S]*?\S)(\*\*)/g, sub: "<b>$2</b>" },
   { name: UND, re: /(__)(\S[\s\S]*?\S)(__)/g, sub: "<u>$2</u>" },
   { name: EMPH, re: /\*(\S.*?\S)\*/g, sub: "<i>$1</i>" },
-  // { name: EMPH, re: /_(\S.*?\S)_/g, sub: "<i>$1</i>" },
   {
     name: HEXCOLOR,
     re: /#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})/g,
@@ -66,7 +62,6 @@ const m2p_styles = [
     re: /(`)([^`]*)(`)/g,
     sub: `<span font_weight='bold' font_family='${monospaceFonts}'> $2 </span>`,
   },
-  // { name: UND, re: /(__|\*\*)(\S[\s\S]*?\S)(__|\*\*)/g, sub: "<u>$2</u>" },
 ];
 
 const re_comment = /^\s*<!--.*-->\s*$/;
@@ -101,7 +96,6 @@ const pad = (lines, start = 1, end = 1) => {
 export default (text) => {
   let lines = text.split("\n");
 
-  // Indicates if the current line is within a code block
   let is_code = false;
   let code_lines = [];
 
@@ -124,7 +118,6 @@ export default (text) => {
   };
 
   for (const line of lines) {
-    // first parse color macros in non-code texts
     if (!is_code) {
       let colors = line.match(re_color);
       if (colors || line.match(re_reset)) {
@@ -158,28 +151,22 @@ export default (text) => {
       }
     }
 
-    // all macros processed, let's remove remaining comments
     if (line.match(re_comment)) {
       continue;
     }
 
-    // is this line an opening statement of a code block
     let code_start = false;
 
-    // escape all non-verbatim text
     let result = is_code ? line : escape_line(line);
 
     for (const { name, re, sub } of m2p_sections) {
       if (line.match(re)) {
         if (name === CODE) {
           if (!is_code) {
-            // haven't been inside a code block, so ``` indicates
-            // that it is starting now
             code_start = true;
             is_code = true;
 
             if (color_span_open) {
-              // cannot color
               result = "<tt>";
               tt_must_close = false;
             } else {
@@ -187,7 +174,6 @@ export default (text) => {
               tt_must_close = true;
             }
           } else {
-            // the code block ends now
             is_code = false;
             output.push(...pad(code_lines).map(escape_line));
             code_lines = [];
@@ -222,15 +208,13 @@ export default (text) => {
       continue;
     }
 
-    // all other text can be styled
     for (const style of m2p_styles) {
       result = result.replace(style.re, style.sub);
     }
 
-    // all raw urls can be linked if possible
-    let uri = result.match(re_uri); // look for any URI
-    let href = result.match(re_href); // and for URIs in href=''
-    let atag = result.match(re_atag); // and for URIs in <a></a>
+    let uri = result.match(re_uri);
+    let href = result.match(re_href);
+    let atag = result.match(re_atag);
     href = href && href[1] == uri;
     atag = href && atag[1] == uri;
     if (uri && (href || atag)) {
@@ -242,7 +226,6 @@ export default (text) => {
 
   try_close_span();
 
-  // remove trailing whitespaces
   output = output.map((line) => line.replace(/ +$/, ""));
 
   return output.join("\n");
@@ -266,7 +249,6 @@ export const markdownTest = `# Heading 1
 - nvidia green: #7ABB08
   - sub-item
 \`\`\`javascript
-// A code block!
 myArray = [23, 123, 43, 54, '6969'];
 console.log('uwu');
 \`\`\`

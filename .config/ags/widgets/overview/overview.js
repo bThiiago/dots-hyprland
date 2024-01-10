@@ -41,10 +41,8 @@ import {
 } from "./searchbuttons.js";
 import { dumpToWorkspace, swapWorkspace } from "./actions.js";
 
-// Add math funcs
 const { sin, cos, tan, cot, asin, acos, atan, acot } = Math;
 const pi = Math.PI;
-// trigonometric funcs for deg
 const sind = (x) => sin((x * pi) / 180);
 const cosd = (x) => cos((x * pi) / 180);
 const tand = (x) => tan((x * pi) / 180);
@@ -55,7 +53,7 @@ const atand = (x) => (atan(x) * 180) / pi;
 const acotd = (x) => (acot(x) * 180) / pi;
 
 const MAX_RESULTS = 10;
-const OVERVIEW_SCALE = 0.18; // = overview workspace box / screen size
+const OVERVIEW_SCALE = 0.18;
 const OVERVIEW_WS_NUM_SCALE = 0.09;
 const OVERVIEW_WS_NUM_MARGIN_SCALE = 0.07;
 const TARGET = [Gtk.TargetEntry.new("text/plain", Gtk.TargetFlags.SAME_APP, 0)];
@@ -71,7 +69,7 @@ const searchPromptTexts = [
 
 function truncateTitle(str) {
   let lastDash = -1;
-  let found = -1; // 0: em dash, 1: en dash, 2: minus, 3: vertical bar, 4: middle dot
+  let found = -1;
   for (let i = str.length - 1; i >= 0; i--) {
     if (str[i] === "—") {
       found = 0;
@@ -115,7 +113,7 @@ function substitute(str) {
     if (from === str) return to;
   }
 
-  if (!iconExists(str)) str = str.toLowerCase().replace(/\s+/g, "-"); // Turn into kebab-case
+  if (!iconExists(str)) str = str.toLowerCase().replace(/\s+/g, "-");
   return str;
 }
 
@@ -130,7 +128,6 @@ const ContextWorkspaceArray = ({ label, actionFunc, thisWorkspace }) =>
           label: `Workspace ${i}`,
         });
         button.connect("activate", () => {
-          // execAsync([`${onClickBinary}`, `${thisWorkspace}`, `${i}`]).catch(print);
           actionFunc(thisWorkspace, i);
         });
         submenu.append(button);
@@ -192,7 +189,7 @@ const client = ({
       menu.connect("selection-done", () => {
         button.toggleClassName("overview-tasks-window-selected", false);
       });
-      menu.popup_at_pointer(null); // Show the menu at the pointer's position
+      menu.popup_at_pointer(null);
     },
     child: Box({
       css: `
@@ -209,7 +206,6 @@ const client = ({
             icon: substitute(c),
             size: (Math.min(w, h) * OVERVIEW_SCALE) / 2.5,
           }),
-          // TODO: Add xwayland tag instead of just having italics
           DoubleRevealer({
             transition1: "slide_right",
             transition2: "slide_down",
@@ -233,7 +229,6 @@ const client = ({
                                       10
                                     }px;
                                 `,
-                // If the title is too short, include the class
                 label: title.length <= 1 ? `${c}: ${title}` : title,
               }),
             }),
@@ -251,14 +246,11 @@ const client = ({
         Gdk.DragAction.MOVE
       );
       button.drag_source_set_icon_name(substitute(c));
-      // button.drag_source_set_icon_gicon(icon);
 
       button.connect("drag-begin", (button) => {
-        // On drag start, add the dragging class
         button.toggleClassName("overview-tasks-window-dragging", true);
       });
       button.connect("drag-data-get", (_w, _c, data) => {
-        // On drag finish, give address
         data.set_text(address, address.length);
         button.toggleClassName("overview-tasks-window-dragging", false);
       });
@@ -317,8 +309,6 @@ const workspace = (index) => {
   widget.update = (clients) => {
     clients = clients.filter(({ workspace: { id } }) => id === index);
 
-    // this is for my monitor layout
-    // shifts clients back by SCREEN_WIDTHpx if necessary
     clients = clients.map((client) => {
       const [x, y] = client.at;
       if (x > SCREEN_WIDTH) client.at = [x - SCREEN_WIDTH, y];
@@ -389,7 +379,6 @@ const OverviewRow = ({ startWorkspace, workspaces, windowName = "overview" }) =>
         .hook(Hyprland, (box) => box._update(box), "client-added")
         .hook(Hyprland, (box) => box._update(box), "client-removed")
         .hook(App, (box, name, visible) => {
-          // Update on open
           if (name == "overview" && visible) box._update(box);
         });
     },
@@ -414,7 +403,6 @@ export const SearchAndWindows = () => {
     transitionDuration: 200,
     revealChild: false,
     transition: "slide_down",
-    // duration: 200,
     hpack: "center",
     child: resultsBox,
   });
@@ -463,22 +451,19 @@ export const SearchAndWindows = () => {
     className: "overview-search-box txt-small txt",
     hpack: "center",
     onAccept: (self) => {
-      // This is when you hit Enter
       const text = self.text;
       if (text.length == 0) return;
       const isAction = text.startsWith(">");
       const isDir = ["/", "~"].includes(entry.text[0]);
 
       if (startsWithNumber(text)) {
-        // Eval on typing is dangerous, this is a workaround
         try {
           const fullResult = eval(text);
-          // copy
           execAsync(["wl-copy", `${fullResult}`]).catch(print);
           App.closeWindow("overview");
           return;
         } catch (e) {
-          // console.log(e);
+          console.log(e);
         }
       }
       if (isDir) {
@@ -493,12 +478,10 @@ export const SearchAndWindows = () => {
         _appSearchResults[0].launch();
         return;
       } else if (text[0] == ">") {
-        // Custom commands
         App.closeWindow("overview");
         launchCustomCommand(text);
         return;
       }
-      // Fallback: Execute command
       if (
         !isAction &&
         exec(`bash -c "command -v ${text.split(" ")[0]}"`) != ""
@@ -511,7 +494,7 @@ export const SearchAndWindows = () => {
           "bash",
           "-c",
           `xdg-open 'https://www.google.com/search?q=${text} -site:quora.com' &`,
-        ]).catch(print); // quora is useless
+        ]).catch(print);
       }
     },
     onChange: (entry) => {
@@ -522,7 +505,6 @@ export const SearchAndWindows = () => {
         const child = children[i];
         child.destroy();
       }
-      // check empty if so then dont do stuff
       if (entry.text == "") {
         resultsRevealer.set_reveal_child(false);
         overviewRevealer.set_reveal_child(true);
@@ -539,16 +521,14 @@ export const SearchAndWindows = () => {
       entry.toggleClassName("overview-search-box-extended", true);
       _appSearchResults = Applications.query(text);
 
-      // Calculate
       if (startsWithNumber(text)) {
-        // Eval on typing is dangerous, this is a small workaround.
         try {
           const fullResult = eval(text);
           resultsBox.add(
             CalculationResultButton({ result: fullResult, text: text })
           );
         } catch (e) {
-          // console.log(e);
+          console.log(e);
         }
       }
       if (isDir) {
@@ -559,10 +539,8 @@ export const SearchAndWindows = () => {
         });
       }
       if (isAction) {
-        // Eval on typing is dangerous, this is a workaround.
         resultsBox.add(CustomCommandButton({ text: entry.text }));
       }
-      // Add application entries
       let appsToAdd = MAX_RESULTS;
       _appSearchResults.forEach((app) => {
         if (appsToAdd == 0) return;
@@ -570,8 +548,6 @@ export const SearchAndWindows = () => {
         appsToAdd--;
       });
 
-      // Fallbacks
-      // if the first word is an actual command
       if (
         !isAction &&
         !hasUnterminatedBackslash(text) &&
@@ -585,7 +561,6 @@ export const SearchAndWindows = () => {
         );
       }
 
-      // Add fallback: search
       resultsBox.add(SearchButton({ text: entry.text }));
       resultsBox.show_all();
     },
@@ -595,7 +570,6 @@ export const SearchAndWindows = () => {
     vertical: true,
     children: [
       ClickToClose({
-        // Top margin. Also works as a click-outside-to-close thing
         child: Box({
           className: "bar-height",
         }),

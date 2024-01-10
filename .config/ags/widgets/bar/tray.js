@@ -24,7 +24,7 @@ const SysTrayItem = (item) =>
             "min-height",
             Gtk.StateFlags.NORMAL
           );
-          self.size = Math.max(width, height, 1); // im too lazy to add another box lol
+          self.size = Math.max(width, height, 1);
         }),
     }),
     binds: [["tooltipMarkup", item, "tooltip-markup"]],

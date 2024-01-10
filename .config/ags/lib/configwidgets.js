@@ -70,7 +70,6 @@ export const ConfigToggle = ({
     setup: (button) => {
       setupCursorHover(button),
         button.connect("pressed", () => {
-          // mouse down
           toggleIcon.toggleClassName("txt-poof", true);
           toggleIcon.toggleClassName("switch-fg-true", false);
           if (!value)
@@ -99,7 +98,6 @@ export const ConfigSegmentedSelection = ({
   const widget = Box({
     tooltipText: desc,
     className: "segment-container",
-    // homogeneous: true,
     children: options.map((option, id) => {
       const selectedIcon = Revealer({
         revealChild: id == initIndex,

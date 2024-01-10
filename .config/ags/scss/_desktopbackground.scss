@@ -1,5 +1,5 @@
 @mixin bg-textshadow {
-  // text-shadow: mix($shadow, $secondaryContainer, 50%) 1px 0px 3px;
+  text-shadow: mix($shadow, $secondaryContainer, 50%) 1px 0px 3px;
 }
 
 .bg-time-box {
@@ -42,12 +42,6 @@
   color: $onSecondaryContainer;
 }
 
-.bg-graph {
-  color: rgba(255, 255, 255, 0.5);
-  border-radius: 0.614rem;
-  border: 0.682rem solid;
-}
-
 .bg-quicklaunch-title {
   @include mainfont;
   color: $onSurfaceVariant;
@@ -75,14 +69,12 @@
 
 .bg-system-bg {
   @include normal-rounding;
-  // background-color: $background;
 }
 
 .bg-system-circprog {
   @include fluent_decel_long;
-  // margin-left: 0.273rem;
-  min-width: 0.205rem; // Trough stroke width
-  min-height: 4.091rem; // Diameter
+  min-width: 0.205rem;
+  min-height: 4.091rem;
   font-size: 0px;
   padding: 0rem;
   background-color: $surfaceVariant;

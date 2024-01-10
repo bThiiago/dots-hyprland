@@ -29,9 +29,7 @@ $bar_subgroup_bg: $surfaceVariant;
 }
 
 .bar-group-pad {
-  // padding: 0rem 1.023rem;
   padding: 0.205rem;
-  // padding-left: 0.341rem;
 }
 
 .bar-group-pad-less {
@@ -130,13 +128,7 @@ $bar_subgroup_bg: $surfaceVariant;
 }
 
 .bar-clock-box {
-  margin: 0rem 0.682rem;
-}
-
-.bar-date {
-  @include titlefont;
-  font-size: 1rem;
-  color: $onBackground;
+  margin: 0rem 0.273rem;
 }
 
 .bar-batt {
@@ -164,7 +156,7 @@ $bar_subgroup_bg: $surfaceVariant;
 
 .bar-batt-circprog {
   @include fluent_decel_long;
-  min-width: 0.068rem; // line width
+  min-width: 0.068rem;
   min-height: 1.636rem;
   padding: 0rem;
   background-color: $secondaryContainer;
@@ -173,7 +165,7 @@ $bar_subgroup_bg: $surfaceVariant;
 
 .bar-batt-circprog-low {
   @include fluent_decel_long;
-  min-width: 0.068rem; // line width
+  min-width: 0.068rem;
   min-height: 1.636rem;
   padding: 0rem;
   background-color: $error;
@@ -182,7 +174,7 @@ $bar_subgroup_bg: $surfaceVariant;
 
 .bar-batt-circprog-full {
   @include fluent_decel_long;
-  min-width: 0.068rem; // line width
+  min-width: 0.068rem;
   min-height: 1.636rem;
   padding: 0rem;
   background-color: $successContainer;
@@ -199,7 +191,7 @@ $bar_subgroup_bg: $surfaceVariant;
 
 .bar-music-circprog {
   @include fluent_decel_long;
-  min-width: 0.068rem; // line width
+  min-width: 0.068rem;
   min-height: 1.636rem;
   padding: 0rem;
   background-color: $secondaryContainer;
@@ -336,7 +328,7 @@ $bar_subgroup_bg: $surfaceVariant;
 }
 
 .corner-black {
-  background-color: $black; // Hard code: fake screen corner
+  background-color: $black;
   @include large-rounding;
 }
 

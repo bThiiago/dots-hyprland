@@ -4,8 +4,8 @@
 @import "./musicwal";
 @import "./colors";
 @import "./lib_mixins";
-$music_gradient1: mix($color1, $background, 50%);
 
+$music_gradient1: mix($color1, $background, 50%);
 $music_gradient2: $color3;
 $music_gradient3: $color5;
 $music_colorstart_transparentize: 0.3;
@@ -16,6 +16,7 @@ $secondaryContainer: transparentize(
   0.5
 );
 $onSecondaryContainer: mix($color7, $color2, 90%);
+
 @if $darkmode ==false {
   $onSecondaryContainer: mix($onSecondaryContainer, black, 50%);
 }
@@ -65,7 +66,6 @@ $onSecondaryContainer: mix($color7, $color2, 90%);
 .osd-music-cover-fallback {
   @include menu_decel;
   @include small-rounding;
-  // margin: 1.023rem;
   min-width: 7.5rem;
   min-height: 7.5rem;
   background-color: $t_surface;
@@ -153,7 +153,7 @@ $onSecondaryContainer: mix($color7, $color2, 90%);
 
 .osd-music-circprog {
   @include fluent_decel_long;
-  min-width: 0.409rem; // width of progress
+  min-width: 0.409rem;
   min-height: 3.068rem;
   padding: 0.273rem;
   color: $onSecondaryContainer;

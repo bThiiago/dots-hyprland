@@ -8,11 +8,10 @@ const { Box, DrawingArea, EventBox } = Widget;
 import Hyprland from "resource:///com/github/Aylur/ags/service/hyprland.js";
 
 const NUM_OF_WORKSPACES = 10;
-const dummyWs = Box({ className: "bar-ws" }); // Not shown. Only for getting size props
-const dummyActiveWs = Box({ className: "bar-ws bar-ws-active" }); // Not shown. Only for getting size props
-const dummyOccupiedWs = Box({ className: "bar-ws bar-ws-occupied" }); // Not shown. Only for getting size props
+const dummyWs = Box({ className: "bar-ws" });
+const dummyActiveWs = Box({ className: "bar-ws bar-ws-active" });
+const dummyOccupiedWs = Box({ className: "bar-ws bar-ws-occupied" });
 
-// Font size = workspace id
 const WorkspaceContents = (count = 10) => {
   return DrawingArea({
     css: `transition: 90ms cubic-bezier(0.1, 1, 0, 1);`,
@@ -22,13 +21,13 @@ const WorkspaceContents = (count = 10) => {
       [
         "updateMask",
         (self) => {
-          if (self._initialized) return; // We only need this to run once
+          if (self._initialized) return;
           const workspaces = Hyprland.workspaces;
           let workspaceMask = 0;
           for (let i = 0; i < workspaces.length; i++) {
             const ws = workspaces[i];
-            if (ws.id < 0) continue; // Ignore scratchpads
-            if (ws.id > count) return; // Not rendered
+            if (ws.id < 0) continue;
+            if (ws.id > count) return;
             if (workspaces[i].windows > 0) {
               workspaceMask |= 1 << ws.id;
             }
@@ -125,24 +124,20 @@ const WorkspaceContents = (count = 10) => {
               -(workspaceDiameter / 2) + workspaceDiameter * activeWs;
             const activeWsCenterY = height / 2;
 
-            // Font
             const layout = PangoCairo.create_layout(cr);
             const fontDesc = Pango.font_description_from_string(
               `${workspaceFontFamily[0]} ${workspaceFontSize}`
             );
             layout.set_font_description(fontDesc);
             cr.setAntialias(Cairo.Antialias.BEST);
-            // Get kinda min radius for number indicators
             layout.set_text("0".repeat(count.toString().length), -1);
             const [layoutWidth, layoutHeight] = layout.get_pixel_size();
             const indicatorRadius =
-              (Math.max(layoutWidth, layoutHeight) / 2) * 1.2; // a bit smaller than sqrt(2)*radius
+              (Math.max(layoutWidth, layoutHeight) / 2) * 1.2;
             const indicatorGap = workspaceRadius - indicatorRadius;
 
-            // Draw workspace numbers
             for (let i = 1; i <= count; i++) {
               if (area._workspaceMask & (1 << i)) {
-                // Draw bg highlight
                 cr.setSourceRGBA(
                   occupiedbg.red,
                   occupiedbg.green,
@@ -152,7 +147,6 @@ const WorkspaceContents = (count = 10) => {
                 const wsCenterX = -workspaceRadius + workspaceDiameter * i;
                 const wsCenterY = height / 2;
                 if (!(area._workspaceMask & (1 << (i - 1)))) {
-                  // Left
                   cr.arc(
                     wsCenterX,
                     wsCenterY,
@@ -171,7 +165,6 @@ const WorkspaceContents = (count = 10) => {
                   cr.fill();
                 }
                 if (!(area._workspaceMask & (1 << (i + 1)))) {
-                  // Right
                   cr.arc(
                     wsCenterX,
                     wsCenterY,
@@ -190,7 +183,6 @@ const WorkspaceContents = (count = 10) => {
                   cr.fill();
                 }
 
-                // Set color for text
                 cr.setSourceRGBA(
                   occupiedfg.red,
                   occupiedfg.green,
@@ -205,13 +197,10 @@ const WorkspaceContents = (count = 10) => {
                 -workspaceRadius + workspaceDiameter * i - layoutWidth / 2;
               const y = (height - layoutHeight) / 2;
               cr.moveTo(x, y);
-              // cr.showText(text);
               PangoCairo.show_layout(cr, layout);
               cr.stroke();
             }
 
-            // Draw active ws
-            // base
             cr.setSourceRGBA(
               activebg.red,
               activebg.green,
@@ -226,7 +215,6 @@ const WorkspaceContents = (count = 10) => {
               2 * Math.PI
             );
             cr.fill();
-            // inner decor
             cr.setSourceRGBA(
               activefg.red,
               activefg.green,
@@ -275,7 +263,7 @@ export default () =>
         Hyprland.sendMessage(`dispatch workspace ${wsId}`);
       });
       self.on("button-press-event", (self, event) => {
-        if (!(event.get_button()[1] === 1)) return; // We're only interested in left-click here
+        if (!(event.get_button()[1] === 1)) return;
         console.log("switching");
         self._clicked = true;
         const [_, cursorX, cursorY] = event.get_coords();

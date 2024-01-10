@@ -5,15 +5,15 @@ export const MarginRevealer = ({
   transition = "slide_down",
   child,
   revealChild,
-  showClass = "element-show", // These are for animation curve, they don't really hide
-  hideClass = "element-hide", // Don't put margins in these classes!
+  showClass = "element-show",
+  hideClass = "element-hide",
   extraProperties = [],
   ...rest
 }) => {
   const widget = Scrollable({
     ...rest,
     properties: [
-      ["revealChild", true], // It'll be set to false after init if it's supposed to hide
+      ["revealChild", true],
       ["transition", transition],
       [
         "show",
@@ -62,7 +62,6 @@ export const MarginRevealer = ({
   return widget;
 };
 
-// TODO: Allow reveal update. Currently this just helps at declaration
 export const DoubleRevealer = ({
   transition1 = "slide_right",
   transition2 = "slide_left",

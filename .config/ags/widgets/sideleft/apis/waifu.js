@@ -1,6 +1,15 @@
-const { Gio, GLib, Gtk } = imports.gi;
+const { Gdk, GdkPixbuf, Gio, GLib, Gtk } = imports.gi;
 import { Utils, Widget } from "../../../imports.js";
-const { Box, Button, Label, Revealer, Scrollable, Stack } = Widget;
+const {
+  Box,
+  Button,
+  DrawingArea,
+  Label,
+  Overlay,
+  Revealer,
+  Scrollable,
+  Stack,
+} = Widget;
 const { execAsync, exec, timeout } = Utils;
 import { MaterialIcon } from "../../../lib/materialicon.js";
 import { MarginRevealer } from "../../../lib/advancedwidgets.js";
@@ -9,7 +18,6 @@ import WaifuService from "../../../services/waifus.js";
 
 const IMAGE_REVEAL_DELAY = 13;
 
-// Create cache folder and clear pics from previous session
 exec(`bash -c 'mkdir -p ${GLib.get_user_cache_dir()}/ags/media/waifus'`);
 exec(`bash -c 'rm ${GLib.get_user_cache_dir()}/ags/media/waifus/*'`);
 
@@ -84,58 +92,60 @@ const WaifuImage = (taglist) => {
       downloadIndicator,
     ],
   });
-  const blockImageActions = Box({
-    className: "sidebar-waifu-image-actions spacing-h-3",
-    children: [
-      Box({ hexpand: true }),
-      ImageAction({
-        name: "Go to source",
-        icon: "link",
-        action: () =>
-          execAsync(["xdg-open", `${thisBlock._imageData.source}`]).catch(
-            print
-          ),
-      }),
-      ImageAction({
-        name: "Hoard",
-        icon: "save",
-        action: () =>
-          execAsync([
-            "bash",
-            "-c",
-            `mkdir -p ~/Pictures/waifus && cp ${thisBlock._imagePath} ~/Pictures/waifus`,
-          ]).catch(print),
-      }),
-      ImageAction({
-        name: "Open externally",
-        icon: "open_in_new",
-        action: () =>
-          execAsync(["xdg-open", `${thisBlock._imagePath}`]).catch(print),
-      }),
-    ],
-  });
-  const blockImage = Box({
-    className: "test",
-    hpack: "start",
-    vertical: true,
-    className: "sidebar-waifu-image",
-    homogeneous: true,
-    children: [
-      Revealer({
-        transition: "crossfade",
-        revealChild: false,
-        child: Box({
-          vertical: true,
-          children: [blockImageActions],
+  const blockImageActions = Revealer({
+    transition: "crossfade",
+    revealChild: false,
+    child: Box({
+      vertical: true,
+      children: [
+        Box({
+          className: "sidebar-waifu-image-actions spacing-h-3",
+          children: [
+            Box({ hexpand: true }),
+            ImageAction({
+              name: "Go to source",
+              icon: "link",
+              action: () =>
+                execAsync(["xdg-open", `${thisBlock._imageData.source}`]).catch(
+                  print
+                ),
+            }),
+            ImageAction({
+              name: "Hoard",
+              icon: "save",
+              action: () =>
+                execAsync([
+                  "bash",
+                  "-c",
+                  `mkdir -p ~/Pictures/waifus && cp ${thisBlock._imagePath} ~/Pictures/waifus`,
+                ]).catch(print),
+            }),
+            ImageAction({
+              name: "Open externally",
+              icon: "open_in_new",
+              action: () =>
+                execAsync(["xdg-open", `${thisBlock._imagePath}`]).catch(print),
+            }),
+          ],
         }),
-      }),
-    ],
+      ],
+    }),
+  });
+  const blockImage = DrawingArea({
+    className: "sidebar-waifu-image",
   });
   const blockImageRevealer = Revealer({
     transition: "slide_down",
     transitionDuration: 150,
     revealChild: false,
-    child: blockImage,
+    child: Overlay({
+      child: Box({
+        homogeneous: true,
+        className: "sidebar-waifu-image",
+        children: [blockImage],
+      }),
+      overlays: [blockImageActions],
+    }),
   });
   const thisBlock = Box({
     className: "sidebar-chat-message",
@@ -164,26 +174,68 @@ const WaifuImage = (taglist) => {
           }
           thisBlock._imagePath = `${GLib.get_user_cache_dir()}/ags/media/waifus/${signature}${extension}`;
           downloadState.shown = "download";
-          // Width allocation
           const widgetWidth = Math.min(
-            Math.floor(waifuContent.get_allocated_width() * 0.75),
+            Math.floor(waifuContent.get_allocated_width() * 0.85),
             width
           );
-          blockImage.set_size_request(
-            widgetWidth,
-            Math.ceil((widgetWidth * height) / width)
-          );
-          // Start download
+          const widgetHeight = Math.ceil((widgetWidth * height) / width);
+          blockImage.set_size_request(widgetWidth, widgetHeight);
           const showImage = () => {
             downloadState.shown = "done";
-            // blockImage.css = `background-color: ${dominant_color};`;
-            blockImage.css = `background-image:url('${thisBlock._imagePath}');`; // TODO: use proper image widget
+            const pixbuf = GdkPixbuf.Pixbuf.new_from_file_at_scale(
+              thisBlock._imagePath,
+              widgetWidth,
+              widgetHeight,
+              false
+            );
+
+            blockImage.set_size_request(widgetWidth, widgetHeight);
+            blockImage.connect("draw", (widget, cr) => {
+              const borderRadius = widget
+                .get_style_context()
+                .get_property("border-radius", Gtk.StateFlags.NORMAL);
+
+              cr.arc(
+                borderRadius,
+                borderRadius,
+                borderRadius,
+                Math.PI,
+                1.5 * Math.PI
+              );
+              cr.arc(
+                widgetWidth - borderRadius,
+                borderRadius,
+                borderRadius,
+                1.5 * Math.PI,
+                2 * Math.PI
+              );
+              cr.arc(
+                widgetWidth - borderRadius,
+                widgetHeight - borderRadius,
+                borderRadius,
+                0,
+                0.5 * Math.PI
+              );
+              cr.arc(
+                borderRadius,
+                widgetHeight - borderRadius,
+                borderRadius,
+                0.5 * Math.PI,
+                Math.PI
+              );
+              cr.closePath();
+              cr.clip();
+
+              Gdk.cairo_set_source_pixbuf(cr, pixbuf, 0, 0);
+              cr.paint();
+            });
+
             timeout(IMAGE_REVEAL_DELAY, () => {
               blockImageRevealer.revealChild = true;
             });
             timeout(
               IMAGE_REVEAL_DELAY + blockImageRevealer.transitionDuration,
-              () => (blockImage.get_children()[0].revealChild = true)
+              () => (blockImageActions.revealChild = true)
             );
             downloadIndicator._hide();
           };
@@ -212,6 +264,7 @@ const WaifuImage = (taglist) => {
           blockHeading,
           Box({
             vertical: true,
+            hpack: "start",
             children: [blockImageRevealer],
           }),
         ],
@@ -260,16 +313,13 @@ export const waifuView = Scrollable({
     children: [waifuContent],
   }),
   setup: (scrolledWindow) => {
-    // Show scrollbar
     scrolledWindow.set_policy(Gtk.PolicyType.NEVER, Gtk.PolicyType.AUTOMATIC);
     const vScrollbar = scrolledWindow.get_vscrollbar();
     vScrollbar.get_style_context().add_class("sidebar-scrollbar");
-    // Avoid click-to-scroll-widget-to-view behavior
     timeout(1, () => {
       const viewport = scrolledWindow.child;
       viewport.set_focus_vadjustment(new Gtk.Adjustment(undefined));
     });
-    // Always scroll to bottom with new content
     const adjustment = scrolledWindow.get_vadjustment();
     adjustment.connect("changed", () => {
       adjustment.set_value(adjustment.get_upper() - adjustment.get_page_size());
@@ -337,8 +387,6 @@ const clearChat = () => {
 };
 
 export const sendMessage = (text) => {
-  // Do something on send
-  // Commands
   if (text.startsWith("/")) {
     if (text.startsWith("/clear")) clearChat();
     else if (text.startsWith("/test")) {
@@ -347,8 +395,6 @@ export const sendMessage = (text) => {
       timeout(IMAGE_REVEAL_DELAY, () =>
         newImage._update(
           {
-            // Needs timeout or inits won't make it
-            // This is an image uploaded to my github repo
             status: 200,
             url: "https://picsum.photos/400/600",
             extension: "",

@@ -6,9 +6,6 @@ import GLib from "gi://GLib";
 import Soup from "gi://Soup?version=3.0";
 import { fileExists } from "./messages.js";
 
-// This is for custom prompt
-// It's hard to make gpt-3.5 listen to all these, I know
-// Disabled by default
 const initMessages = [
   {
     role: "user",
@@ -43,8 +40,6 @@ function expandTilde(path) {
   }
 }
 
-// We're using many models to not be restricted to 3 messages per minute.
-// The whole chat will be sent every request anyway.
 const KEY_FILE_LOCATION = `${GLib.get_user_cache_dir()}/ags/user/openai_api_key.txt`;
 const CHAT_MODELS = [
   "gpt-3.5-turbo-1106",
@@ -273,7 +268,6 @@ class ChatGPTService extends Service {
         return m;
       }),
       temperature: this._temperature,
-      // temperature: 2, // <- Nuts
       stream: true,
     };
 

@@ -204,6 +204,6 @@ export const SearchButton = ({ text = "" }) =>
         "bash",
         "-c",
         `xdg-open 'https://www.google.com/search?q=${text} -site:quora.com' &`,
-      ]).catch(print); // quora is useless
+      ]).catch(print);
     },
   });

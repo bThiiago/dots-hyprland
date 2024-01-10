@@ -11,7 +11,6 @@ export function hasUnterminatedBackslash(inputString) {
 export function launchCustomCommand(command) {
   const args = command.split(" ");
   if (args[0] == ">raw") {
-    // Mouse raw input
     execAsync([
       `bash`,
       `-c`,
@@ -19,7 +18,6 @@ export function launchCustomCommand(command) {
       `&`,
     ]).catch(print);
   } else if (args[0] == ">img") {
-    // Change wallpaper
     execAsync([
       `bash`,
       `-c`,
@@ -27,7 +25,6 @@ export function launchCustomCommand(command) {
       `&`,
     ]).catch(print);
   } else if (args[0] == ">color") {
-    // Generate colorscheme from color picker
     execAsync([
       `bash`,
       `-c`,
@@ -35,7 +32,6 @@ export function launchCustomCommand(command) {
       `&`,
     ]).catch(print);
   } else if (args[0] == ">light") {
-    // Light mode
     execAsync([
       `bash`,
       `-c`,
@@ -50,7 +46,6 @@ export function launchCustomCommand(command) {
       )
       .catch(print);
   } else if (args[0] == ">dark") {
-    // Dark mode
     execAsync([
       `bash`,
       `-c`,
@@ -65,40 +60,32 @@ export function launchCustomCommand(command) {
       )
       .catch(print);
   } else if (args[0] == ">badapple") {
-    // Light mode
     execAsync([
       `bash`,
       `-c`,
       `${App.configDir}/scripts/color_generation/applycolor.sh --bad-apple`,
     ]).catch(print);
   } else if (args[0] == ">material") {
-    // Light mode
     execAsync([
       `bash`,
       `-c`,
       `mkdir -p ${GLib.get_user_cache_dir()}/ags/user && echo "material" > ${GLib.get_user_cache_dir()}/ags/user/colorbackend.txt`,
     ]).catch(print);
   } else if (args[0] == ">pywal") {
-    // Dark mode
     execAsync([
       `bash`,
       `-c`,
       `mkdir -p ${GLib.get_user_cache_dir()}/ags/user && echo "pywal" > ${GLib.get_user_cache_dir()}/ags/user/colorbackend.txt`,
     ]).catch(print);
   } else if (args[0] == ">todo") {
-    // Todo
     Todo.add(args.slice(1).join(" "));
   } else if (args[0] == ">shutdown") {
-    // Shut down
     execAsync([`bash`, `-c`, `systemctl poweroff`]).catch(print);
   } else if (args[0] == ">reboot") {
-    // Reboot
     execAsync([`bash`, `-c`, `systemctl reboot`]).catch(print);
   } else if (args[0] == ">sleep") {
-    // Sleep
     execAsync([`bash`, `-c`, `systemctl suspend`]).catch(print);
   } else if (args[0] == ">logout") {
-    // Log out
     execAsync([`bash`, `-c`, `loginctl terminate-user $USER`]).catch(print);
   }
 }
@@ -126,10 +113,8 @@ export function expandTilde(path) {
 function getFileIcon(fileInfo) {
   let icon = fileInfo.get_icon();
   if (icon) {
-    // Get the icon's name
     return icon.get_names()[0];
   } else {
-    // Default icon for files
     return "text-x-generic";
   }
 }
@@ -158,7 +143,6 @@ export function ls({ path = "~", silent = false }) {
         icon: getFileIcon(fileInfo),
       };
 
-      // Add file extension for files
       if (fileType === Gio.FileType.REGULAR) {
         let fileExtension = fileName.split(".").pop();
         item.type = `${fileExtension}`;
@@ -173,7 +157,7 @@ export function ls({ path = "~", silent = false }) {
         } else if (!aIsFolder && bIsFolder) {
           return 1;
         } else {
-          return a.name.localeCompare(b.name); // Sort alphabetically within folders and files
+          return a.name.localeCompare(b.name);
         }
       });
     }

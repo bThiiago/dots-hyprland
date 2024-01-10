@@ -65,7 +65,6 @@ export const NavigationIndicator = (count, vertical, props) =>
             Gtk.StateFlags.NORMAL
           );
           cr.setLineWidth(2);
-          // Background
           cr.setSourceRGBA(
             background_color.red,
             background_color.green,
@@ -75,7 +74,6 @@ export const NavigationIndicator = (count, vertical, props) =>
           cr.rectangle(0, 0, width, height);
           cr.fill();
 
-          // The indicator line
           cr.setSourceRGBA(color.red, color.green, color.blue, color.alpha);
           if (vertical) {
             cr.rectangle(

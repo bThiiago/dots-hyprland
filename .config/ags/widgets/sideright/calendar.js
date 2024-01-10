@@ -10,9 +10,9 @@ let calendarJson = getCalendarLayout(undefined, true);
 let monthshift = 0;
 
 function getDateInXMonthsTime(x) {
-  var currentDate = new Date(); // Get the current date
-  var targetMonth = currentDate.getMonth() + x; // Calculate the target month
-  var targetYear = currentDate.getFullYear(); // Get the current year
+  var currentDate = new Date();
+  var targetMonth = currentDate.getMonth() + x;
+  var targetYear = currentDate.getFullYear();
 
   targetYear += Math.floor(targetMonth / 12);
   targetMonth = ((targetMonth % 12) + 12) % 12;

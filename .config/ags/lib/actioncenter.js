@@ -1,14 +1,9 @@
-// Not yet used. For cool drag and drop stuff. Thanks DevAlien
-
 const Toggles = {};
 Toggles.Wifi = NetworkToggle;
 Toggles.Bluetooth = BluetoothToggle;
 Toggles.DND = DNDToggle;
 Toggles.ThemeToggle = ThemeToggle;
 Toggles.ProfileToggle = ProfileToggle;
-// Toggles.Record = RecordToggle;
-// Toggles.Airplane = AirplaneToggle;
-// Toggles.DoNotDisturb = DoNotDisturbToggle;
 const TARGET = [Gtk.TargetEntry.new("text/plain", Gtk.TargetFlags.SAME_APP, 0)];
 
 export class ActionCenter extends Gtk.Box {

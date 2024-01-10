@@ -1,4 +1,4 @@
-const { GLib, Gdk, Gtk } = imports.gi;
+const { GLib, Gdk, Gtk, Pango } = imports.gi;
 import { Utils, Widget } from "../imports.js";
 const { lookUpIcon, timeout } = Utils;
 const { Box, EventBox, Icon, Overlay, Label, Button, Revealer } = Widget;
@@ -19,7 +19,6 @@ function guessMessageType(summary) {
 }
 
 const NotificationIcon = (notifObject) => {
-  // { appEntry, appIcon, image }, urgency = 'normal'
   if (notifObject.image) {
     return Box({
       valign: Gtk.Align.CENTER,
@@ -59,7 +58,7 @@ const NotificationIcon = (notifObject) => {
                   "min-height",
                   Gtk.StateFlags.NORMAL
                 );
-                self.size = Math.max(width * 0.7, height * 0.7, 1); // im too lazy to add another box lol
+                self.size = Math.max(width * 0.7, height * 0.7, 1);
               }),
           })
         : MaterialIcon(
@@ -125,7 +124,6 @@ export default ({
     transition: "slide_down",
     transitionDuration: 200,
     child: Box({
-      // Box to make sure css-based spacing works
       homogeneous: true,
     }),
   });
@@ -142,7 +140,8 @@ export default ({
       xalign: 0,
       justify: Gtk.Justification.LEFT,
       maxWidthChars: 24,
-      truncate: "end",
+      ellipsize: Pango.EllipsizeMode.MIDDLE,
+      wrap: true,
       label: notifObject.body.split("\n")[0],
     }),
   });
@@ -289,19 +288,15 @@ export default ({
     ],
   });
 
-  // Gesture stuff
   const gesture = Gtk.GestureDrag.new(widget);
   var initDirX = 0;
-  var initDirVertical = -1; // -1: unset, 0: horizontal, 1: vertical
+  var initDirVertical = -1;
   var expanded = false;
-  // in px
   const startMargin = 0;
   const MOVE_THRESHOLD = 10;
   const DRAG_CONFIRM_THRESHOLD = 100;
-  // in rem
   const maxOffset = 10.227;
   const endMargin = 20.455;
-  const disappearHeight = 6.818;
   const leftAnim1 = `transition: 200ms cubic-bezier(0.05, 0.7, 0.1, 1);
                        margin-left: -${Number(maxOffset + endMargin)}rem;
                        margin-right: ${Number(maxOffset + endMargin)}rem;

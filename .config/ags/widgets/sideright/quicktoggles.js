@@ -52,7 +52,6 @@ export const ToggleIconBluetooth = (props = {}) =>
     className: "txt-small sidebar-iconbutton",
     tooltipText: "Bluetooth | Right-click to configure",
     onClicked: () => {
-      // Provided service doesn't work hmmm
       const status = Bluetooth?.enabled;
       if (status) {
         exec("rfkill block bluetooth");
@@ -87,7 +86,6 @@ export const HyprToggleIcon = (icon, name, hyprlandConfigValue, props = {}) =>
     className: "txt-small sidebar-iconbutton",
     tooltipText: `${name}`,
     onClicked: (button) => {
-      // Set the value to 1 - value
       execAsync(`hyprctl -j getoption ${hyprlandConfigValue}`)
         .then((result) => {
           const currentOption = JSON.parse(result).int;

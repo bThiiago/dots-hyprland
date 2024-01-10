@@ -12,7 +12,6 @@ function paramStringFromObj(params) {
   return Object.entries(params)
     .map(([key, value]) => {
       if (Array.isArray(value)) {
-        // If it's an array, repeat
         if (value.length == 0) return "";
         let thisKey = `${encodeURIComponent(key)}=${encodeURIComponent(
           value[0]
@@ -41,7 +40,7 @@ class WaifuService extends Service {
     pics: {},
   };
   _baseUrl = "https://api.waifu.im/search";
-  _mode = "im"; // Allowed: im
+  _mode = "im";
   _responses = [];
   _queries = [];
   _nsfw = false;
@@ -90,11 +89,9 @@ class WaifuService extends Service {
 
   async fetch(msg) {
     try {
-      // Init
       const userArgs = msg.split(" ");
       let taglist = [];
       this._nsfw = false;
-      // Construct body/headers
       for (let i = 0; i < userArgs.length; i++) {
         const thisArg = userArgs[i];
         if (thisArg == "--im") this._mode = "im";
@@ -131,8 +128,6 @@ class WaifuService extends Service {
         nsfw: this._nsfw,
       };
       const paramString = paramStringFromObj(params);
-      // Fetch
-      // Note: body isn't included since passing directly to url is more reliable
       const options = {
         method: "GET",
         headers: this._headers[this._mode],
@@ -144,7 +139,6 @@ class WaifuService extends Service {
           return result.text();
         })
         .then((dataString) => {
-          // Store interesting stuff and emit
           const parsedData = JSON.parse(dataString);
           if (!parsedData.images)
             this._responses.push({

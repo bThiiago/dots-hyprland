@@ -33,7 +33,7 @@ function getPrevMonthDays(month, year) {
 
 export function getCalendarLayout(dateObject, highlight) {
   if (!dateObject) dateObject = new Date();
-  const weekday = (dateObject.getDay() + 6) % 7; // MONDAY IS THE FIRST DAY OF THE WEEK
+  const weekday = (dateObject.getDay() + 6) % 7;
   const day = dateObject.getDate();
   const month = dateObject.getMonth() + 1;
   const year = dateObject.getFullYear();
@@ -42,7 +42,6 @@ export function getCalendarLayout(dateObject, highlight) {
   const daysInNextMonth = getNextMonthDays(month, year);
   const daysInPrevMonth = getPrevMonthDays(month, year);
 
-  // Fill
   var monthDiff = weekdayOfMonthFirst == 0 ? 0 : -1;
   var toFill, dim;
   if (weekdayOfMonthFirst == 0) {
@@ -65,16 +64,13 @@ export function getCalendarLayout(dateObject, highlight) {
           ? 0
           : -1,
     };
-    // Increment
     toFill++;
     if (toFill > dim) {
-      // Next month?
       monthDiff++;
       if (monthDiff == 0) dim = daysInMonth;
       else if (monthDiff == 1) dim = daysInNextMonth;
       toFill = 1;
     }
-    // Next tile
     j++;
     if (j == 7) {
       j = 0;

@@ -92,7 +92,6 @@ export const AnimatedCircProg = ({
           const end_x = center_x + Math.cos(end_angle) * radius;
           const end_y = center_y + Math.sin(end_angle) * radius;
 
-          // Draw background
           const background_color = styleContext.get_property(
             "background-color",
             Gtk.StateFlags.NORMAL
@@ -109,7 +108,6 @@ export const AnimatedCircProg = ({
 
           if (progressValue == 0) return;
 
-          // Draw progress
           const color = styleContext.get_property(
             "color",
             Gtk.StateFlags.NORMAL
@@ -119,7 +117,6 @@ export const AnimatedCircProg = ({
           cr.setLineWidth(fg_stroke);
           cr.stroke();
 
-          // Draw rounded ends for progress arcs
           cr.setLineWidth(0);
           cr.arc(start_x, start_y, fg_stroke / 2, 0, 0 - 0.01);
           cr.fill();

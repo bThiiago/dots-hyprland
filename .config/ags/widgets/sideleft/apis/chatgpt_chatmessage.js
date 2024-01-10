@@ -42,7 +42,7 @@ const HighlightedCode = (content, lang) => {
     wrap_mode: Gtk.WrapMode.WORD,
   });
   const langManager = GtkSource.LanguageManager.get_default();
-  let displayLang = langManager.get_language(substituteLang(lang)); // Set your preferred language
+  let displayLang = langManager.get_language(substituteLang(lang));
   if (displayLang) {
     buffer.set_language(displayLang);
   }
@@ -91,13 +91,12 @@ const CodeBlock = (content = "", lang = "txt") => {
             buffer.get_start_iter(),
             buffer.get_end_iter(),
             false
-          ); // TODO: fix this
+          );
           execAsync([`wl-copy`, `${copyContent}`]).catch(print);
         },
       }),
     ],
   });
-  // Source view
   const sourceView = HighlightedCode(content, lang);
 
   const codeBlock = Box({
@@ -141,7 +140,6 @@ const MessageContent = (content) => {
       [
         "fullUpdate",
         (self, content, useCursor = false) => {
-          // Clear and add first text widget
           const children = contentBox.get_children();
           for (let i = 0; i < children.length; i++) {
             const child = children[i];
@@ -152,7 +150,6 @@ const MessageContent = (content) => {
           let lastProcessed = 0;
           let inCode = false;
           for (const [index, line] of lines.entries()) {
-            // Code blocks
             const codeBlockRegex = /^\s*```([a-zA-Z0-9]+)?\n?/;
             if (codeBlockRegex.test(line)) {
               const kids = self.get_children();
@@ -169,7 +166,6 @@ const MessageContent = (content) => {
               lastProcessed = index + 1;
               inCode = !inCode;
             }
-            // Breaks
             const dividerRegex = /^\s*---/;
             if (!inCode && dividerRegex.test(line)) {
               const kids = self.get_children();
@@ -239,7 +235,6 @@ export const ChatMessage = (message, scrolledWindow) => {
           [
             message,
             (self) => {
-              // Message update
               messageContentBox._fullUpdate(
                 messageContentBox,
                 message.content,
@@ -251,7 +246,6 @@ export const ChatMessage = (message, scrolledWindow) => {
           [
             message,
             (label, isDone) => {
-              // Remove the cursor
               messageContentBox._fullUpdate(
                 messageContentBox,
                 message.content,
