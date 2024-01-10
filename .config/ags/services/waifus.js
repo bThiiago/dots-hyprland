@@ -1,6 +1,6 @@
 import { Utils } from "../imports.js";
 import Service from "resource:///com/github/Aylur/ags/service.js";
-const { timeout } = Utils;
+const { fetch } = Utils;
 
 // Tags:
 //     waifu.im (type):

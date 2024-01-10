@@ -1,7 +1,7 @@
 import { Widget, Utils } from "../../imports.js";
 import Bluetooth from "resource:///com/github/Aylur/ags/service/bluetooth.js";
 import Network from "resource:///com/github/Aylur/ags/service/network.js";
-import Notifications from "resource:///com/github/Aylur/ags/service/notifications.js";
+import Audio from "resource:///com/github/Aylur/ags/service/audio.js";
 const { execAsync, exec, subprocess } = Utils;
 const { Button } = Widget;
 import { BluetoothIndicator, NetworkIndicator } from "../../lib/statusicons.js";
@@ -199,19 +199,19 @@ export const ModuleIdleInhibitor = (props = {}) =>
     ...props,
   });
 
-export const ModuleDND = (props = {}) =>
+export const ModuleMuteMic = (props = {}) =>
   Button({
     className: "txt-small sidebar-iconbutton",
-    tooltipText: "Do not disturb",
+    tooltipText: "Mute microphone",
     onClicked: (button) => {
-      const dnd = Notifications.dnd;
-      if (dnd) {
-        Notifications.dnd = false;
+      const mic = Audio.microphone.isMuted;
+      if (mic) {
+        Audio.microphone.isMuted = false;
       }
-      Notifications.dnd = !dnd;
-      button.toggleClassName("sidebar-button-active", !dnd);
+      Audio.microphone.isMuted = !mic;
+      button.toggleClassName("sidebar-button-active", !mic);
     },
-    child: MaterialIcon("notifications_off", "norm"),
+    child: MaterialIcon("mic_off", "norm"),
     setup: setupCursorHover,
     ...props,
   });

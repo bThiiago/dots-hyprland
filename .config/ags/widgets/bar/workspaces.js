@@ -15,6 +15,7 @@ const dummyOccupiedWs = Box({ className: "bar-ws bar-ws-occupied" }); // Not sho
 // Font size = workspace id
 const WorkspaceContents = (count = 10) => {
   return DrawingArea({
+    css: `transition: 90ms cubic-bezier(0.1, 1, 0, 1);`,
     properties: [
       ["initialized", false],
       ["workspaceMask", 0],
@@ -22,7 +23,6 @@ const WorkspaceContents = (count = 10) => {
         "updateMask",
         (self) => {
           if (self._initialized) return; // We only need this to run once
-          console.log("update dayo");
           const workspaces = Hyprland.workspaces;
           let workspaceMask = 0;
           for (let i = 0; i < workspaces.length; i++) {
@@ -45,8 +45,7 @@ const WorkspaceContents = (count = 10) => {
         },
       ],
     ],
-    css: `transition: 200ms cubic-bezier(0.1, 1, 0, 1);`,
-    setup: (area) => {
+    setup: (area) =>
       area
         .hook(Hyprland.active.workspace, (area) =>
           area.setCss(`font-size: ${Hyprland.active.workspace.id}px;`)
@@ -243,8 +242,7 @@ const WorkspaceContents = (count = 10) => {
             );
             cr.fill();
           })
-        );
-    },
+        ),
   });
 };
 

@@ -8,7 +8,7 @@ import {
   ModuleNightLight,
   ModuleInvertColors,
   ModuleIdleInhibitor,
-  ModuleDND,
+  ModuleMuteMic,
   ModuleReloadIcon,
   ModuleSettingsIcon,
   ModulePowerIcon,
@@ -62,7 +62,7 @@ const togglesBox = Box({
     ModuleNightLight(),
     ModuleInvertColors(),
     ModuleIdleInhibitor(),
-    ModuleDND(),
+    ModuleMuteMic(),
   ],
 });
 
