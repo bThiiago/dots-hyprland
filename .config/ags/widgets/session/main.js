@@ -1,4 +1,4 @@
-import { Widget } from "../../imports.js";
+import Widget from "resource:///com/github/Aylur/ags/widget.js";
 import SessionScreen from "./sessionscreen.js";
 const { Window } = Widget;
 

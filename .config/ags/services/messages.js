@@ -1,5 +1,5 @@
 const { GLib, Gio } = imports.gi;
-import { Utils } from "../imports.js";
+import * as Utils from "resource:///com/github/Aylur/ags/utils.js";
 import Battery from "resource:///com/github/Aylur/ags/service/battery.js";
 const { execAsync, timeout, writeFile } = Utils;
 

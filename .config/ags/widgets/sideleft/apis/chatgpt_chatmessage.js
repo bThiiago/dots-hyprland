@@ -1,5 +1,7 @@
 const { Gio, GLib, Gtk } = imports.gi;
-import { App, Utils, Widget } from "../../../imports.js";
+import App from "resource:///com/github/Aylur/ags/app.js";
+import Widget from "resource:///com/github/Aylur/ags/widget.js";
+import * as Utils from "resource:///com/github/Aylur/ags/utils.js";
 const { Box, Button, Label, Scrollable } = Widget;
 const { execAsync } = Utils;
 import { MaterialIcon } from "../../../lib/materialicon.js";

@@ -1,5 +1,5 @@
 const { GLib } = imports.gi;
-import { Widget } from "../../imports.js";
+import Widget from "resource:///com/github/Aylur/ags/widget.js";
 const { Box, Label } = Widget;
 
 const TimeAndDate = () =>

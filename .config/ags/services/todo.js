@@ -1,5 +1,6 @@
 const { Gio, GLib } = imports.gi;
-import { Service, Utils } from "../imports.js";
+import Service from "resource:///com/github/Aylur/ags/service.js";
+import * as Utils from "resource:///com/github/Aylur/ags/utils.js";
 const { exec, writeFile, readFile } = Utils;
 
 function fileExists(filePath) {

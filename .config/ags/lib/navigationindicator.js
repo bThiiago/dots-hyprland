@@ -1,6 +1,6 @@
 const { Gtk } = imports.gi;
 const Lang = imports.lang;
-import { Widget } from "../imports.js";
+import Widget from "resource:///com/github/Aylur/ags/widget.js";
 const { DrawingArea } = Widget;
 
 export const NavigationIndicator = (count, vertical, props) =>

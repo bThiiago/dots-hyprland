@@ -1,5 +1,6 @@
 const { Gdk, GdkPixbuf, Gio, GLib, Gtk } = imports.gi;
-import { Utils, Widget } from "../../../imports.js";
+import Widget from "resource:///com/github/Aylur/ags/widget.js";
+import * as Utils from "resource:///com/github/Aylur/ags/utils.js";
 const {
   Box,
   Button,

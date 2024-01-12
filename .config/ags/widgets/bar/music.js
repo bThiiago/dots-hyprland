@@ -1,4 +1,5 @@
-import { Utils, Widget } from "../../imports.js";
+import Widget from "resource:///com/github/Aylur/ags/widget.js";
+import * as Utils from "resource:///com/github/Aylur/ags/utils.js";
 import Mpris from "resource:///com/github/Aylur/ags/service/mpris.js";
 import Hyprland from "resource:///com/github/Aylur/ags/service/hyprland.js";
 import { AnimatedCircProg } from "../../lib/animatedcircularprogress.js";

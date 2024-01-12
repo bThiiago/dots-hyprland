@@ -1,4 +1,4 @@
-import { Widget } from "../../imports.js";
+import Widget from "resource:///com/github/Aylur/ags/widget.js";
 import Notifications from "resource:///com/github/Aylur/ags/service/notifications.js";
 import Notification from "../../lib/notification.js";
 const { Box } = Widget;

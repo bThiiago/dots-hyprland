@@ -1,5 +1,6 @@
 const { Gtk } = imports.gi;
-import { Widget, Utils } from "../../imports.js";
+import Widget from "resource:///com/github/Aylur/ags/widget.js";
+import * as Utils from "resource:///com/github/Aylur/ags/utils.js";
 const { timeout } = Utils;
 const { Box, Button, Entry, Scrollable, Stack, Label, Revealer } = Widget;
 import { MaterialIcon } from "../../lib/materialicon.js";

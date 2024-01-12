@@ -1,5 +1,7 @@
 const { Gio, GLib } = imports.gi;
-import { App, Utils, Widget } from "../../imports.js";
+import App from "resource:///com/github/Aylur/ags/app.js";
+import Widget from "resource:///com/github/Aylur/ags/widget.js";
+import * as Utils from "resource:///com/github/Aylur/ags/utils.js";
 const { exec, execAsync, readFile } = Utils;
 import Mpris from "resource:///com/github/Aylur/ags/service/mpris.js";
 

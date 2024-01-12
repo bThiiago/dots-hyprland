@@ -3,7 +3,8 @@ const Lang = imports.lang;
 const Cairo = imports.cairo;
 const Pango = imports.gi.Pango;
 const PangoCairo = imports.gi.PangoCairo;
-import { App, Widget } from "../../imports.js";
+import App from "resource:///com/github/Aylur/ags/app.js";
+import Widget from "resource:///com/github/Aylur/ags/widget.js";
 const { Box, DrawingArea, EventBox } = Widget;
 import Hyprland from "resource:///com/github/Aylur/ags/service/hyprland.js";
 

@@ -1,5 +1,6 @@
 const { Gio, GLib } = imports.gi;
-import { App, Utils } from "../../imports.js";
+import App from "resource:///com/github/Aylur/ags/app.js";
+import * as Utils from "resource:///com/github/Aylur/ags/utils.js";
 const { execAsync } = Utils;
 import Todo from "../../services/todo.js";
 

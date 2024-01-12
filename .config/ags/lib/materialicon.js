@@ -1,4 +1,4 @@
-import { Widget } from "../imports.js";
+import Widget from "resource:///com/github/Aylur/ags/widget.js";
 const { Label } = Widget;
 
 export const MaterialIcon = (icon, size, props = {}) =>

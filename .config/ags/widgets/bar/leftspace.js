@@ -1,4 +1,5 @@
-import { App, Widget } from "../../imports.js";
+import App from "resource:///com/github/Aylur/ags/app.js";
+import Widget from "resource:///com/github/Aylur/ags/widget.js";
 import Audio from "resource:///com/github/Aylur/ags/service/audio.js";
 import Hyprland from "resource:///com/github/Aylur/ags/service/hyprland.js";
 import { RoundedCorner } from "../../lib/roundedcorner.js";

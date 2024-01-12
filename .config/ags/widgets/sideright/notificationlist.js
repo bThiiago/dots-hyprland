@@ -1,4 +1,4 @@
-import { Widget } from "../../imports.js";
+import Widget from "resource:///com/github/Aylur/ags/widget.js";
 import Notifications from "resource:///com/github/Aylur/ags/service/notifications.js";
 const { Box, Button, Label, Revealer, Scrollable, Stack } = Widget;
 import { MaterialIcon } from "../../lib/materialicon.js";

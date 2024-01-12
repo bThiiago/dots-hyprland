@@ -1,5 +1,5 @@
 const { Gtk } = imports.gi;
-import { Widget } from "../../imports.js";
+import Widget from "resource:///com/github/Aylur/ags/widget.js";
 const { Box, CenterBox, Window } = Widget;
 import { ModuleLeftSpace } from "./leftspace.js";
 import { ModuleMusic } from "./music.js";

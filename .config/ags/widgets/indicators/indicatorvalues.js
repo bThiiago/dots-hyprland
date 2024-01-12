@@ -1,4 +1,4 @@
-import { Widget } from "../../imports.js";
+import Widget from "resource:///com/github/Aylur/ags/widget.js";
 import { MarginRevealer } from "../../lib/advancedwidgets.js";
 import Audio from "resource:///com/github/Aylur/ags/service/audio.js";
 import Indicator from "../../services/indicator.js";

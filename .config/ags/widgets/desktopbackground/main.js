@@ -1,4 +1,4 @@
-import { Widget } from "../../imports.js";
+import Widget from "resource:///com/github/Aylur/ags/widget.js";
 import TimeAndLaunchesWidget from "./timeandlaunches.js";
 import SystemWidget from "./system.js";
 const { Box, Overlay, Window } = Widget;

@@ -1,4 +1,5 @@
-import { Utils, Widget } from "../../imports.js";
+import Widget from "resource:///com/github/Aylur/ags/widget.js";
+import * as Utils from "resource:///com/github/Aylur/ags/utils.js";
 const { execAsync, exec } = Utils;
 const { Box, EventBox, Label, Revealer, Overlay } = Widget;
 import { AnimatedCircProg } from "../../lib/animatedcircularprogress.js";

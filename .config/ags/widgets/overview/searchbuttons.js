@@ -1,5 +1,7 @@
 const { Gtk } = imports.gi;
-import { App, Utils, Widget } from "../../imports.js";
+import App from "resource:///com/github/Aylur/ags/app.js";
+import Widget from "resource:///com/github/Aylur/ags/widget.js";
+import * as Utils from "resource:///com/github/Aylur/ags/utils.js";
 const { execAsync, timeout } = Utils;
 const { Box, Label, Icon, Button, Revealer } = Widget;
 import { searchItem } from "./searchitem.js";

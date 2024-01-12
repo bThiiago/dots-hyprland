@@ -1,5 +1,6 @@
 const { Gtk } = imports.gi;
-import { Utils, Widget } from "../../imports.js";
+import Widget from "resource:///com/github/Aylur/ags/widget.js";
+import * as Utils from "resource:///com/github/Aylur/ags/utils.js";
 import SystemTray from "resource:///com/github/Aylur/ags/service/systemtray.js";
 const { timeout } = Utils;
 const { Box, Icon, Button, Revealer } = Widget;

@@ -1,4 +1,4 @@
-import { Utils } from "../../imports.js";
+import * as Utils from "resource:///com/github/Aylur/ags/utils.js";
 const { execAsync } = Utils;
 import Hyprland from "resource:///com/github/Aylur/ags/service/hyprland.js";
 

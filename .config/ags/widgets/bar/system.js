@@ -1,31 +1,11 @@
-import { Utils, Widget } from "../../imports.js";
+import Widget from "resource:///com/github/Aylur/ags/widget.js";
+import * as Utils from "resource:///com/github/Aylur/ags/utils.js";
 const { Box, Label, Button, Overlay, Revealer, Stack, EventBox } = Widget;
 const { execAsync, timeout } = Utils;
 const { GLib } = imports.gi;
 import Hyprland from "resource:///com/github/Aylur/ags/service/hyprland.js";
-import Battery from "resource:///com/github/Aylur/ags/service/battery.js";
 import { MaterialIcon } from "../../lib/materialicon.js";
 import { AnimatedCircProg } from "../../lib/animatedcircularprogress.js";
-
-const BATTERY_LOW = 20;
-
-const BatBatteryProgress = () => {
-  const _updateProgress = (circprog) => {
-    circprog.css = `font-size: ${Battery.percent}px;`;
-
-    circprog.toggleClassName(
-      "bar-batt-circprog-low",
-      Battery.percent <= BATTERY_LOW
-    );
-    circprog.toggleClassName("bar-batt-circprog-full", Battery.charged);
-  };
-  return AnimatedCircProg({
-    className: "bar-batt-circprog",
-    vpack: "center",
-    hpack: "center",
-    connections: [[Battery, _updateProgress]],
-  });
-};
 
 const BarClock = () =>
   Box({
@@ -86,47 +66,6 @@ const Utilities = () =>
         onClicked: () => {
           execAsync(["hyprpicker", "-a"]).catch(print);
         },
-      }),
-    ],
-  });
-
-const BarBattery = () =>
-  Box({
-    className: "spacing-h-4 txt-onSurfaceVariant",
-    children: [
-      Revealer({
-        transitionDuration: 150,
-        revealChild: false,
-        transition: "slide_right",
-        child: MaterialIcon("bolt", "norm"),
-        setup: (self) =>
-          self.hook(Battery, (revealer) => {
-            self.revealChild = Battery.charging;
-          }),
-      }),
-      Label({
-        className: "txt-smallie txt-onSurfaceVariant",
-        setup: (self) =>
-          self.hook(Battery, (label) => {
-            label.label = `${Battery.percent}%`;
-          }),
-      }),
-      Overlay({
-        child: Box({
-          vpack: "center",
-          className: "bar-batt",
-          homogeneous: true,
-          children: [MaterialIcon("settings_heart", "small")],
-          setup: (self) =>
-            self.hook(Battery, (box) => {
-              box.toggleClassName(
-                "bar-batt-low",
-                Battery.percent <= BATTERY_LOW
-              );
-              box.toggleClassName("bar-batt-full", Battery.charged);
-            }),
-        }),
-        overlays: [BatBatteryProgress()],
       }),
     ],
   });
@@ -196,16 +135,6 @@ export const ModuleSystem = () =>
           transitionDuration: 150,
           items: [
             [
-              "laptop",
-              Box({
-                className: "spacing-h-5",
-                children: [
-                  BarGroup({ child: Utilities() }),
-                  BarGroup({ child: BarBattery() }),
-                ],
-              }),
-            ],
-            [
               "desktop",
               Box({
                 className: "spacing-h-5",
@@ -231,8 +160,7 @@ export const ModuleSystem = () =>
           ],
           setup: (stack) =>
             timeout(10, () => {
-              if (!Battery.available) stack.shown = "desktop";
-              else stack.shown = "laptop";
+              stack.shown = "desktop";
             }),
         }),
       ],

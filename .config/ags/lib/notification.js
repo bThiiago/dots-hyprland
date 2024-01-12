@@ -1,5 +1,6 @@
 const { GLib, Gdk, Gtk, Pango } = imports.gi;
-import { Utils, Widget } from "../imports.js";
+import Widget from "resource:///com/github/Aylur/ags/widget.js";
+import * as Utils from "resource:///com/github/Aylur/ags/utils.js";
 const { lookUpIcon, timeout } = Utils;
 const { Box, EventBox, Icon, Overlay, Label, Button, Revealer } = Widget;
 import { MaterialIcon } from "./materialicon.js";

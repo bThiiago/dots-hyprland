@@ -1,5 +1,6 @@
 "use strict";
-import { App, Utils } from "./imports.js";
+import App from "resource:///com/github/Aylur/ags/app.js";
+import * as Utils from "resource:///com/github/Aylur/ags/utils.js";
 const { exec } = Utils;
 import Bar from "./widgets/bar/main.js";
 import Cheatsheet from "./widgets/cheatsheet/main.js";

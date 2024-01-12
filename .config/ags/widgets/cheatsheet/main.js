@@ -1,5 +1,5 @@
 const { Gtk } = imports.gi;
-import { Widget } from "../../imports.js";
+import Widget from "resource:///com/github/Aylur/ags/widget.js";
 import { Keybinds } from "./keybinds.js";
 import { setupCursorHover } from "../../lib/cursorhover.js";
 const { Box, Label, Button, CenterBox, EventBox, Window } = Widget;

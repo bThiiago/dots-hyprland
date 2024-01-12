@@ -1,4 +1,4 @@
-import { Utils } from "../imports.js";
+import * as Utils from "resource:///com/github/Aylur/ags/utils.js";
 const { readFile, writeFile } = Utils;
 import Service from "resource:///com/github/Aylur/ags/service.js";
 import Gio from "gi://Gio";

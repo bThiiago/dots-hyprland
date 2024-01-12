@@ -1,4 +1,4 @@
-import { Widget } from "../../imports.js";
+import Widget from "resource:///com/github/Aylur/ags/widget.js";
 const { Box, Button, Entry, Stack } = Widget;
 import { setupCursorHover } from "../../lib/cursorhover.js";
 import ChatGPT from "../../services/chatgpt.js";

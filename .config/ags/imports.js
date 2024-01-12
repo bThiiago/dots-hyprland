@@ -21,6 +21,7 @@ export const SystemTray = await service("systemtray");
 globalThis["App"] = App;
 globalThis["Utils"] = Utils;
 globalThis["Mpris"] = Mpris;
+globalThis["Network"] = Network;
 globalThis["Notifications"] = Notifications;
 
 const { exec } = Utils;
