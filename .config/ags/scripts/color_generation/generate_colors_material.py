@@ -73,7 +73,6 @@ inverseSurface = hexFromArgb(colorscheme.get_inverseSurface())
 inverseOnSurface = hexFromArgb(colorscheme.get_inverseOnSurface())
 inversePrimary = hexFromArgb(colorscheme.get_inversePrimary())
 
-# make material less boring
 if darkmode:
     background = darken(background, 0.6)
 
