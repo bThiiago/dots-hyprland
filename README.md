@@ -1,5 +1,5 @@
 <div align="center">
-    <h1>「 Hyprland dotfiles 」</h1>
+    <h1>「 Dead Hyprland dotfiles 」</h1>
     <h3> end_4 illogical_impulse branch with personal tweaks </h3>
 </div>
 
